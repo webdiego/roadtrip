@@ -3,7 +3,7 @@ import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const TripTable = sqliteTable("trip", {
   id: integer("id").primaryKey(),
-  userId: integer("user_id").notNull().unique(),
+  userId: text("user_id").notNull(),
   name: text("title").notNull(),
   description: text("description").notNull(),
   createdAt: integer("timestamp", { mode: "number" })

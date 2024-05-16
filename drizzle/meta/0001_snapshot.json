@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "3677e40b-3b57-41a2-a1d7-04b73b150f4f",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "3de4ee8d-d91c-4f67-a92d-1dadfe2a75d3",
+  "prevId": "3677e40b-3b57-41a2-a1d7-04b73b150f4f",
   "tables": {
     "trip": {
       "name": "trip",
@@ -44,15 +44,7 @@
           "default": "(unixepoch())"
         }
       },
-      "indexes": {
-        "trip_user_id_unique": {
-          "name": "trip_user_id_unique",
-          "columns": [
-            "user_id"
-          ],
-          "isUnique": true
-        }
-      },
+      "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}

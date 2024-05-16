@@ -1,0 +1,1 @@
+DROP INDEX IF EXISTS `trip_user_id_unique`;
