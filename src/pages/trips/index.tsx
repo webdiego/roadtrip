@@ -6,6 +6,7 @@ import { GetServerSideProps } from "next";
 export default function Index() {
   const { isLoaded, isSignedIn, user } = useUser();
 
+  console.log(user);
   if (!isLoaded || !isSignedIn) {
     return null;
   }
@@ -18,5 +19,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const user = userId ? await clerkClient.users.getUser(userId) : undefined;
 
-  return { props: { ...buildClerkProps(ctx.req, { user }) } };
+  console.log(userId);
+
+  //Find all trips by user id and return them
+
+  // If no trips are found, return an empty array
+
+  return { props: { ...buildClerkProps(ctx.req, { user }), trips: [] } };
 };
