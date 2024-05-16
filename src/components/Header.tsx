@@ -19,7 +19,7 @@ export default function Header() {
           </Button>
         </header>
       ) : (
-        <header className="p-2 bg-red-500 text-white">
+        <header className="p-2 bg-slate-100 text-white">
           <div className="flex self-end justify-end">
             <SignedOut>
               <Button asChild variant={"ghost"}>

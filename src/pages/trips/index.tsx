@@ -1,4 +1,3 @@
-import { useUser } from "@clerk/nextjs";
 import React from "react";
 import { getAuth, buildClerkProps, clerkClient } from "@clerk/nextjs/server";
 import { GetServerSideProps } from "next";
@@ -7,52 +6,56 @@ import { db } from "@/db";
 import { TripTable } from "@/db/schema/trips";
 import { eq } from "drizzle-orm";
 import { TripType } from "@/types/index";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
 
-export default function Index({ trips }: { trips: TripType[] | [] }) {
-  // Access the client
+export default function Index() {
   const queryClient = useQueryClient();
-  const { isLoaded, isSignedIn, user } = useUser();
+
+  // Query
+  const { isLoading, data } = useQuery({
+    queryKey: ["trips"],
+    queryFn: async () => {
+      return await axios.get("/api/trips/get").then((res) => res.data);
+    },
+  });
+
   // Mutations
-  const mutationFn = useMutation({
+  const { isPending, isSuccess, isError, mutate, error } = useMutation({
     mutationFn: (trip: any) => {
       return axios.post("/api/trips/create", trip);
     },
     onSuccess: () => {
-      // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: ["trips"] });
     },
   });
 
-  console.log(mutationFn);
-  if (!isLoaded || !isSignedIn) {
-    return null;
-  }
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error: {error.message}</div>;
 
   return (
-    <div>
-      {user.fullName}
-      {mutationFn.isPending && <p>Creating trip...</p>}
-      {mutationFn.isSuccess && <p>Trip created!</p>}
-      {mutationFn.isError && <p>Error: {mutationFn.error.message}</p>}
-      {trips &&
-        trips?.map((trip: TripType) => (
+    <div className="px-4 py-10">
+      <h2 className="text-4xl font-bold ">Your trips</h2>
+
+      {data &&
+        data?.trips.map((trip: TripType) => (
           <div key={trip.id}>
             <h3>{trip.name}</h3>
             <p>{trip.description}</p>
             <p>{new Date(trip.createdAt).toLocaleString()}</p>
           </div>
         ))}
-      <button
+      <Button
+        disabled={isPending}
         onClick={() =>
-          mutationFn.mutate({
+          mutate({
             name: "Test Trip query",
             description: "This is a test trip query",
           })
         }
       >
         Create Trip
-      </button>
+      </Button>
     </div>
   );
 }
@@ -62,9 +65,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const user = userId ? await clerkClient.users.getUser(userId) : undefined;
 
-  console.log(userId);
   if (!userId) {
-    return { props: { ...buildClerkProps(ctx.req, { user }) } };
+    return {
+      redirect: {
+        destination: "/sign-in",
+        permanent: false,
+      },
+    };
   }
 
   //Find all trips by user id and return them
@@ -74,5 +81,5 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   // If no trips are found, return an empty array
 
-  return { props: { ...buildClerkProps(ctx.req, { user }), trips: trips } };
+  return { props: { ...buildClerkProps(ctx.req, { user }) } };
 };
