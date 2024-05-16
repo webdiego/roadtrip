@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1715851241806,
-      "tag": "0000_narrow_puff_adder",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1715852961752,
-      "tag": "0001_lean_selene",
+      "when": 1715864794221,
+      "tag": "0000_ordinary_makkari",
       "breakpoints": true
     }
   ]
