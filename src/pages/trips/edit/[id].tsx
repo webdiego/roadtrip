@@ -1,7 +1,7 @@
 import React from "react";
 import { useRouter } from "next/router";
 
-export default function Trip() {
+export default function EditTrip() {
   const router = useRouter();
   if (!router.query.id) {
     return <div>Not found</div>;
