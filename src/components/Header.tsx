@@ -7,24 +7,18 @@ import { useRouter } from "next/router";
 
 export default function Header() {
   const { pathname } = useRouter();
-  const showHome = ["/sign-up/[[...index]]", "/sign-in/[[...index]]"];
-  let showHomeButton = showHome.includes(pathname) ? true : false;
+  const navbar = ["/sign-up/[[...index]]", "/sign-in/[[...index]]"];
+  let showNavbar = navbar.includes(pathname) ? false : true;
 
   return (
     <>
-      {showHomeButton ? (
-        <header>
-          <Button asChild>
-            <Link href="/">Home Page</Link>
-          </Button>
-        </header>
-      ) : (
+      {showNavbar && (
         <header className="p-2 bg-slate-100 text-white">
           <div className="flex self-end justify-end">
             <SignedOut>
-              <Button asChild variant={"ghost"}>
+              {/* <Button asChild variant={"ghost"}>
                 <Link href="/sign-up">Sign Up</Link>
-              </Button>
+              </Button> */}
               <Button asChild className="mr-2">
                 <Link href="/sign-in" className="mr-2">
                   Sign In
