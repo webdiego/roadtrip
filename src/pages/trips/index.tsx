@@ -8,7 +8,7 @@ import { eq } from "drizzle-orm";
 import { TripType } from "@/types/index";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-
+import CardTrip from "@/components/CardTrip";
 export default function Index() {
   const queryClient = useQueryClient();
 
@@ -32,20 +32,34 @@ export default function Index() {
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error: {error.message}</div>;
-
+  console.log(data);
   return (
     <div className="px-4 py-10">
-      <h2 className="text-4xl font-bold ">Your trips</h2>
+      <h2 className="text-4xl font-bold py-4">Your trips</h2>
+      <div className="flex flex-wrap gap-6">
+        {data &&
+          data?.trips.map((trip: TripType) => (
+            <CardTrip key={trip.id} {...{ trip }} />
+          ))}
+      </div>
 
-      {data &&
+      {/* {data &&
         data?.trips.map((trip: TripType) => (
-          <div key={trip.id}>
+          <div key={trip.id} className="mt-4">
             <h3>{trip.name}</h3>
             <p>{trip.description}</p>
-            <p>{new Date(trip.createdAt).toLocaleString()}</p>
+            <p>
+              {typeof trip.createdAt === "number" &&
+                new Date(trip.createdAt * 1000).toLocaleString("en-UK", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+            </p>
           </div>
-        ))}
+        ))} */}
       <Button
+        className="mt-4"
         disabled={isPending}
         onClick={() =>
           mutate({

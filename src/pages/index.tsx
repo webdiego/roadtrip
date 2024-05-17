@@ -13,7 +13,9 @@ export default function Home() {
       </p>
       {isSignedIn && (
         <Button className="mt-2" asChild>
-          <Link href={"/trips"}>Go to your dashboard</Link>
+          <Link href={"/trips"} prefetch>
+            Go to your dashboard
+          </Link>
         </Button>
       )}
     </div>
