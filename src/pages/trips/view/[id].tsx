@@ -1,8 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { get } from "http";
-
+import { BreadCrumb } from "@/components/BreadCrumb";
 export default function ViewTrip({ tripId }: { tripId: number }) {
   // Query
   const { isLoading, data, isError, error } = useQuery({
@@ -20,9 +19,12 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
 
   let trip = data?.trip[0];
   return (
-    <div>
-      <h2>{trip.name}</h2>
-    </div>
+    <>
+      <div>
+        <h2 className="text-4xl font-bold py-4">{trip.name}</h2>
+        <p>{trip.description}</p>
+      </div>
+    </>
   );
 }
 
