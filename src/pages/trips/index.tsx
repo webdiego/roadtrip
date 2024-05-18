@@ -11,7 +11,7 @@ export default function Index() {
   const { isLoading, data } = useQuery({
     queryKey: ["trips"],
     queryFn: async () => {
-      return await axios.get("/api/trips/get").then((res) => res.data);
+      return await axios.get("/api/trips/get-all").then((res) => res.data);
     },
   });
 

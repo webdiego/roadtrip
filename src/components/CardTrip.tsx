@@ -68,13 +68,13 @@ export default function CardTrip({ trip }: { trip: TripType }) {
             </div>
           </Button>
           <Button asChild size={"sm"} className="w-full" variant={"edit"}>
-            <Link href="/trips/edit/[id]" as={`/trips/edit/${trip.id}`}>
+            <Link href={`/trips/edit/${trip.id}`} as={`/trips/ed/${trip.id}`}>
               <Bolt className="w-4 mr-2" />
               Edit
             </Link>
           </Button>
           <Button asChild size={"sm"} className="w-full">
-            <Link href="/trips/[id]" as={`/trips/${trip.id}`}>
+            <Link href={`/trips/view/${trip.id}`} as={`/trips/view/${trip.id}`}>
               <Eye className="w-4 mr-2" />
               View
             </Link>
