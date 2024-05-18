@@ -26,9 +26,9 @@ export default function CardTrip({ trip }: { trip: TripType }) {
       <div className="border border-gray-200 rounded-lg p-4 shadow-md max-w-sm min-w-[320px] space-y-4 flex flex-col">
         <div className="border relative w-max px-2 pr-3 rounded-lg self-end justify-self-end -mb-5 ">
           <div className="dot absolute -top-1 -right-1">
-            <span className="relative flex h-3 w-3 ">
+            <span className="relative flex h-2 w-2 ">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-green-400"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
             </span>
           </div>
           <h3 className="text-xs font-medium text-gray-800">On trip</h3>
