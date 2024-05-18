@@ -1,12 +1,15 @@
 import React from "react";
 import { useRouter } from "next/router";
 
-export default function EditTrip() {
-  const router = useRouter();
-  if (!router.query.id) {
-    return <div>Not found</div>;
-  }
-  const tripId = +router.query.id as number;
-
+export default function EditTrip({ tripId }: { tripId: number }) {
   return <div>{tripId}</div>;
+}
+export async function getServerSideProps(ctx: any) {
+  const tripId = +ctx.query.id!;
+
+  return {
+    props: {
+      tripId,
+    },
+  };
 }

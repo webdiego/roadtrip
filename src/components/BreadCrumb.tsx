@@ -33,7 +33,10 @@ export function BreadCrumb() {
                 </BreadcrumbItem>
               </>
             )}
-            {pathname.includes("/trips/") && (
+
+            {pathname.includes(
+              "/trips/" || "/trips/create" || "/trips/edit" || "/trips/view"
+            ) && (
               <>
                 <BreadcrumbSeparator>
                   <SlashIcon />

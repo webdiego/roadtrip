@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 import { Bolt, Eye, Trash2 } from "lucide-react";
 import { TripType } from "@/types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { default as DialogDelete } from "@/components/Dialog";
 import axios from "axios";
 
@@ -68,13 +68,13 @@ export default function CardTrip({ trip }: { trip: TripType }) {
             </div>
           </Button>
           <Button asChild size={"sm"} className="w-full" variant={"edit"}>
-            <Link href={`/trips/edit/${trip.id}`} as={`/trips/edit/${trip.id}`}>
+            <Link href={`/trips/edit/${trip.id}`}>
               <Bolt className="w-4 mr-2" />
               Edit
             </Link>
           </Button>
           <Button asChild size={"sm"} className="w-full">
-            <Link href={`/trips/view/${trip.id}`} as={`/trips/view/${trip.id}`}>
+            <Link href={`/trips/view/${trip.id}`}>
               <Eye className="w-4 mr-2" />
               View
             </Link>
