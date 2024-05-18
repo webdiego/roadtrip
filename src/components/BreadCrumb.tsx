@@ -34,9 +34,7 @@ export function BreadCrumb() {
               </>
             )}
 
-            {pathname.includes(
-              "/trips/" || "/trips/create" || "/trips/edit" || "/trips/view"
-            ) && (
+            {pathname.includes("/trips/") && (
               <>
                 <BreadcrumbSeparator>
                   <SlashIcon />
