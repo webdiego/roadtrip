@@ -28,7 +28,7 @@ export default function Index() {
         </Button>
       </div>
       <div className="border-t my-4"></div>
-      <div className="flex flex-wrap gap-6 mt-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
         {data &&
           data?.trips.map((trip: TripType) => (
             <CardTrip key={trip.id} {...{ trip }} />

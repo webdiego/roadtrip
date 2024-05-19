@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { BreadCrumb } from "@/components/BreadCrumb";
+import { Label } from "@radix-ui/react-label";
 export default function ViewTrip({ tripId }: { tripId: number }) {
   // Query
   const { isLoading, data, isError, error } = useQuery({
@@ -22,7 +22,16 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
     <>
       <div>
         <h2 className="text-4xl font-bold py-4">{trip.name}</h2>
-        <p>{trip.description}</p>
+        <div>
+          <Label className="text-sm text-gray-500">Description</Label>
+          <p>{trip.description}</p>
+        </div>
+        <div>
+          <Label className="text-sm text-gray-500">Budget</Label>
+          <p>
+            {trip.currency} {trip.budget}
+          </p>
+        </div>
       </div>
     </>
   );

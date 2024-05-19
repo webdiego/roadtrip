@@ -24,7 +24,7 @@ export default function CardTrip({ trip }: { trip: TripType }) {
   console.log(trip);
   return (
     <>
-      <div className="border border-gray-200 rounded-lg p-4 shadow-md max-w-sm min-w-[320px] space-y-4 flex flex-col">
+      <div className="border border-gray-200 rounded-lg p-4 shadow-md w-full min-w-[320px] space-y-4 flex flex-col">
         <div className="border relative w-max px-2 pr-3 rounded-lg self-end justify-self-end -mb-5 ">
           <div className="dot absolute -top-1 -right-1">
             <span className="relative flex h-2 w-2 ">
