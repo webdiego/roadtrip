@@ -23,7 +23,7 @@ export function BreadCrumb() {
             <BreadcrumbItem>
               <BreadcrumbLink href="/">Home</BreadcrumbLink>
             </BreadcrumbItem>
-            {pathname.includes("/trips") && (
+            {pathname?.includes("/trips") && (
               <>
                 <BreadcrumbSeparator>
                   <SlashIcon />
@@ -34,7 +34,7 @@ export function BreadCrumb() {
               </>
             )}
 
-            {pathname.includes("/trips/") && (
+            {pathname?.includes("/trips/") && (
               <>
                 <BreadcrumbSeparator>
                   <SlashIcon />
