@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-
+import { useToast } from "@/components/ui/use-toast";
 import {
   Form,
   FormControl,
@@ -22,7 +22,10 @@ import * as z from "zod";
 const schema = z.object({
   name: z.string().min(1, { message: "Required" }),
   description: z.string().min(1, { message: "Required" }),
-  budget: z.number().min(1, { message: "Required" }),
+
+  budget: z.coerce // SOLUTION
+    .number()
+    .min(1, { message: "Required" }),
   currency: z
     .string()
     .min(1, { message: "Required" })
@@ -31,6 +34,7 @@ const schema = z.object({
 });
 
 export default function CreateTrip() {
+  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   // 1. Define your form.
@@ -59,9 +63,14 @@ export default function CreateTrip() {
     console.log(values);
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    mutate({
-      name: "Test Trip query",
+    // mutate({
+    //   name: "Test Trip query",
+    //   description: "This is a test trip query",
+    // });
+    toast({
+      title: "Trip created",
       description: "This is a test trip query",
+      duration: 5000,
     });
   }
   if (isError) return <div>Error: {error.message}</div>;

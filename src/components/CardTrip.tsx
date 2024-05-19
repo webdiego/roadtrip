@@ -34,7 +34,7 @@ export default function CardTrip({ trip }: { trip: TripType }) {
           <h3 className="text-xs font-medium text-gray-800">On trip</h3>
         </div>
         <div>
-          <h3 className="text-sm font-semibold text-gray-800">Trip name</h3>
+          <h3 className="text-sm font-semibold text-gray-800">Name</h3>
           <p className=" text-gray-700">{trip.name}</p>
         </div>
         <div>

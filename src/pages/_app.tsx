@@ -3,7 +3,7 @@ import type { AppProps } from "next/app";
 import { ClerkProvider } from "@clerk/nextjs";
 import Layout from "@/components/Layout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
+import { Toaster } from "@/components/ui/toaster";
 // Create a client
 export const queryClient = new QueryClient();
 
@@ -13,6 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <QueryClientProvider client={queryClient}>
         <Layout>
           <Component {...pageProps} />
+          <Toaster />
         </Layout>
       </QueryClientProvider>
     </ClerkProvider>
