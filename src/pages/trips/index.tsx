@@ -23,7 +23,7 @@ export default function Index() {
           <h2 className="text-4xl font-bold ">Your trips</h2>
           <p>Here you can view and manage your trips.</p>
         </div>
-        <Button className="mt-4" size={"sm"}>
+        <Button className="mt-4" size={"sm"} asChild>
           <Link href={`/trips/create`}>Create Trip</Link>
         </Button>
       </div>

@@ -21,6 +21,7 @@ export default function CardTrip({ trip }: { trip: TripType }) {
     },
   });
 
+  console.log(trip);
   return (
     <>
       <div className="border border-gray-200 rounded-lg p-4 shadow-md max-w-sm min-w-[320px] space-y-4 flex flex-col">
@@ -46,11 +47,17 @@ export default function CardTrip({ trip }: { trip: TripType }) {
         <div className="flex items-center space-x-4">
           <div>
             <h3 className="text-sm font-semibold text-gray-800">Budget</h3>
-            <p className=" text-gray-700">$10,000</p>
+            <p className=" text-gray-700">
+              {trip.currency}
+              {trip.budget}
+            </p>
           </div>
           <div>
             <h3 className="text-sm font-semibold text-gray-800">Amount used</h3>
-            <p className=" text-gray-700">$5,000</p>
+            <p className=" text-gray-700">
+              {trip.currency}
+              {trip.amount_used}
+            </p>
           </div>
         </div>
 

@@ -23,10 +23,7 @@ import * as z from "zod";
 const schema = z.object({
   name: z.string().min(1, { message: "Required" }),
   description: z.string().min(1, { message: "Required" }),
-
-  budget: z.coerce // SOLUTION
-    .number()
-    .min(1, { message: "Required" }),
+  budget: z.coerce.number().min(1, { message: "Required" }),
   currency: z
     .string()
     .min(1, { message: "Required" })
@@ -56,13 +53,24 @@ export default function CreateTrip() {
     mutationFn: (trip: any) => {
       return axios.post("/api/trips/create", trip);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log(data);
+
       queryClient.invalidateQueries({ queryKey: ["trips"] });
+      toast({
+        title: "Trip created",
+        description: "This is a test trip query",
+        duration: 2000,
+      });
+      setTimeout(() => {
+        router.push("/trips");
+      }, 2000);
     },
   });
 
   function onSubmit(values: z.infer<typeof schema>) {
     console.log(values);
+
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     mutate({
@@ -72,15 +80,8 @@ export default function CreateTrip() {
       currency: values.currency,
       status: values.status,
     });
-    toast({
-      title: "Trip created",
-      description: "This is a test trip query",
-      duration: 2000,
-    });
-    setTimeout(() => {
-      router.push("/trips");
-    }, 2000);
   }
+
   if (isError) return <div>Error: {error.message}</div>;
 
   return (
@@ -159,6 +160,9 @@ export default function CreateTrip() {
                       <FormControl>
                         <Input placeholder="$" {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Set the currency for your budget.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
