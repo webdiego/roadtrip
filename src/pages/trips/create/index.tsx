@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/router";
 import {
   Form,
   FormControl,
@@ -34,6 +35,7 @@ const schema = z.object({
 });
 
 export default function CreateTrip() {
+  const router = useRouter();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -63,15 +65,21 @@ export default function CreateTrip() {
     console.log(values);
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    // mutate({
-    //   name: "Test Trip query",
-    //   description: "This is a test trip query",
-    // });
+    mutate({
+      name: values.name,
+      description: values.description,
+      budget: values.budget,
+      currency: values.currency,
+      status: values.status,
+    });
     toast({
       title: "Trip created",
       description: "This is a test trip query",
-      duration: 5000,
+      duration: 2000,
     });
+    setTimeout(() => {
+      router.push("/trips");
+    }, 2000);
   }
   if (isError) return <div>Error: {error.message}</div>;
 
@@ -186,12 +194,6 @@ export default function CreateTrip() {
                 className="mt-4"
                 size={"sm"}
                 disabled={isPending}
-                onClick={() =>
-                  mutate({
-                    name: "Test Trip query",
-                    description: "This is a test trip query",
-                  })
-                }
               >
                 Create Trip
               </Button>
