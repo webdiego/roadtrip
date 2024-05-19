@@ -1,0 +1,1 @@
+ALTER TABLE `trip` RENAME COLUMN `departure` TO `start_trip`;

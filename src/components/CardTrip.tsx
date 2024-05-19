@@ -22,9 +22,7 @@ export default function CardTrip({ trip }: { trip: TripType }) {
     },
   });
 
-  console.log(trip.departure);
-
-  let onTrip = currentlyOnTrip(trip.departure);
+  let onTrip = currentlyOnTrip(trip.start_trip);
   return (
     <>
       <div className="border border-gray-200 rounded-lg p-4 shadow-md w-full min-w-[320px] space-y-4 flex flex-col text-sm">

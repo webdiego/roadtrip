@@ -5,6 +5,7 @@ export type TripType = {
   currency: string;
   budget: number;
   amount_used: number;
-  departure: Date;
+  start_trip?: Date;
+  end_trip?: Date;
   createdAt: Date;
 };

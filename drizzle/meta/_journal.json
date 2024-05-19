@@ -22,6 +22,20 @@
       "when": 1716082857039,
       "tag": "0002_violet_lilandra",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1716127898069,
+      "tag": "0003_fresh_norrin_radd",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1716127982623,
+      "tag": "0004_whole_justice",
+      "breakpoints": true
     }
   ]
 }

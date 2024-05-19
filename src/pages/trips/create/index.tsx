@@ -39,7 +39,8 @@ const schema = z.object({
     .string()
     .min(1, { message: "Required" })
     .max(3, { message: "Max 3 characters" }),
-  departure: z.date().min(new Date("1900-01-01")).optional(),
+  start_trip: z.date().min(new Date("1900-01-01")).optional(),
+  end_trip: z.date().min(new Date("1900-01-01")).optional(),
 });
 
 export default function CreateTrip() {
@@ -56,7 +57,8 @@ export default function CreateTrip() {
       description: "",
       budget: 0,
       currency: "",
-      departure: undefined,
+      start_trip: undefined,
+      end_trip: undefined,
     },
   });
 
@@ -90,7 +92,10 @@ export default function CreateTrip() {
       description: values.description,
       budget: values.budget,
       currency: values.currency,
-      departure: values.departure ? format(values.departure, "t") : undefined,
+      start_trip: values.start_trip
+        ? format(values.start_trip, "t")
+        : undefined,
+      end_trip: values.end_trip ? format(values.end_trip, "t") : undefined,
     });
   }
 
@@ -103,7 +108,7 @@ export default function CreateTrip() {
         <p className="text-sm text-gray-500">
           You can create a new trip by filling out the form below.
         </p>
-        <div className="border border-gray-200 rounded-lg p-4 shadow-md flex flex-col mt-5 w-[500px]">
+        <div className="border border-gray-200 rounded-lg p-4 shadow-sm flex flex-col mt-5 w-full sm:w-[600px]">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
@@ -141,7 +146,7 @@ export default function CreateTrip() {
                   </FormItem>
                 )}
               />
-              <div className="flex space-x-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 space-y-6 sm:space-y-0 sm:space-x-6">
                 <FormField
                   control={form.control}
                   name="budget"
@@ -180,51 +185,90 @@ export default function CreateTrip() {
                   )}
                 />
               </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 space-y-6 sm:space-y-0 sm:space-x-6">
+                <FormField
+                  control={form.control}
+                  name="start_trip"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Start trip</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormDescription>Date of departure.</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="end_trip"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>End trip</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                " pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormDescription>
+                        You can leave this field empty if you don&apos;t want to
+                        set an end trip, you can set later on.
+                      </FormDescription>
 
-              <FormField
-                control={form.control}
-                name="departure"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Departure</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-[240px] pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          // disabled={(date) =>
-                          //   date > new Date() || date < new Date("1900-01-01")
-                          // }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormDescription>
-                      Your date of birth is used to calculate your age.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <Button
                 type="submit"
                 className="mt-4"
