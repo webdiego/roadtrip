@@ -6,7 +6,7 @@ import { TripType } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { default as DialogDelete } from "@/components/Dialog";
 import axios from "axios";
-
+import { isBefore, isAfter, isEqual } from "date-fns";
 export default function CardTrip({ trip }: { trip: TripType }) {
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -21,19 +21,44 @@ export default function CardTrip({ trip }: { trip: TripType }) {
     },
   });
 
-  console.log(trip);
+  console.log(trip.departure);
+
+  let currentlyOnTrip = false;
+  // Check if the trip is currently on trip or not by comparing the departure date with the current date
+  if (trip.departure) {
+    const currentDate = new Date();
+    const tripDate = new Date(+trip.departure * 1000);
+    if (isBefore(tripDate, currentDate) || isEqual(tripDate, currentDate)) {
+      currentlyOnTrip = true;
+    }
+    if (isAfter(tripDate, currentDate)) {
+      currentlyOnTrip = false;
+    }
+  }
+  console.log(currentlyOnTrip);
   return (
     <>
       <div className="border border-gray-200 rounded-lg p-4 shadow-md w-full min-w-[320px] space-y-4 flex flex-col">
         <div className="border relative w-max px-2 pr-3 rounded-lg self-end justify-self-end -mb-5 ">
           <div className="dot absolute -top-1 -right-1">
             <span className="relative flex h-2 w-2 ">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
+              <span
+                className={`animate-ping absolute inline-flex h-full w-full rounded-full ${
+                  currentlyOnTrip ? "bg-green-300" : "bg-blue-300"
+                }  opacity-75`}
+              ></span>
+              <span
+                className={`relative inline-flex rounded-full h-2 w-2 ${
+                  currentlyOnTrip ? "bg-green-400" : "bg-blue-400"
+                }`}
+              ></span>
             </span>
           </div>
-          <h3 className="text-xs font-medium text-gray-800">On trip</h3>
+          <h3 className="text-xs font-medium text-gray-800">
+            {currentlyOnTrip ? "On trip" : "Not on trip"}
+          </h3>
         </div>
+
         <div>
           <h3 className="text-sm font-semibold text-gray-800">Name</h3>
           <p className=" text-gray-700">{trip.name}</p>

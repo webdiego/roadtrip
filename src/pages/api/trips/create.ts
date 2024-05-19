@@ -16,7 +16,7 @@ export default async function handler(
     return;
   }
 
-  const { name, description, budget, currency, status } = req.body;
+  const { name, description, budget, currency, departure } = req.body;
 
   const trip = await db
     .insert(TripTable)
@@ -26,7 +26,7 @@ export default async function handler(
       userId,
       budget,
       currency,
-      status,
+      departure,
     })
     .returning();
 

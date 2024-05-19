@@ -1,4 +1,5 @@
 import { relations, sql } from "drizzle-orm";
+import { boolean } from "drizzle-orm/mysql-core";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const TripTable = sqliteTable("trip", {
@@ -9,7 +10,9 @@ export const TripTable = sqliteTable("trip", {
   budget: integer("budget").default(0),
   amount_used: integer("amount_used").default(0),
   currency: text("currency").default("USD"),
-  status: text("status").default("active"),
+  departure: integer("departure", { mode: "number" }).default(
+    sql`(unixepoch())`
+  ),
   createdAt: integer("timestamp", { mode: "number" })
     .notNull()
     .default(sql`(unixepoch())`),

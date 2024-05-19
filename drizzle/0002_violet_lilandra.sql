@@ -1,0 +1,1 @@
+ALTER TABLE `trip` ADD `departure` integer DEFAULT (unixepoch());

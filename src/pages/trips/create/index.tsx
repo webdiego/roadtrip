@@ -18,6 +18,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { format } from "date-fns";
+
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
 import * as z from "zod";
 
 const schema = z.object({
@@ -28,10 +39,11 @@ const schema = z.object({
     .string()
     .min(1, { message: "Required" })
     .max(3, { message: "Max 3 characters" }),
-  status: z.boolean().default(false),
+  departure: z.date().min(new Date("1900-01-01")).optional(),
 });
 
 export default function CreateTrip() {
+  const [date, setDate] = React.useState<Date>();
   const router = useRouter();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -44,7 +56,7 @@ export default function CreateTrip() {
       description: "",
       budget: 0,
       currency: "",
-      status: false,
+      departure: undefined,
     },
   });
 
@@ -78,7 +90,7 @@ export default function CreateTrip() {
       description: values.description,
       budget: values.budget,
       currency: values.currency,
-      status: values.status,
+      departure: values.departure ? format(values.departure, "t") : undefined,
     });
   }
 
@@ -168,26 +180,46 @@ export default function CreateTrip() {
                   )}
                 />
               </div>
+
               <FormField
                 control={form.control}
-                name="status"
+                name="departure"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Status</FormLabel>
-                    <FormControl className="flex items-center">
-                      <div className="flex items-center">
-                        <p className="text-sm mr-2 text-gray-800">
-                          Not on trip
-                        </p>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Departure</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-[240px] pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          // disabled={(date) =>
+                          //   date > new Date() || date < new Date("1900-01-01")
+                          // }
+                          initialFocus
                         />
-                        <p className="text-sm ml-2">On trip</p>
-                      </div>
-                    </FormControl>
+                      </PopoverContent>
+                    </Popover>
                     <FormDescription>
-                      Is this trip already started?
+                      Your date of birth is used to calculate your age.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
