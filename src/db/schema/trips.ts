@@ -16,7 +16,10 @@ export const TripTable = sqliteTable("trip", {
 });
 
 export const usersRelations = relations(TripTable, ({ one }) => ({
-  expenses: one(ExpensesTable),
+  expenses: one(ExpensesTable, {
+    fields: [TripTable.id],
+    references: [ExpensesTable.tripId],
+  }),
 }));
 
 export const ExpensesTable = sqliteTable("expenses", {
@@ -39,5 +42,13 @@ export const ExpensesTable = sqliteTable("expenses", {
     .notNull()
     .default(sql`(unixepoch())`),
 });
-export type InsertHTrip = typeof TripTable.$inferInsert;
-export type SelectHaTrip = typeof TripTable.$inferSelect;
+
+export const expensesRelations = relations(ExpensesTable, ({ one }) => ({
+  trip: one(TripTable, {
+    fields: [ExpensesTable.tripId],
+    references: [TripTable.id],
+  }),
+}));
+
+export type InsertTrip = typeof TripTable.$inferInsert;
+export type SelectTrip = typeof TripTable.$inferSelect;
