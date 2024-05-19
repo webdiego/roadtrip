@@ -10,9 +10,7 @@ export const TripTable = sqliteTable("trip", {
   budget: integer("budget").default(0),
   amount_used: integer("amount_used").default(0),
   currency: text("currency").default("USD"),
-  departure: integer("departure", { mode: "number" }).default(
-    sql`(unixepoch())`
-  ),
+  departure: integer("departure", { mode: "number" }),
   createdAt: integer("timestamp", { mode: "number" })
     .notNull()
     .default(sql`(unixepoch())`),
