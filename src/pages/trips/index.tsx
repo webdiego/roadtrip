@@ -16,7 +16,6 @@ export default function Index() {
   });
 
   if (isLoading) return <LoadingSkeleton />;
-  console.log(data);
   return (
     <div className="px-4 py-10 w-full">
       <div className="flex items-center justify-between w-full ">

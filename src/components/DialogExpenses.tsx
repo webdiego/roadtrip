@@ -80,8 +80,6 @@ export default function DialogExpenses({
       return axios.post("/api/expenses/create", expense);
     },
     onSuccess: (data) => {
-      console.log(data);
-
       queryClient.invalidateQueries({ queryKey: ["expense"] });
       toast({
         title: "Expense added",
@@ -92,7 +90,6 @@ export default function DialogExpenses({
   });
 
   function onSubmit(values: z.infer<typeof schema>) {
-    console.log(values);
     mutate({
       tripId,
       type: values.type,

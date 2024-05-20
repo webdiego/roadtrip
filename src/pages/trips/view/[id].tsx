@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Label } from "@radix-ui/react-label";
-import { Expenses, columns } from "@/components/Table/columns";
+import { columns } from "@/components/Table/columns";
 import { ExpensesTable } from "@/components/Table/ExpensesTable";
 import { Button } from "@/components/ui/button";
 import DialogExpenses from "@/components/DialogExpenses";
@@ -13,7 +13,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
 
   // Query
   const { isLoading, data, isError, error } = useQuery({
-    queryKey: ["trip"],
+    queryKey: ["tripId"],
     queryFn: async () => {
       return axios
         .get(`/api/trips/get-trip/?tripId=${tripId}`)
@@ -113,7 +113,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
           Add expenses to your trip. You can add as many expenses as you want.
         </p>
         <div className="mt-4">
-          <ExpensesTable columns={columns} data={expenses} />
+          <ExpensesTable data={expenses} />
         </div>
       </div>
       <DialogExpenses

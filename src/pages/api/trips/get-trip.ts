@@ -29,24 +29,17 @@ export default async function handler(
   const trip =
     (await db.select().from(TripTable).where(eq(TripTable.id, +tripId))) || [];
 
-  console.log(trip);
   if (trip.length === 0) {
     console.log("Trip not found");
     res.status(404).json({ message: "Trip not found" });
     return;
   }
 
-  const expenses = (
+  const expenses =
     (await db
       .select()
       .from(ExpensesTable)
-      .where(eq(ExpensesTable.tripId, +tripId))) || []
-  ).map((expense) => ({
-    id: expense.id,
-    type: expense.type,
-    description: expense.description,
-    amount: expense.amount,
-    date_issued: expense.date_issued,
-  }));
+      .where(eq(ExpensesTable.tripId, +tripId))) || [];
+
   res.status(200).json({ trip, expenses });
 }

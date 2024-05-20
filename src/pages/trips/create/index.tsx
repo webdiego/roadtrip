@@ -69,7 +69,8 @@ export default function CreateTrip() {
     onSuccess: (data) => {
       console.log(data);
 
-      queryClient.invalidateQueries({ queryKey: ["trips"] });
+      queryClient.invalidateQueries({ queryKey: ["expenses"] });
+      queryClient.invalidateQueries({ queryKey: ["trip"] });
       toast({
         title: "Trip created",
         description: "Ready to go!",

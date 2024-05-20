@@ -1,5 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { typeSelect } from "@/lib/typeSelect";
+import { TrashIcon } from "lucide-react";
+import { Button } from "../ui/button";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -65,6 +67,23 @@ export const columns: ColumnDef<Expenses>[] = [
             year: "numeric",
           })}
         </div>
+      );
+    },
+  },
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }) => {
+      return (
+        <Button
+          size="icon"
+          variant="ghost"
+          onClick={() => {
+            console.log("delete", row.id);
+          }}
+        >
+          <TrashIcon className="h-4 w-4" />
+        </Button>
       );
     },
   },

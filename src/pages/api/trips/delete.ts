@@ -16,7 +16,7 @@ export default async function handler(
     return;
   }
 
-  const { tripId } = req.body;
+  const { tripId } = req.body as { tripId: number };
 
   const tripDeleted = await db
     .delete(TripTable)
@@ -24,7 +24,7 @@ export default async function handler(
     .returning();
 
   if (tripDeleted.length === 0) {
-    res.status(404).json({ message: "Trip not found" });
+    res.status(404).json({ message: "Expense not found" });
     return;
   }
 
