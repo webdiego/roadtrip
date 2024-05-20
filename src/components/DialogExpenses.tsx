@@ -80,12 +80,18 @@ export default function DialogExpenses({
       return axios.post("/api/expenses/create", expense);
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["expense"] });
+      queryClient.invalidateQueries({ queryKey: ["tripId"] });
       toast({
         title: "Expense added",
         description: "Expense added successfully",
         duration: 1500,
       });
+      setTimeout(() => {
+        if (form.formState.isSubmitSuccessful) {
+          form.reset();
+        }
+        setDialogOpen(false);
+      }, 1700);
     },
   });
 
@@ -100,6 +106,12 @@ export default function DialogExpenses({
         : undefined,
     });
   }
+
+  // React.useEffect(() => {
+  //   if (form.formState.isSubmitSuccessful) {
+  //     form.reset();
+  //   }
+  // }, [form.formState, form.reset]);
 
   return (
     <Dialog
@@ -245,7 +257,7 @@ export default function DialogExpenses({
                   Close
                 </Button>
                 <Button type="submit" size={"sm"} disabled={isPending}>
-                  Create Trip
+                  Add expense
                 </Button>
               </div>
             </form>
