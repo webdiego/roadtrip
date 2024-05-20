@@ -5,8 +5,11 @@ import { Label } from "@radix-ui/react-label";
 import { Expenses, columns } from "@/components/Table/columns";
 import { ExpensesTable } from "@/components/Table/ExpensesTable";
 import { Button } from "@/components/ui/button";
+import DialogExpenses from "@/components/DialogExpenses";
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 export default function ViewTrip({ tripId }: { tripId: number }) {
+  const [isOpen, setIsOpen] = React.useState(false);
   function getData() {
     return [
       {
@@ -35,7 +38,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
     },
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <LoadingSkeleton />;
 
   if (isError) return <div>Error: {error.message}</div>;
 
@@ -118,7 +121,9 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
       <div className="w-full mt-10">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-bold ">Expenses</h2>
-          <Button size={"sm"}>Add expense</Button>
+          <Button size={"sm"} onClick={() => setIsOpen(true)}>
+            Add expense
+          </Button>
         </div>
         <p className="text-sm text-gray-500">
           Add expenses to your trip. You can add as many expenses as you want.
@@ -127,6 +132,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
           <ExpensesTable columns={columns} data={dataExpenses} />
         </div>
       </div>
+      <DialogExpenses dialogOpen={isOpen} setDialogOpen={setIsOpen} />
     </div>
   );
 }

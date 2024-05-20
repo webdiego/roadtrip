@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import CardTrip from "@/components/CardTrip";
 import Link from "next/link";
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 export default function Index() {
   // Query
   const { isLoading, data } = useQuery({
@@ -14,7 +15,7 @@ export default function Index() {
     },
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <LoadingSkeleton />;
   console.log(data);
   return (
     <div className="px-4 py-10 w-full">
