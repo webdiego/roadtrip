@@ -108,7 +108,7 @@ export default function CreateTrip() {
         <p className="text-sm text-gray-500">
           You can create a new trip by filling out the form below.
         </p>
-        <div className="border border-gray-200 rounded-lg p-4 shadow-sm flex flex-col mt-5 w-full sm:w-[600px]">
+        <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm flex flex-col mt-5 w-full sm:w-[600px]">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField

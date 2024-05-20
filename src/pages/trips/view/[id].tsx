@@ -50,7 +50,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
         </p>
       </div>
 
-      <div className="px-4 mr-auto border border-gray-200 rounded-lg p-4 w-full">
+      <div className="px-4 mr-auto border border-gray-200 dark:border-gray-700rounded-lg p-4 w-full">
         <div className="flex">
           <div className="w-1/2 mr-5">
             <dl className="grid gap-6 text-sm">
@@ -118,9 +118,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
       <div className="w-full mt-10">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-bold ">Expenses</h2>
-          <Button className="mt-4" size={"sm"}>
-            Add expense
-          </Button>
+          <Button size={"sm"}>Add expense</Button>
         </div>
         <p className="text-sm text-gray-500">
           Add expenses to your trip. You can add as many expenses as you want.

@@ -27,7 +27,7 @@ export default function Index() {
           <Link href={`/trips/create`}>Create Trip</Link>
         </Button>
       </div>
-      <div className="border-t my-4"></div>
+      <div className="border-t dark:border-t-gray-700 my-4"></div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mt-10">
         {data &&
           data?.trips.map((trip: TripType) => (
