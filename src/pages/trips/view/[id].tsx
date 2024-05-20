@@ -2,7 +2,29 @@ import React from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Label } from "@radix-ui/react-label";
+import { Expenses, columns } from "@/components/Table/columns";
+import { ExpensesTable } from "@/components/Table/ExpensesTable";
+import { Button } from "@/components/ui/button";
+
 export default function ViewTrip({ tripId }: { tripId: number }) {
+  function getData() {
+    return [
+      {
+        id: "728ed52f",
+        amount: 100,
+        type: "Food",
+        description: "Make a cup of coffee",
+        createdAt: "2023-01-01T00:00:00.000Z",
+      },
+      {
+        id: "728ed52f",
+        amount: 100,
+        type: "Other",
+        description: "Dive into the ocean",
+        createdAt: "2023-01-01T00:00:00.000Z",
+      },
+    ];
+  }
   // Query
   const { isLoading, data, isError, error } = useQuery({
     queryKey: ["trip"],
@@ -18,22 +40,96 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
   if (isError) return <div>Error: {error.message}</div>;
 
   let trip = data?.trip[0];
+  const dataExpenses = getData() as Expenses[];
   return (
-    <>
-      <div>
-        <h2 className="text-4xl font-bold py-4">{trip.name}</h2>
-        <div>
-          <Label className="text-sm text-gray-500">Description</Label>
-          <p>{trip.description}</p>
-        </div>
-        <div>
-          <Label className="text-sm text-gray-500">Budget</Label>
-          <p>
-            {trip.currency} {trip.budget}
-          </p>
+    <div className="mt-4 w-full">
+      <div className=" py-5">
+        <h1 className="text-2xl font-bold">Trip details</h1>
+        <p className="text-sm text-gray-500">
+          This is an overview of your trip. You can add expenses to your trip.
+        </p>
+      </div>
+
+      <div className="px-4 mr-auto border border-gray-200 rounded-lg p-4 w-full">
+        <div className="flex">
+          <div className="w-1/2 mr-5">
+            <dl className="grid gap-6 text-sm">
+              <div className="grid gap-1.5">
+                <dt className="font-medium">Name</dt>
+                <dd className="text-gray-500 dark:text-gray-400">
+                  {trip.name}
+                </dd>
+              </div>
+              <div className="grid gap-1.5">
+                <Label className="font-medium">Description</Label>
+                <dd className="text-gray-500">{trip.description}</dd>
+              </div>
+              <div className="grid grid-cols-2 gap-1.5 ">
+                <div className="grid mr-10">
+                  <dt className="font-medium">Budget</dt>
+                  <dd className="text-gray-500 dark:text-gray-400">
+                    {trip.currency} {trip.budget}
+                  </dd>
+                </div>
+                <div className="grid ">
+                  <dt className="font-medium">Budget used</dt>
+                  <dd className="text-gray-500 dark:text-gray-400">
+                    {trip.currency} {trip.budget_used}
+                  </dd>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-1.5 ">
+                <div className="grid mr-10">
+                  <dt className="font-medium">Date of departure</dt>
+                  <dd className="text-gray-500 dark:text-gray-400">
+                    {trip.start_trip
+                      ? new Date(+trip.start_trip * 1000).toLocaleString(
+                          "en-UK",
+                          {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          }
+                        )
+                      : "-"}
+                  </dd>
+                </div>
+
+                <div className="grid ">
+                  <dt className="font-medium">Date of arrival</dt>
+                  <dd className="text-gray-500 dark:text-gray-400">
+                    {trip.end_trip
+                      ? new Date(trip.end_trip).toLocaleString("en-UK", {
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        })
+                      : "-"}
+                  </dd>
+                </div>
+              </div>
+            </dl>
+          </div>
+          <div className="bg-blue-500 w-96 ml-auto rounded-md flex items-center justify-center">
+            <p className="text-white">Image of the trip</p>
+          </div>
         </div>
       </div>
-    </>
+      <div className="w-full mt-10">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-bold ">Expenses</h2>
+          <Button className="mt-4" size={"sm"}>
+            Add expense
+          </Button>
+        </div>
+        <p className="text-sm text-gray-500">
+          Add expenses to your trip. You can add as many expenses as you want.
+        </p>
+        <div className="mt-4">
+          <ExpensesTable columns={columns} data={dataExpenses} />
+        </div>
+      </div>
+    </div>
   );
 }
 

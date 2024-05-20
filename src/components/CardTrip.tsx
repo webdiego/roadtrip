@@ -24,10 +24,10 @@ export default function CardTrip({ trip }: { trip: TripType }) {
 
   let onTrip = currentlyOnTrip(trip.start_trip);
   return (
-    <div className="border border-gray-200 rounded-lg p-4 shadow-md w-full min-w-[320px] space-y-4 flex flex-col text-sm ">
-      <div className="border relative w-max px-2 pr-3 rounded-lg self-end justify-self-end -mb-5 ">
-        <div className="dot absolute -top-1 -right-1">
-          <span className="relative flex h-2 w-2 ">
+    <div className="border border-gray-200 rounded-lg p-4 shadow-sm w-full min-w-[320px] space-y-4 flex flex-col text-sm dark:bg-black">
+      <div className="border relative w-max px-2 pr-3 rounded-lg self-end justify-self-end -mb-5  ">
+        <div className="dot absolute -top-1 right-0">
+          <span className="relative flex h-2 w-2  ">
             <span
               className={`animate-ping absolute inline-flex h-full w-full rounded-full ${
                 onTrip ? "bg-green-300" : "bg-blue-300"
@@ -40,14 +40,13 @@ export default function CardTrip({ trip }: { trip: TripType }) {
             ></span>
           </span>
         </div>
-        <h3 className="text-xs font-medium text-gray-800">
+        <h3 className="text-xs font-medium text-gray-800 dark:text-white">
           {onTrip ? "On trip" : "Not on trip"}
         </h3>
       </div>
-
       <div>
-        <h3 className=" font-semibold text-gray-800">Name</h3>
-        <p className=" text-gray-700">{trip.name}</p>
+        <h3 className="font-semibold text-gray-800 dark:text-white">Name</h3>
+        <p className=" text-gray-700 dark:text-gray-300">{trip.name}</p>
       </div>
       <div>
         <h3 className=" font-semibold text-gray-800">Description</h3>
@@ -66,8 +65,7 @@ export default function CardTrip({ trip }: { trip: TripType }) {
         <div>
           <h3 className=" font-semibold text-gray-800">Amount used</h3>
           <p className=" text-gray-700">
-            {trip.currency}
-            {trip.amount_used}
+            {trip.amount_used ? `${trip.amount_used} ${trip.currency}` : "-"}
           </p>
         </div>
       </div>
