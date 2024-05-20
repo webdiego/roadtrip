@@ -44,7 +44,6 @@ const schema = z.object({
 });
 
 export default function CreateTrip() {
-  const [date, setDate] = React.useState<Date>();
   const router = useRouter();
   const { toast } = useToast();
   const queryClient = useQueryClient();
