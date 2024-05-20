@@ -1,7 +1,12 @@
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 
@@ -14,10 +19,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
-import { TrashIcon } from "lucide-react";
+import { ArrowUpDown, TrashIcon } from "lucide-react";
 import { typeSelect } from "@/lib/typeSelect";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { useState } from "react";
+import { Input } from "../ui/input";
 
 type Expenses = {
   id: string;
@@ -54,16 +61,15 @@ export function ExpensesTable<Expenses, TValue>({
   });
 
   const columns: ColumnDef<Expenses>[] = [
-    {
-      accessorKey: "id",
-      header: "Id",
-      cell: ({ row }) => {
-        return <div>{row.id}</div>;
-      },
-    },
+    // {
+    //   accessorKey: "id",
+    //   header: "Id",
+    //   cell: ({ row }) => {
+    //     return <div className="text-sm text-gray-400">#{row.id}</div>;
+    //   },
+    // },
     {
       accessorKey: "type",
-      header: "Type",
       cell: ({ row }) => {
         const typeValue = row.getValue("type") as string;
         const emoji = typeSelect.find(
@@ -71,37 +77,79 @@ export function ExpensesTable<Expenses, TValue>({
         )?.emoji;
         const type = typeSelect.find((item) => item.value === typeValue)?.label;
         return (
-          <div>
+          <div className="ml-2">
             {emoji} {type}
           </div>
+        );
+      },
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            size={"sm"}
+          >
+            Type
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
         );
       },
     },
     {
       accessorKey: "description",
-      header: "Description",
+      cell: ({ row }) => {
+        return <div className="ml-2">{row.getValue("description")}</div>;
+      },
+      header: ({ column }) => {
+        return (
+          <Button variant="ghost" size={"sm"}>
+            Description
+          </Button>
+        );
+      },
     },
     {
       accessorKey: "amount",
-      header: "Amount",
       cell: ({ row }) => {
         const amount = parseFloat(row.getValue("amount"));
         const formatted = new Intl.NumberFormat("en-US", {
           style: "currency",
           currency: "USD",
         }).format(amount);
-
-        return <div>{formatted}</div>;
+        return <div className="ml-2">{formatted}</div>;
+      },
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            size={"sm"}
+          >
+            Amount
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
       },
     },
     {
       accessorKey: "date_issued",
-      header: "Date of the expense",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            size={"sm"}
+          >
+            Date of the expense
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
       cell: ({ row }) => {
         const date_issued = new Date(row.getValue("date_issued"));
 
         return (
-          <div>
+          <div className="ml-2">
             {new Date(+date_issued * 1000).toLocaleString("en-UK", {
               month: "long",
               day: "numeric",
@@ -134,57 +182,103 @@ export function ExpensesTable<Expenses, TValue>({
       },
     },
   ];
-
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
     data,
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting,
+      columnFilters,
+    },
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
   });
 
   return (
-    <div className="rounded-md border w-full">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+    <>
+      <div className="flex items-center py-4">
+        <Input
+          placeholder="Filter type.."
+          value={(table.getColumn("type")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("type")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+      </div>
+      <div className="rounded-md border w-full">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  );
+                })}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          Previous
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          Next
+        </Button>
+      </div>
+    </>
   );
 }

@@ -112,7 +112,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
         <p className="text-sm text-gray-500">
           Add expenses to your trip. You can add as many expenses as you want.
         </p>
-        <div className="mt-4">
+        <div className="pt-4 pb-10 w-full">
           <ExpensesTable data={expenses} />
         </div>
       </div>
