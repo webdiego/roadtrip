@@ -34,7 +34,7 @@ import * as z from "zod";
 const schema = z.object({
   name: z.string().min(1, { message: "Required" }),
   description: z.string().min(1, { message: "Required" }),
-  budget: z.coerce.number().min(1, { message: "Required" }),
+  budget: z.coerce.number().nonnegative().min(1, { message: "Required" }),
   currency: z
     .string()
     .min(1, { message: "Required" })
@@ -73,8 +73,8 @@ export default function CreateTrip() {
       queryClient.invalidateQueries({ queryKey: ["trips"] });
       toast({
         title: "Trip created",
-        description: "This is a test trip query",
-        duration: 2000,
+        description: "Ready to go!",
+        duration: 1500,
       });
       setTimeout(() => {
         router.push("/trips");
@@ -103,7 +103,7 @@ export default function CreateTrip() {
 
   return (
     <>
-      <div className="py-10">
+      <div className="py-10 w-full">
         <h1 className="text-2xl font-bold">Create a new trip</h1>
         <p className="text-sm text-gray-500">
           You can create a new trip by filling out the form below.
@@ -157,6 +157,7 @@ export default function CreateTrip() {
                         <Input
                           min={0}
                           type="number"
+                          step=".01"
                           placeholder="0"
                           {...field}
                         />
@@ -259,16 +260,30 @@ export default function CreateTrip() {
                           />
                         </PopoverContent>
                       </Popover>
-                      <FormDescription>
-                        You can leave this field empty if you don&apos;t want to
-                        set an end trip, you can set later on.
-                      </FormDescription>
+                      <FormDescription>You can set later on.</FormDescription>
 
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
+              {/* <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Image of the trip</FormLabel>
+                    <FormControl>
+                      <Input id="picture" type="file" />
+                    </FormControl>
+                    <FormDescription>
+                      Upload a picture of your trip. This will be used as a
+                      thumbnail.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              /> */}
               <Button
                 type="submit"
                 className="mt-4"
