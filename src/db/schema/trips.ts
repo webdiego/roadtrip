@@ -39,7 +39,8 @@ export const ExpensesTable = sqliteTable("expenses", {
     ],
   }),
   description: text("description"),
-  amount: integer("amount").notNull(),
+  amount: integer("amount").default(0).notNull(),
+  date_issued: integer("date_issued", { mode: "number" }).notNull(),
   createdAt: integer("timestamp", { mode: "number" })
     .notNull()
     .default(sql`(unixepoch())`),

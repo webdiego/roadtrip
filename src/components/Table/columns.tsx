@@ -1,6 +1,5 @@
-"use client";
-
 import { ColumnDef } from "@tanstack/react-table";
+import { typeSelect } from "@/lib/typeSelect";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -23,6 +22,16 @@ export const columns: ColumnDef<Expenses>[] = [
   {
     accessorKey: "type",
     header: "Type",
+    cell: ({ row }) => {
+      const typeValue = row.getValue("type") as string;
+      const emoji = typeSelect.find((item) => item.value === typeValue)?.emoji;
+      const type = typeSelect.find((item) => item.value === typeValue)?.label;
+      return (
+        <div>
+          {emoji} {type}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "description",
@@ -43,13 +52,14 @@ export const columns: ColumnDef<Expenses>[] = [
     },
   },
   {
-    accessorKey: "createdAt",
-    header: "Created At",
+    accessorKey: "date_issued",
+    header: "Date of the expense",
     cell: ({ row }) => {
-      const createdAt = new Date(row.getValue("createdAt"));
+      const date_issued = new Date(row.getValue("date_issued"));
+
       return (
-        <div className="">
-          {createdAt.toLocaleString("en-UK", {
+        <div>
+          {new Date(+date_issued * 1000).toLocaleString("en-UK", {
             month: "long",
             day: "numeric",
             year: "numeric",

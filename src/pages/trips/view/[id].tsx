@@ -10,24 +10,7 @@ import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 export default function ViewTrip({ tripId }: { tripId: number }) {
   const [isOpen, setIsOpen] = React.useState(false);
-  function getData() {
-    return [
-      {
-        id: "728ed52f",
-        amount: 100,
-        type: "Food",
-        description: "Make a cup of coffee",
-        createdAt: "2023-01-01T00:00:00.000Z",
-      },
-      {
-        id: "728ed52f",
-        amount: 100,
-        type: "Other",
-        description: "Dive into the ocean",
-        createdAt: "2023-01-01T00:00:00.000Z",
-      },
-    ];
-  }
+
   // Query
   const { isLoading, data, isError, error } = useQuery({
     queryKey: ["trip"],
@@ -43,7 +26,8 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
   if (isError) return <div>Error: {error.message}</div>;
 
   let trip = data?.trip[0];
-  const dataExpenses = getData() as Expenses[];
+  let expenses = data?.expenses;
+  console.log(expenses);
   return (
     <div className="mt-4 w-full">
       <div className=" py-5">
@@ -129,10 +113,14 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
           Add expenses to your trip. You can add as many expenses as you want.
         </p>
         <div className="mt-4">
-          <ExpensesTable columns={columns} data={dataExpenses} />
+          <ExpensesTable columns={columns} data={expenses} />
         </div>
       </div>
-      <DialogExpenses dialogOpen={isOpen} setDialogOpen={setIsOpen} />
+      <DialogExpenses
+        dialogOpen={isOpen}
+        setDialogOpen={setIsOpen}
+        tripId={trip.id}
+      />
     </div>
   );
 }

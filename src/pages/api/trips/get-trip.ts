@@ -35,11 +35,18 @@ export default async function handler(
     res.status(404).json({ message: "Trip not found" });
     return;
   }
-  const expenses =
+
+  const expenses = (
     (await db
       .select()
       .from(ExpensesTable)
-      .where(eq(ExpensesTable.tripId, +tripId))) || [];
-
+      .where(eq(ExpensesTable.tripId, +tripId))) || []
+  ).map((expense) => ({
+    id: expense.id,
+    type: expense.type,
+    description: expense.description,
+    amount: expense.amount,
+    date_issued: expense.date_issued,
+  }));
   res.status(200).json({ trip, expenses });
 }

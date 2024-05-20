@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/db";
 import { ExpensesTable } from "@/db/schema/trips";
 import { getAuth } from "@clerk/nextjs/server";
+import { eq } from "drizzle-orm";
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,17 +17,15 @@ export default async function handler(
     return;
   }
 
-  const { tripId, type, description, amount, date_issued } = req.body;
+  const { tripId } = req.body;
 
-  const expenseAdded = await db.insert(ExpensesTable).values({
-    tripId,
-    type,
-    description,
-    amount,
-    date_issued,
-  });
+  const expenses = await db
+    .select()
+    .from(ExpensesTable)
+    .where(eq(ExpensesTable.tripId, tripId));
+  // and(eq(ExpensesTable.tripId, tripId), eq(ExpensesTable.userId, userId))
 
-  console.log(expenseAdded);
+  console.log(expenses);
 
-  res.status(200).json({ expenseAdded });
+  res.status(200).json({ expenses });
 }
