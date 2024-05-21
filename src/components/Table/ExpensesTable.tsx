@@ -59,7 +59,10 @@ export function ExpensesTable<Expenses, TValue>({
       queryClient.invalidateQueries({ queryKey: ["tripId"] });
     },
   });
-
+  const [pagination, setPagination] = useState({
+    pageIndex: 0, //initial page index
+    pageSize: 10, //default page size
+  });
   const columns: ColumnDef<Expenses>[] = [
     // {
     //   accessorKey: "id",
@@ -191,10 +194,18 @@ export function ExpensesTable<Expenses, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    onPaginationChange: setPagination,
     state: {
       sorting,
       columnFilters,
+      pagination,
     },
+    // initialState: {
+    //   pagination: {
+    //     pageIndex: 1, //custom initial page index
+    //     pageSize: 1, //custom default page size
+    //   },
+    // },
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
   });
@@ -203,7 +214,7 @@ export function ExpensesTable<Expenses, TValue>({
     <>
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter type.."
+          placeholder="Filter by type.."
           value={(table.getColumn("type")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("type")?.setFilterValue(event.target.value)
