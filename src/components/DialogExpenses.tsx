@@ -48,7 +48,15 @@ import { Textarea } from "./ui/textarea";
 import { typeSelect } from "@/lib/typeSelect";
 
 const schema = z.object({
-  type: z.enum(["food", "petrol", "transportation", "lodging", "pleasure"]),
+  type: z.enum([
+    "food",
+    "petrol",
+    "transportation",
+    "lodging",
+    "pleasure",
+    "sport",
+    "other",
+  ]),
   description: z.string().min(1, { message: "Required" }),
   amount: z.coerce.number().nonnegative().min(1, { message: "Required" }),
   date_issued: z.date().min(new Date("1900-01-01")),
@@ -252,6 +260,7 @@ export default function DialogExpenses({
                 <Button
                   type="button"
                   variant="secondary"
+                  size={"sm"}
                   onClick={() => setDialogOpen(false)}
                 >
                   Close

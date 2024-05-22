@@ -45,62 +45,67 @@ export default function CardTrip({ trip }: { trip: TripType }) {
         </h3>
       </div>
       <div>
-        <h3 className="font-semibold text-gray-800 dark:text-white">Name</h3>
-        <p className="text-gray-500 dark:text-gray-400">{trip.name}</p>
-      </div>
-      <div>
-        <h3 className="font-semibold text-gray-800 dark:text-white">
-          Description
-        </h3>
-        <p className="text-gray-500 dark:text-gray-400">
-          {trip.description ? trip.description : "No description"}
-        </p>
-      </div>
-      <div className="flex items-center space-x-4">
-        <div>
-          <h3 className="font-semibold text-gray-800 dark:text-white">
-            Budget
-          </h3>
-          <p className="text-gray-500 dark:text-gray-400">
-            {trip.currency}
-            {trip.budget}
-          </p>
+        <div className="bg-blue-500 mt-4 w-full h-28 ml-auto rounded-md flex items-center justify-center">
+          <p className="text-white">Image of the trip</p>
+        </div>
+        <div className="mt-4">
+          <h3 className="font-semibold text-gray-800 dark:text-white">Name</h3>
+          <p className="text-gray-500 dark:text-gray-400">{trip.name}</p>
         </div>
         <div>
           <h3 className="font-semibold text-gray-800 dark:text-white">
-            Amount used
+            Description
           </h3>
           <p className="text-gray-500 dark:text-gray-400">
-            {trip.amount_used ? `${trip.amount_used} ${trip.currency}` : "-"}
+            {trip.description ? trip.description : "No description"}
           </p>
         </div>
-      </div>
-
-      <div className="flex items-center justify-end w-full space-x-4 border-t border-gray-200 dark:border-gray-700 pt-4">
-        <Button
-          asChild
-          size={"sm"}
-          className="w-full"
-          variant={"destructive"}
-          onClick={() => setIsOpen(true)}
-        >
+        <div className="flex items-center space-x-4">
           <div>
-            <Trash2 className="w-4 mr-2" />
-            Delete
+            <h3 className="font-semibold text-gray-800 dark:text-white">
+              Budget
+            </h3>
+            <p className="text-gray-500 dark:text-gray-400">
+              {trip.currency}
+              {trip.budget}
+            </p>
           </div>
-        </Button>
-        <Button asChild size={"sm"} className="w-full" variant={"edit"}>
-          <Link href={`/trips/edit/${trip.id}`}>
-            <Bolt className="w-4 mr-2" />
-            Edit
-          </Link>
-        </Button>
-        <Button asChild size={"sm"} className="w-full">
-          <Link href={`/trips/view/${trip.id}`}>
-            <Eye className="w-4 mr-2" />
-            View
-          </Link>
-        </Button>
+          <div>
+            <h3 className="font-semibold text-gray-800 dark:text-white">
+              Amount used
+            </h3>
+            <p className="text-gray-500 dark:text-gray-400">
+              {trip.amount_used ? `${trip.currency}${trip.amount_used}` : "-"}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-end w-full space-x-4 border-t border-gray-200 dark:border-gray-700 pt-4">
+          <Button
+            asChild
+            size={"sm"}
+            className="w-full"
+            variant={"destructive"}
+            onClick={() => setIsOpen(true)}
+          >
+            <div>
+              <Trash2 className="w-4 mr-2" />
+              Delete
+            </div>
+          </Button>
+          <Button asChild size={"sm"} className="w-full" variant={"edit"}>
+            <Link href={`/trips/edit/${trip.id}`}>
+              <Bolt className="w-4 mr-2" />
+              Edit
+            </Link>
+          </Button>
+          <Button asChild size={"sm"} className="w-full">
+            <Link href={`/trips/view/${trip.id}`}>
+              <Eye className="w-4 mr-2" />
+              View
+            </Link>
+          </Button>
+        </div>
       </div>
       <DialogDelete
         dialogOpen={isOpen}

@@ -27,7 +27,6 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
 
   let trip = data?.trip[0];
   let expenses = data?.expenses;
-  console.log(expenses);
   return (
     <div className="mt-4 w-full">
       <div className=" py-5">
@@ -38,12 +37,12 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
       </div>
 
       <div className="px-4 mr-auto border border-gray-200 dark:border-gray-700rounded-lg p-4 w-full">
-        <div className="flex">
-          <div className="w-1/2 mr-5">
+        <div className="flex flex-col md:flex-row">
+          <div className="w-full md:w-1/2 mr-5">
             <dl className="grid gap-6 text-sm">
               <div className="grid gap-1.5">
                 <dt className="font-medium">Name</dt>
-                <dd className="text-gray-500 dark:text-gray-400">
+                <dd id="name-trip" className="text-gray-500 dark:text-gray-400">
                   {trip.name}
                 </dd>
               </div>
@@ -59,9 +58,10 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
                   </dd>
                 </div>
                 <div className="grid ">
-                  <dt className="font-medium">Budget used</dt>
+                  <dt className="font-medium">Amount used</dt>
                   <dd className="text-gray-500 dark:text-gray-400">
-                    {trip.currency} {trip.budget_used}
+                    {trip.currency}
+                    {trip.amount_used ?? "-"}
                   </dd>
                 </div>
               </div>
@@ -97,7 +97,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
               </div>
             </dl>
           </div>
-          <div className="bg-blue-500 w-96 ml-auto rounded-md flex items-center justify-center">
+          <div className="bg-blue-500 mt-10 md:mt-0 w-full md:w-96 h-72 ml-auto rounded-md flex items-center justify-center">
             <p className="text-white">Image of the trip</p>
           </div>
         </div>
