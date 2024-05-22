@@ -42,10 +42,10 @@ export const ExpensesTable = sqliteTable("expenses", {
     .notNull()
     .default(sql`(unixepoch())`),
 });
-
 export const expensesRelations = relations(ExpensesTable, ({ one }) => ({
   trip: one(TripTable),
 }));
-
+export type InsertExpense = typeof ExpensesTable.$inferInsert;
+export type SelectExpense = typeof ExpensesTable.$inferSelect;
 export type InsertTrip = typeof TripTable.$inferInsert;
 export type SelectTrip = typeof TripTable.$inferSelect;

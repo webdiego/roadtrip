@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* bg-[#131316] */
 body {
-  @apply bg-white dark:bg-black;
+  @apply bg-white dark:border-slate-800 dark:bg-slate-950;
 }
