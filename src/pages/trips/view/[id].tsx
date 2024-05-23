@@ -90,11 +90,14 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
                   <dt className="font-medium">Date of arrival</dt>
                   <dd className="text-gray-500 dark:text-gray-400">
                     {trip.end_trip
-                      ? new Date(trip.end_trip).toLocaleString("en-UK", {
-                          month: "long",
-                          day: "numeric",
-                          year: "numeric",
-                        })
+                      ? new Date(+trip.end_trip * 1000).toLocaleString(
+                          "en-UK",
+                          {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          }
+                        )
                       : "-"}
                   </dd>
                 </div>
