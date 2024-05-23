@@ -27,6 +27,10 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
 
   let trip = data?.trip[0];
   let expenses = data?.expenses;
+
+  const amountUsed =
+    expenses.reduce((sum: number, expense: any) => sum + expense?.amount, 0) ||
+    null;
   return (
     <div className="mt-4 w-full">
       <div className=" py-5">
@@ -61,7 +65,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
                   <dt className="font-medium">Amount used</dt>
                   <dd className="text-gray-500 dark:text-gray-400">
                     {trip.currency}
-                    {trip.amount_used ?? "-"}
+                    {amountUsed ?? "-"}
                   </dd>
                 </div>
               </div>

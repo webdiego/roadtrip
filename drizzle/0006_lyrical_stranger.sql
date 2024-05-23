@@ -1,0 +1,1 @@
+ALTER TABLE `trip` DROP COLUMN `amount_used`;

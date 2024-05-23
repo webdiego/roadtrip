@@ -52,32 +52,13 @@ export default function CardTrip({ trip }: { trip: TripType }) {
           <h3 className="font-semibold text-gray-800 dark:text-white">Name</h3>
           <p className="text-gray-500 dark:text-gray-400">{trip.name}</p>
         </div>
-        <div>
+        <div className="mt-2 mb-4">
           <h3 className="font-semibold text-gray-800 dark:text-white">
             Description
           </h3>
           <p className="text-gray-500 dark:text-gray-400">
             {trip.description ? trip.description : "No description"}
           </p>
-        </div>
-        <div className="flex items-center space-x-4">
-          <div>
-            <h3 className="font-semibold text-gray-800 dark:text-white">
-              Budget
-            </h3>
-            <p className="text-gray-500 dark:text-gray-400">
-              {trip.currency}
-              {trip.budget}
-            </p>
-          </div>
-          <div>
-            <h3 className="font-semibold text-gray-800 dark:text-white">
-              Amount used
-            </h3>
-            <p className="text-gray-500 dark:text-gray-400">
-              {trip.amount_used ? `${trip.currency}${trip.amount_used}` : "-"}
-            </p>
-          </div>
         </div>
 
         <div className="flex items-center justify-end w-full space-x-4 border-t border-gray-200 dark:border-gray-700 pt-4">

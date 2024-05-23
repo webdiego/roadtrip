@@ -8,7 +8,6 @@ export const TripTable = sqliteTable("trip", {
   name: text("title").notNull(),
   description: text("description"),
   budget: integer("budget").default(0),
-  amount_used: integer("amount_used").default(0),
   currency: text("currency").default("USD"),
   start_trip: integer("start_trip", { mode: "number" }),
   end_trip: integer("end_trip", { mode: "number" }),
@@ -17,8 +16,13 @@ export const TripTable = sqliteTable("trip", {
     .default(sql`(unixepoch())`),
 });
 
-export const usersRelations = relations(TripTable, ({ many }) => ({
-  expenses: many(ExpensesTable),
+export type InsertTrip = typeof TripTable.$inferInsert;
+export type SelectTrip = typeof TripTable.$inferSelect;
+
+export const tripRelations = relations(TripTable, ({ many }) => ({
+  expenses: many(ExpensesTable, {
+    relationName: "collectionExpenses",
+  }),
 }));
 
 export const ExpensesTable = sqliteTable("expenses", {
@@ -43,9 +47,11 @@ export const ExpensesTable = sqliteTable("expenses", {
     .default(sql`(unixepoch())`),
 });
 export const expensesRelations = relations(ExpensesTable, ({ one }) => ({
-  trip: one(TripTable),
+  trip: one(TripTable, {
+    fields: [ExpensesTable.tripId],
+    references: [TripTable.id],
+  }),
 }));
+
 export type InsertExpense = typeof ExpensesTable.$inferInsert;
 export type SelectExpense = typeof ExpensesTable.$inferSelect;
-export type InsertTrip = typeof TripTable.$inferInsert;
-export type SelectTrip = typeof TripTable.$inferSelect;
