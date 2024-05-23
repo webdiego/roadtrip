@@ -71,13 +71,15 @@ export default function CreateTrip() {
 
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
       queryClient.invalidateQueries({ queryKey: ["trip"] });
+      let tripId = data.data.trip[0].id;
+
       toast({
         title: "Trip created",
         description: "Ready to go!",
         duration: 1500,
       });
       setTimeout(() => {
-        router.push("/trips");
+        router.push(`/trips/view/${tripId}`);
       }, 2000);
     },
   });
