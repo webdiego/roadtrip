@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/router";
@@ -39,6 +38,7 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 
 import * as z from "zod";
+
 const backgroundSelect = [
   {
     name: "Sea",
@@ -79,7 +79,6 @@ export default function CreateTrip() {
   const router = useRouter();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [isFocused, setIsFocused] = useState(false);
   const [isPickerVisible, setIsPickerVisible] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const pickerRef = useRef<HTMLInputElement>(null); // 1. Define your form.
@@ -93,6 +92,7 @@ export default function CreateTrip() {
       start_trip: undefined,
       end_trip: undefined,
       emoji: "",
+      background: "",
     },
   });
 
@@ -124,16 +124,18 @@ export default function CreateTrip() {
 
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    // mutate({
-    //   name: values.name,
-    //   description: values.description,
-    //   budget: values.budget,
-    //   currency: values.currency,
-    //   start_trip: values.start_trip
-    //     ? format(values.start_trip, "t")
-    //     : undefined,
-    //   end_trip: values.end_trip ? format(values.end_trip, "t") : undefined,
-    // });
+    mutate({
+      name: values.name,
+      description: values.description,
+      budget: values.budget,
+      currency: values.currency,
+      start_trip: values.start_trip
+        ? format(values.start_trip, "t")
+        : undefined,
+      end_trip: values.end_trip ? format(values.end_trip, "t") : undefined,
+      emoji: values.emoji,
+      background: values.background,
+    });
   }
 
   if (isError) return <div>Error: {error.message}</div>;

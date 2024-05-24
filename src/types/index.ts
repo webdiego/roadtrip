@@ -8,4 +8,6 @@ export type TripType = {
   start_trip?: Date;
   end_trip?: Date;
   createdAt: Date;
+  emoji: string;
+  background: string;
 };

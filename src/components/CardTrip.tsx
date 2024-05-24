@@ -45,8 +45,16 @@ export default function CardTrip({ trip }: { trip: TripType }) {
         </h3>
       </div>
       <div>
-        <div className="bg-gradient-to-br from-blue-500 to-green-400 mt-4 w-full h-28 ml-auto rounded-md flex items-center justify-center">
-          <p className="text-white text-7xl">🏄</p>
+        <div
+          className={`${trip.background} mt-4 w-full h-28 ml-auto rounded-md flex items-center justify-center`}
+        >
+          <p className="text-white text-2xl -rotate-12 opacity-15">
+            {trip.emoji}
+          </p>
+          <p className="text-white text-6xl">{trip.emoji}</p>
+          <p className="text-white text-2xl rotate-12 opacity-15">
+            {trip.emoji}
+          </p>
         </div>
         <div className="mt-4">
           <h3 className="font-semibold text-gray-800 dark:text-white">Name</h3>
