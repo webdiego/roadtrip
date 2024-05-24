@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
-import data from "@emoji-mart/data";
+import emojiData from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import {
   Select,
@@ -60,6 +60,7 @@ export default function EditTrip({ tripId }: { tripId: number }) {
   const [isPickerVisible, setIsPickerVisible] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const pickerRef = useRef<HTMLInputElement>(null);
+  const [emojiState, setEmojiState] = useState("");
   // Query
   const { isLoading, data, isError, error } = useQuery({
     queryKey: ["tripId"],
@@ -109,11 +110,11 @@ export default function EditTrip({ tripId }: { tripId: number }) {
         ? format(values.start_trip, "t")
         : undefined,
       end_trip: values.end_trip ? format(values.end_trip, "t") : undefined,
-      emoji: values.emoji,
+      emoji: JSON.stringify(emojiState),
       background: values.background,
     });
   }
-
+  // let parseEmoji = JSON.parse(trip?.emoji)
   // 1. Define your form.
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -132,14 +133,18 @@ export default function EditTrip({ tripId }: { tripId: number }) {
   useEffect(() => {
     form.reset({
       ...trip,
+      emoji: JSON.parse(trip?.emoji).native,
       start_trip: new Date(+trip?.start_trip * 1000),
       end_trip: new Date(+trip?.end_trip * 1000),
     });
-  }, [trip]);
+    // form.setValue("emoji", emojiData.emojis[trip?.emoji].skins[0].native);
+  }, [trip, form]);
 
   const handleEmojiSelect = (emoji: any) => {
-    form.setValue("emoji", emoji.native); // Update the form field value with the selected emoji]
-    console.log(emoji);
+    setEmojiState(emoji);
+    //FOR SHOW IN THE INPUT
+    form.setValue("emoji", emoji.native);
+
     setIsPickerVisible(false);
   };
 
@@ -163,6 +168,7 @@ export default function EditTrip({ tripId }: { tripId: number }) {
 
   if (isLoading) return <LoadingSkeleton />;
   if (isError) return <div>Error: {error.message}</div>;
+
   return (
     <>
       <div className="py-10 w-full">
@@ -230,7 +236,7 @@ export default function EditTrip({ tripId }: { tripId: number }) {
                               ref={pickerRef}
                             >
                               <Picker
-                                data={data}
+                                data={emojiData}
                                 onEmojiSelect={handleEmojiSelect}
                                 navPosition="none"
                                 searchPosition="none"
@@ -256,7 +262,7 @@ export default function EditTrip({ tripId }: { tripId: number }) {
                       <FormLabel>Background color</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        defaultValue={trip?.background}
                       >
                         <FormControl>
                           <SelectTrigger>
@@ -265,7 +271,7 @@ export default function EditTrip({ tripId }: { tripId: number }) {
                         </FormControl>
                         <SelectContent>
                           {backgroundSelect.map((item: any) => (
-                            <SelectItem key={item.value} value={item.value}>
+                            <SelectItem key={item.value} value={item.name}>
                               <div className="flex justify-between items-center w-full">
                                 <p className="mr-2">{item.name}</p>
                                 <div

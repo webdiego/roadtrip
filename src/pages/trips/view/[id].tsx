@@ -7,6 +7,8 @@ import { ExpensesTable } from "@/components/Table/ExpensesTable";
 import { Button } from "@/components/ui/button";
 import DialogExpenses from "@/components/DialogExpenses";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
+import emojiData from "@emoji-mart/data";
+import { backgroundSelect } from "@/lib/backgroundSelect";
 
 export default function ViewTrip({ tripId }: { tripId: number }) {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -27,6 +29,8 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
 
   let trip = data?.trip[0];
   let expenses = data?.expenses;
+  let emojiParsed = JSON.parse(trip.emoji).native;
+  let bg = backgroundSelect.find((b) => b.name === trip.background)?.value;
 
   const amountUsed =
     expenses.reduce((sum: number, expense: any) => sum + expense?.amount, 0) ||
@@ -105,9 +109,9 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
             </dl>
           </div>
           <div
-            className={`${trip.background} mt-10 md:mt-0 w-full md:w-96 h-72 ml-auto rounded-md flex items-center justify-center`}
+            className={`${bg} mt-10 md:mt-0 w-full md:w-96 h-72 ml-auto rounded-md flex items-center justify-center`}
           >
-            <p className="text-white text-7xl">{trip.emoji}</p>
+            <p className="text-white text-7xl">{emojiParsed}</p>
           </div>
         </div>
       </div>

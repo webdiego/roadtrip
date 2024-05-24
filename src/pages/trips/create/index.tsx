@@ -102,24 +102,26 @@ export default function CreateTrip() {
 
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    mutate({
-      name: values.name,
-      description: values.description,
-      budget: values.budget,
-      currency: values.currency,
-      start_trip: values.start_trip
-        ? format(values.start_trip, "t")
-        : undefined,
-      end_trip: values.end_trip ? format(values.end_trip, "t") : undefined,
-      emoji: values.emoji,
-      background: values.background,
-    });
+    // mutate({
+    //   name: values.name,
+    //   description: values.description,
+    //   budget: values.budget,
+    //   currency: values.currency,
+    //   start_trip: values.start_trip
+    //     ? format(values.start_trip, "t")
+    //     : undefined,
+    //   end_trip: values.end_trip ? format(values.end_trip, "t") : undefined,
+    //   emoji: values.emoji,
+    //   background: values.background,
+    // });
   }
 
   if (isError) return <div>Error: {error.message}</div>;
   const handleEmojiSelect = (emoji: any) => {
-    form.setValue("emoji", emoji.native); // Update the form field value with the selected emoji]
+    // const emObject = data.find((d) => d.native === emoji.native);
+    console.log(data);
     console.log(emoji);
+    form.setValue("emoji", emoji.native); // Update the form field value with the selected emoji]
     setIsPickerVisible(false);
   };
   const handleClickOutside = (event: any) => {

@@ -7,7 +7,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { default as DialogDelete } from "@/components/Dialog";
 import axios from "axios";
 import { currentlyOnTrip } from "@/lib/utils";
-
+import EmojiBackground from "./EmojiBackground";
+import { backgroundSelect } from "@/lib/backgroundSelect";
 export default function CardTrip({ trip }: { trip: TripType }) {
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -23,6 +24,9 @@ export default function CardTrip({ trip }: { trip: TripType }) {
   });
 
   let onTrip = currentlyOnTrip(trip.start_trip);
+
+  let bg = backgroundSelect.find((b) => b.name === trip.background)?.value;
+  let emojiParsed = JSON.parse(trip.emoji).native;
   return (
     <div className="border border-gray-200 rounded-lg p-4 shadow-sm w-full min-w-[320px] space-y-4 flex flex-col text-sm dark:bg-gray-900/40 dark:border-gray-700">
       <div className="border dark:border-gray-700 relative w-max px-3 pr-3 rounded-lg self-end justify-self-end -mb-5  ">
@@ -46,15 +50,9 @@ export default function CardTrip({ trip }: { trip: TripType }) {
       </div>
       <div>
         <div
-          className={`${trip.background} mt-4 w-full h-28 ml-auto rounded-md flex items-center justify-center`}
+          className={`${bg} mt-4 w-full h-28 ml-auto rounded-md flex items-center justify-center`}
         >
-          <p className="text-white text-2xl -rotate-12 opacity-15">
-            {trip.emoji}
-          </p>
-          <p className="text-white text-6xl">{trip.emoji}</p>
-          <p className="text-white text-2xl rotate-12 opacity-15">
-            {trip.emoji}
-          </p>
+          <EmojiBackground emoji={emojiParsed} />
         </div>
         <div className="mt-4">
           <h3 className="font-semibold text-gray-800 dark:text-white">Name</h3>
