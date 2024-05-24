@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/router";
@@ -20,7 +19,15 @@ import {
 } from "@/components/ui/form";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
-
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -30,6 +37,28 @@ import {
 } from "@/components/ui/popover";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 import * as z from "zod";
+const backgroundSelect = [
+  {
+    name: "Sea",
+    value: "bg-gradient-to-br from-blue-400 to-green-400",
+  },
+  {
+    name: "Sun",
+    value: "bg-gradient-to-br from-orange-500 to-yellow-400",
+  },
+  {
+    name: "Forest",
+    value: "bg-gradient-to-br from-green-700 to-green-400",
+  },
+  {
+    name: "Sky",
+    value: "bg-gradient-to-br from-blue-400 to-sky-400",
+  },
+  {
+    name: "Earth",
+    value: "bg-gradient-to-br from-orange-400 to-red-400",
+  },
+];
 
 const schema = z.object({
   name: z.string().min(1, { message: "Required" }),
@@ -41,13 +70,17 @@ const schema = z.object({
     .max(3, { message: "Max 3 characters" }),
   start_trip: z.date().min(new Date("1900-01-01")).optional(),
   end_trip: z.date().min(new Date("1900-01-01")).optional(),
+  emoji: z.string().min(1, { message: "Required" }),
+  background: z.string().min(1, { message: "Required" }),
 });
 
 export default function EditTrip({ tripId }: { tripId: number }) {
   const router = useRouter();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-
+  const [isPickerVisible, setIsPickerVisible] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const pickerRef = useRef<HTMLInputElement>(null);
   // Query
   const { isLoading, data, isError, error } = useQuery({
     queryKey: ["tripId"],
@@ -85,7 +118,7 @@ export default function EditTrip({ tripId }: { tripId: number }) {
       }, 2000);
     },
   });
-
+  console.log("trip", trip);
   function onSubmit(values: z.infer<typeof schema>) {
     console.log(values);
 
@@ -101,6 +134,8 @@ export default function EditTrip({ tripId }: { tripId: number }) {
         ? format(values.start_trip, "t")
         : undefined,
       end_trip: values.end_trip ? format(values.end_trip, "t") : undefined,
+      emoji: values.emoji,
+      background: values.background,
     });
   }
 
@@ -114,12 +149,42 @@ export default function EditTrip({ tripId }: { tripId: number }) {
       currency: trip?.currency ?? "",
       start_trip: trip?.start_trip ?? undefined,
       end_trip: trip?.end_trip ?? undefined,
+      emoji: trip?.emoji ?? "",
+      background: trip?.background ?? "",
     },
   });
 
   useEffect(() => {
-    form.reset(trip);
+    form.reset({
+      ...trip,
+      start_trip: new Date(+trip?.start_trip * 1000),
+      end_trip: new Date(+trip?.end_trip * 1000),
+    });
   }, [trip]);
+
+  const handleEmojiSelect = (emoji: any) => {
+    form.setValue("emoji", emoji.native); // Update the form field value with the selected emoji]
+    console.log(emoji);
+    setIsPickerVisible(false);
+  };
+
+  const handleClickOutside = (event: any) => {
+    if (
+      inputRef.current &&
+      !inputRef.current.contains(event.target) &&
+      pickerRef.current &&
+      !pickerRef.current.contains(event.target)
+    ) {
+      setIsPickerVisible(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   if (isLoading) return <LoadingSkeleton />;
   if (isError) return <div>Error: {error.message}</div>;
@@ -168,6 +233,82 @@ export default function EditTrip({ tripId }: { tripId: number }) {
                   </FormItem>
                 )}
               />
+              <div className="grid grid-cols-1 sm:grid-cols-2 space-y-6 sm:space-y-0 sm:space-x-6">
+                <FormField
+                  control={form.control}
+                  name="emoji"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Emoji of trip</FormLabel>
+                      <FormControl>
+                        <div className="flex relative w-full ">
+                          <div ref={inputRef} className="w-full">
+                            <Input
+                              placeholder="🏄‍♂️"
+                              onFocus={() => setIsPickerVisible(true)}
+                              {...field}
+                            />
+                          </div>
+                          {isPickerVisible && (
+                            <div
+                              className="absolute w-full -top-1 right-2"
+                              ref={pickerRef}
+                            >
+                              <Picker
+                                data={data}
+                                onEmojiSelect={handleEmojiSelect}
+                                navPosition="none"
+                                searchPosition="none"
+                                previewPosition="none"
+                                perLine={7}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </FormControl>
+                      <FormDescription>
+                        Set the emoji for the trip!
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="background"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Background color</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Sea" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {backgroundSelect.map((item: any) => (
+                            <SelectItem key={item.value} value={item.value}>
+                              <div className="flex justify-between items-center w-full">
+                                <p className="mr-2">{item.name}</p>
+                                <div
+                                  className={`${item.value} h-4 w-4 rounded-full`}
+                                />
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormDescription>
+                        Select a color to represent your trip.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 space-y-6 sm:space-y-0 sm:space-x-6">
                 <FormField
                   control={form.control}
@@ -289,23 +430,7 @@ export default function EditTrip({ tripId }: { tripId: number }) {
                   )}
                 />
               </div>
-              {/* <FormField
-                control={form.control}
-                name="image"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Image of the trip</FormLabel>
-                    <FormControl>
-                      <Input id="picture" type="file" />
-                    </FormControl>
-                    <FormDescription>
-                      Upload a picture of your trip. This will be used as a
-                      thumbnail.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
+
               <Button
                 type="submit"
                 className="mt-4"

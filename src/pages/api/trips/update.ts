@@ -16,8 +16,17 @@ export default async function handler(
     return;
   }
 
-  const { id, name, description, budget, currency, start_trip, end_trip } =
-    req.body;
+  const {
+    id,
+    name,
+    description,
+    budget,
+    currency,
+    start_trip,
+    end_trip,
+    emoji,
+    background,
+  } = req.body;
 
   const tripUpdated = await db
     .update(TripTable)
@@ -29,6 +38,8 @@ export default async function handler(
       currency,
       start_trip,
       end_trip,
+      emoji,
+      background,
     })
     .where(eq(TripTable.id, id))
     .returning();
