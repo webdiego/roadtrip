@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 import {
   Form,
   FormControl,
@@ -28,6 +29,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 
 import * as z from "zod";
 
@@ -41,14 +44,17 @@ const schema = z.object({
     .max(3, { message: "Max 3 characters" }),
   start_trip: z.date().min(new Date("1900-01-01")).optional(),
   end_trip: z.date().min(new Date("1900-01-01")).optional(),
+  emoji: z.string().min(1, { message: "Required" }),
 });
 
 export default function CreateTrip() {
   const router = useRouter();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-
-  // 1. Define your form.
+  const [isFocused, setIsFocused] = useState(false);
+  const [isPickerVisible, setIsPickerVisible] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const pickerRef = useRef<HTMLInputElement>(null); // 1. Define your form.
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -58,6 +64,7 @@ export default function CreateTrip() {
       currency: "",
       start_trip: undefined,
       end_trip: undefined,
+      emoji: "",
     },
   });
 
@@ -89,20 +96,41 @@ export default function CreateTrip() {
 
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    mutate({
-      name: values.name,
-      description: values.description,
-      budget: values.budget,
-      currency: values.currency,
-      start_trip: values.start_trip
-        ? format(values.start_trip, "t")
-        : undefined,
-      end_trip: values.end_trip ? format(values.end_trip, "t") : undefined,
-    });
+    // mutate({
+    //   name: values.name,
+    //   description: values.description,
+    //   budget: values.budget,
+    //   currency: values.currency,
+    //   start_trip: values.start_trip
+    //     ? format(values.start_trip, "t")
+    //     : undefined,
+    //   end_trip: values.end_trip ? format(values.end_trip, "t") : undefined,
+    // });
   }
 
   if (isError) return <div>Error: {error.message}</div>;
+  const handleEmojiSelect = (emoji: any) => {
+    form.setValue("emoji", emoji.native); // Update the form field value with the selected emoji]
+    console.log(emoji);
+    setIsPickerVisible(false);
+  };
+  const handleClickOutside = (event: any) => {
+    if (
+      inputRef.current &&
+      !inputRef.current.contains(event.target) &&
+      pickerRef.current &&
+      !pickerRef.current.contains(event.target)
+    ) {
+      setIsPickerVisible(false);
+    }
+  };
 
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   return (
     <>
       <div className="py-10 w-full">
@@ -113,22 +141,60 @@ export default function CreateTrip() {
         <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm flex flex-col mt-5 w-full sm:w-[600px]">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Australia West Coast" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      Write a short name for your trip.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-1 sm:grid-cols-2 space-y-6 sm:space-y-0 sm:space-x-6">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Australia West Coast" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        Write a short name for your trip.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="emoji"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Emoji of trip</FormLabel>
+                      <FormControl>
+                        <div className="flex relative w">
+                          <div ref={inputRef}>
+                            <Input
+                              placeholder="🏄‍♂️"
+                              {...field}
+                              onFocus={() => setIsPickerVisible(true)}
+                            />
+                          </div>
+                          {isPickerVisible && (
+                            <div className="absolute right-0" ref={pickerRef}>
+                              <Picker
+                                data={data}
+                                onEmojiSelect={handleEmojiSelect}
+                                navPosition="none"
+                                searchPosition="none"
+                                previewPosition="none"
+                                perLine={7}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </FormControl>
+                      <FormDescription>
+                        Set the emoji for the trip!
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <FormField
                 control={form.control}
                 name="description"
@@ -269,23 +335,7 @@ export default function CreateTrip() {
                   )}
                 />
               </div>
-              {/* <FormField
-                control={form.control}
-                name="image"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Image of the trip</FormLabel>
-                    <FormControl>
-                      <Input id="picture" type="file" />
-                    </FormControl>
-                    <FormDescription>
-                      Upload a picture of your trip. This will be used as a
-                      thumbnail.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
+
               <Button
                 type="submit"
                 className="mt-4"
