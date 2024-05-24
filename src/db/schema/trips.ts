@@ -7,6 +7,8 @@ export const TripTable = sqliteTable("trip", {
   userId: text("user_id").notNull(),
   name: text("title").notNull(),
   description: text("description"),
+  emoji: text("emoji"),
+  background: text("background"),
   budget: integer("budget").default(0),
   currency: text("currency").default("USD"),
   start_trip: integer("start_trip", { mode: "number" }),

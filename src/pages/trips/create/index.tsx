@@ -9,7 +9,13 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/router";
-import dynamic from "next/dynamic";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Form,
   FormControl,
@@ -33,7 +39,28 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 
 import * as z from "zod";
-
+const backgroundSelect = [
+  {
+    name: "Sea",
+    value: "bg-gradient-to-br from-blue-400 to-green-400",
+  },
+  {
+    name: "Sun",
+    value: "bg-gradient-to-br from-orange-500 to-yellow-400",
+  },
+  {
+    name: "Forest",
+    value: "bg-gradient-to-br from-green-700 to-green-400",
+  },
+  {
+    name: "Sky",
+    value: "bg-gradient-to-br from-blue-400 to-sky-400",
+  },
+  {
+    name: "Earth",
+    value: "bg-gradient-to-br from-orange-400 to-red-400",
+  },
+];
 const schema = z.object({
   name: z.string().min(1, { message: "Required" }),
   description: z.string().min(1, { message: "Required" }),
@@ -45,6 +72,7 @@ const schema = z.object({
   start_trip: z.date().min(new Date("1900-01-01")).optional(),
   end_trip: z.date().min(new Date("1900-01-01")).optional(),
   emoji: z.string().min(1, { message: "Required" }),
+  background: z.string().min(1, { message: "Required" }),
 });
 
 export default function CreateTrip() {
@@ -141,60 +169,23 @@ export default function CreateTrip() {
         <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm flex flex-col mt-5 w-full sm:w-[600px]">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 space-y-6 sm:space-y-0 sm:space-x-6">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Australia West Coast" {...field} />
-                      </FormControl>
-                      <FormDescription>
-                        Write a short name for your trip.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="emoji"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Emoji of trip</FormLabel>
-                      <FormControl>
-                        <div className="flex relative w">
-                          <div ref={inputRef}>
-                            <Input
-                              placeholder="🏄‍♂️"
-                              {...field}
-                              onFocus={() => setIsPickerVisible(true)}
-                            />
-                          </div>
-                          {isPickerVisible && (
-                            <div className="absolute right-0" ref={pickerRef}>
-                              <Picker
-                                data={data}
-                                onEmojiSelect={handleEmojiSelect}
-                                navPosition="none"
-                                searchPosition="none"
-                                previewPosition="none"
-                                perLine={7}
-                              />
-                            </div>
-                          )}
-                        </div>
-                      </FormControl>
-                      <FormDescription>
-                        Set the emoji for the trip!
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Australia West Coast" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Write a short name for your trip.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="description"
@@ -214,6 +205,83 @@ export default function CreateTrip() {
                   </FormItem>
                 )}
               />
+              <div className="grid grid-cols-1 sm:grid-cols-2 space-y-6 sm:space-y-0 sm:space-x-6">
+                <FormField
+                  control={form.control}
+                  name="emoji"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Emoji of trip</FormLabel>
+                      <FormControl>
+                        <div className="flex relative w-full ">
+                          <div ref={inputRef}>
+                            <Input
+                              placeholder="🏄‍♂️"
+                              {...field}
+                              onFocus={() => setIsPickerVisible(true)}
+                              className="w-full"
+                            />
+                          </div>
+                          {isPickerVisible && (
+                            <div
+                              className="absolute w-full -top-1 right-2"
+                              ref={pickerRef}
+                            >
+                              <Picker
+                                data={data}
+                                onEmojiSelect={handleEmojiSelect}
+                                navPosition="none"
+                                searchPosition="none"
+                                previewPosition="none"
+                                perLine={7}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </FormControl>
+                      <FormDescription>
+                        Set the emoji for the trip!
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="background"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Background color</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a color to represent your trip" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {backgroundSelect.map((item: any) => (
+                            <SelectItem key={item.value} value={item.value}>
+                              <div className="flex justify-between items-center w-full">
+                                <p className="mr-2">{item.name}</p>
+                                <div
+                                  className={`${item.value} h-4 w-4 rounded-full`}
+                                />
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormDescription>
+                        Select a color to represent your trip.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 space-y-6 sm:space-y-0 sm:space-x-6">
                 <FormField
                   control={form.control}
