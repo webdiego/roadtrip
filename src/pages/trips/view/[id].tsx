@@ -104,8 +104,8 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
               </div>
             </dl>
           </div>
-          <div className="bg-blue-500 mt-10 md:mt-0 w-full md:w-96 h-72 ml-auto rounded-md flex items-center justify-center">
-            <p className="text-white">Image of the trip</p>
+          <div className="bg-gradient-to-br from-blue-500 to-green-400 mt-10 md:mt-0 w-full md:w-96 h-72 ml-auto rounded-md flex items-center justify-center">
+            <p className="text-white text-9xl">🏄</p>
           </div>
         </div>
       </div>
