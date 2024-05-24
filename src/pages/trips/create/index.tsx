@@ -214,12 +214,11 @@ export default function CreateTrip() {
                       <FormLabel>Emoji of trip</FormLabel>
                       <FormControl>
                         <div className="flex relative w-full ">
-                          <div ref={inputRef}>
+                          <div ref={inputRef} className="w-full">
                             <Input
                               placeholder="🏄‍♂️"
-                              {...field}
                               onFocus={() => setIsPickerVisible(true)}
-                              className="w-full"
+                              {...field}
                             />
                           </div>
                           {isPickerVisible && (
@@ -258,7 +257,7 @@ export default function CreateTrip() {
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select a color to represent your trip" />
+                            <SelectValue placeholder="Sea" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
