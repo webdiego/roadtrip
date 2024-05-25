@@ -59,7 +59,9 @@ export default function CreateTrip() {
   const queryClient = useQueryClient();
   const [isPickerVisible, setIsPickerVisible] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const pickerRef = useRef<HTMLInputElement>(null); // 1. Define your form.
+  const pickerRef = useRef<HTMLInputElement>(null);
+  const [emojiState, setEmojiState] = useState("");
+
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -102,25 +104,23 @@ export default function CreateTrip() {
 
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    // mutate({
-    //   name: values.name,
-    //   description: values.description,
-    //   budget: values.budget,
-    //   currency: values.currency,
-    //   start_trip: values.start_trip
-    //     ? format(values.start_trip, "t")
-    //     : undefined,
-    //   end_trip: values.end_trip ? format(values.end_trip, "t") : undefined,
-    //   emoji: values.emoji,
-    //   background: values.background,
-    // });
+    mutate({
+      name: values.name,
+      description: values.description,
+      budget: values.budget,
+      currency: values.currency,
+      start_trip: values.start_trip
+        ? format(values.start_trip, "t")
+        : undefined,
+      end_trip: values.end_trip ? format(values.end_trip, "t") : undefined,
+      emoji: JSON.stringify(emojiState),
+      background: values.background,
+    });
   }
 
   if (isError) return <div>Error: {error.message}</div>;
   const handleEmojiSelect = (emoji: any) => {
-    // const emObject = data.find((d) => d.native === emoji.native);
-    console.log(data);
-    console.log(emoji);
+    setEmojiState(emoji);
     form.setValue("emoji", emoji.native); // Update the form field value with the selected emoji]
     setIsPickerVisible(false);
   };
@@ -244,7 +244,7 @@ export default function CreateTrip() {
                         </FormControl>
                         <SelectContent>
                           {backgroundSelect.map((item: any) => (
-                            <SelectItem key={item.value} value={item.value}>
+                            <SelectItem key={item.value} value={item.name}>
                               <div className="flex justify-between items-center w-full">
                                 <p className="mr-2">{item.name}</p>
                                 <div
