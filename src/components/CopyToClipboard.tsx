@@ -25,7 +25,7 @@ export const CopyToClipboard = ({ text }: { text: string }) => {
       <Input
         readOnly
         value={text}
-        className="bg-slate-100 bg-gray-800/80 text-muted-foreground"
+        className="bg-slate-100 dark:bg-gray-800/80 text-muted-foreground"
       />
       <Button size="icon" variant={"outline"} onClick={() => copyToClipboard()}>
         {copied ? (

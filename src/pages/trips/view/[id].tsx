@@ -51,7 +51,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
         <Button
           onClick={() => setIsDialogShare(true)}
           size={"sm"}
-          className="absolute -top-2 right-0"
+          className="absolute -top-5 right-1"
         >
           <p>Share trip</p>
           <Share className="w-4 h-4 ml-2" />

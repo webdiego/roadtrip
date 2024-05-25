@@ -34,9 +34,9 @@ export default function DialogShare({
           <DialogTitle>Share your trip</DialogTitle>
           <DialogDescription>Share your trip with who want</DialogDescription>
         </DialogHeader>
-        <p className="text-xs text-gray-100 mt-2">Share via link</p>
+        <p className="text-xs dark:text-gray-100 mt-2">Share via link</p>
         <CopyToClipboard text="https://soundcloud.com/you/likes" />
-        <p className="text-xs text-gray-100">Share via social</p>
+        <p className="text-xs dark:text-gray-100">Share via social</p>
         <div className="flex space-x-3">
           <FacebookShareButton url={"https://soundcloud.com/you/likes"}>
             <div className="rounded-full">
