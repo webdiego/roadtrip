@@ -7,7 +7,6 @@ import { ExpensesTable } from "@/components/Table/ExpensesTable";
 import { Button } from "@/components/ui/button";
 import DialogExpenses from "@/components/DialogExpenses";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
-import emojiData from "@emoji-mart/data";
 import { backgroundSelect } from "@/lib/backgroundSelect";
 import { Share } from "lucide-react";
 import DialogShare from "@/components/DialogShare";
@@ -40,22 +39,20 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
   const amountRemain = trip.budget - amountUsed;
   return (
     <div className="mt-4 w-full">
-      <div className=" py-5">
-        <h1 className="text-2xl font-bold">Trip details</h1>
-        <p className="text-sm text-gray-500">
-          This is an overview of your trip. You can add expenses to your trip.
-        </p>
-      </div>
-
-      <div className="relative px-4 mr-auto border border-gray-200 dark:border-gray-700 rounded-lg p-4 w-full">
-        <Button
-          onClick={() => setIsDialogShare(true)}
-          size={"sm"}
-          className="absolute -top-5 right-1"
-        >
+      <div className="py-5 flex items-center justify-between">
+        <div className="pr-7">
+          <h1 className="text-2xl font-bold">Trip details</h1>
+          <p className="text-sm text-gray-500">
+            This is an overview of your trip. You can add expenses to your trip.
+          </p>
+        </div>
+        <Button onClick={() => setIsDialogShare(true)} size={"sm"}>
           <p>Share trip</p>
           <Share className="w-4 h-4 ml-2" />
         </Button>
+      </div>
+
+      <div className="px-4 mr-auto border border-gray-200 dark:border-gray-700 rounded-lg p-4 w-full">
         <div className="flex flex-col md:flex-row">
           <div className="w-full md:w-1/2 mr-5">
             <dl className="grid gap-6 text-sm">
@@ -141,14 +138,19 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
       </div>
       <div className="w-full mt-10">
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-bold ">Expenses</h2>
+          <div className="pr-7">
+            <h2 className="text-xl font-bold ">Expenses</h2>
+
+            <p className="text-sm text-gray-500">
+              Add expenses to your trip. You can add as many expenses as you
+              want.
+            </p>
+          </div>
           <Button size={"sm"} onClick={() => setIsOpen(true)}>
             Add expense
           </Button>
         </div>
-        <p className="text-sm text-gray-500">
-          Add expenses to your trip. You can add as many expenses as you want.
-        </p>
+
         <div className="pt-4 pb-10 w-full">
           <ExpensesTable data={expenses} />
         </div>
