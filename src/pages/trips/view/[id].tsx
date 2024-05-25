@@ -9,9 +9,11 @@ import DialogExpenses from "@/components/DialogExpenses";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 import emojiData from "@emoji-mart/data";
 import { backgroundSelect } from "@/lib/backgroundSelect";
-
+import { Share } from "lucide-react";
+import DialogShare from "@/components/DialogShare";
 export default function ViewTrip({ tripId }: { tripId: number }) {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isDialogShare, setIsDialogShare] = React.useState(false);
 
   // Query
   const { isLoading, data, isError, error } = useQuery({
@@ -45,7 +47,15 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
         </p>
       </div>
 
-      <div className="px-4 mr-auto border border-gray-200 dark:border-gray-700 rounded-lg p-4 w-full">
+      <div className="relative px-4 mr-auto border border-gray-200 dark:border-gray-700 rounded-lg p-4 w-full">
+        <Button
+          onClick={() => setIsDialogShare(true)}
+          size={"sm"}
+          className="absolute -top-2 right-0"
+        >
+          <p>Share trip</p>
+          <Share className="w-4 h-4 ml-2" />
+        </Button>
         <div className="flex flex-col md:flex-row">
           <div className="w-full md:w-1/2 mr-5">
             <dl className="grid gap-6 text-sm">
@@ -125,7 +135,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
           <div
             className={`${bg} mt-10 md:mt-0 w-full md:w-96 h-auto ml-auto rounded-md flex items-center justify-center`}
           >
-            <p className="text-white text-7xl">{emojiParsed}</p>
+            <p className="text-white text-7xl py-10">{emojiParsed}</p>
           </div>
         </div>
       </div>
@@ -147,6 +157,10 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
         dialogOpen={isOpen}
         setDialogOpen={setIsOpen}
         tripId={trip.id}
+      />
+      <DialogShare
+        dialogOpen={isDialogShare}
+        setDialogOpen={setIsDialogShare}
       />
     </div>
   );
