@@ -84,8 +84,6 @@ export default function EditTrip({ tripId }: { tripId: number }) {
       return axios.post("/api/trips/update", trip);
     },
     onSuccess: (data) => {
-      console.log(data);
-
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
       queryClient.invalidateQueries({ queryKey: ["trip"] });
       toast({
@@ -131,13 +129,14 @@ export default function EditTrip({ tripId }: { tripId: number }) {
   });
 
   useEffect(() => {
-    form.reset({
-      ...trip,
-      emoji: JSON.parse(trip?.emoji).native,
-      start_trip: new Date(+trip?.start_trip * 1000),
-      end_trip: new Date(+trip?.end_trip * 1000),
-    });
-    // form.setValue("emoji", emojiData.emojis[trip?.emoji].skins[0].native);
+    if (trip) {
+      form.reset({
+        ...trip,
+        emoji: JSON.parse(trip?.emoji).native,
+        start_trip: new Date(+trip?.start_trip * 1000),
+        end_trip: new Date(+trip?.end_trip * 1000),
+      });
+    }
   }, [trip, form]);
 
   const handleEmojiSelect = (emoji: any) => {
