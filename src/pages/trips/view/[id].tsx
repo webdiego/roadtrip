@@ -1,8 +1,7 @@
 import React from "react";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import axios, { AxiosResponse } from "axios";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Label } from "@radix-ui/react-label";
-import { columns } from "@/components/Table/columns";
 import { ExpensesTable } from "@/components/Table/ExpensesTable";
 import { Button } from "@/components/ui/button";
 import DialogExpenses from "@/components/DialogExpenses";
@@ -10,9 +9,14 @@ import LoadingSkeleton from "@/components/LoadingSkeleton";
 import { backgroundSelect } from "@/lib/backgroundSelect";
 import { Share } from "lucide-react";
 import DialogShare from "@/components/DialogShare";
+interface ShareTripResponse {
+  ciphertext: string;
+  // Include any other properties your response might have
+}
 export default function ViewTrip({ tripId }: { tripId: number }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isDialogShare, setIsDialogShare] = React.useState(false);
+  const [urlShare, setUrlShare] = React.useState("");
 
   // Query
   const { isLoading, data, isError, error } = useQuery({
@@ -21,6 +25,22 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
       return axios
         .get(`/api/trips/get-trip/?tripId=${tripId}`)
         .then((res) => res.data);
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: (tripId: number) => {
+      console.log(tripId);
+      return axios.post<ShareTripResponse>("/api/trips/share", {
+        tripId,
+      });
+    },
+    onSuccess: (response: AxiosResponse<ShareTripResponse>) => {
+      if (response.data) {
+        const ciphertext = response.data.ciphertext;
+        setUrlShare(`${process.env.NEXT_PUBLIC_URL_SHARE}/${ciphertext}`);
+        setIsDialogShare(true);
+      }
     },
   });
 
@@ -37,6 +57,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
     expenses.reduce((sum: number, expense: any) => sum + expense?.amount, 0) ||
     null;
   const amountRemain = trip.budget - amountUsed;
+
   return (
     <div className="mt-4 w-full">
       <div className="py-5 flex items-center justify-between">
@@ -46,7 +67,12 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
             This is an overview of your trip. You can add expenses to your trip.
           </p>
         </div>
-        <Button onClick={() => setIsDialogShare(true)} size={"sm"}>
+        <Button
+          onClick={() => {
+            mutation.mutate(tripId);
+          }}
+          size={"sm"}
+        >
           <p>Share trip</p>
           <Share className="w-4 h-4 ml-2" />
         </Button>
@@ -163,6 +189,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
       <DialogShare
         dialogOpen={isDialogShare}
         setDialogOpen={setIsDialogShare}
+        urlShare={urlShare}
       />
     </div>
   );

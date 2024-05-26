@@ -1,10 +1,8 @@
 import React from "react";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -15,12 +13,17 @@ import {
   WhatsappShareButton,
   WhatsappIcon,
 } from "react-share";
+
+import CryptoJS from "crypto-js";
+
 export default function DialogShare({
   dialogOpen,
   setDialogOpen,
+  urlShare,
 }: {
   dialogOpen: boolean;
   setDialogOpen: (open: boolean) => void;
+  urlShare: string;
 }) {
   return (
     <Dialog
@@ -35,7 +38,7 @@ export default function DialogShare({
           <DialogDescription>Share your trip with who want</DialogDescription>
         </DialogHeader>
         <p className="text-xs dark:text-gray-100 mt-2">Share via link</p>
-        <CopyToClipboard text="https://soundcloud.com/you/likes" />
+        <CopyToClipboard text={`${urlShare}`} />
         <p className="text-xs dark:text-gray-100">Share via social</p>
         <div className="flex space-x-3">
           <FacebookShareButton url={"https://soundcloud.com/you/likes"}>

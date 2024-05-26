@@ -17,7 +17,6 @@ export default async function handler(
   }
   const {
     query: { tripId },
-    method,
   } = req;
 
   if (!tripId) {
