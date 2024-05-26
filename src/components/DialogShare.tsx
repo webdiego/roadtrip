@@ -14,8 +14,6 @@ import {
   WhatsappIcon,
 } from "react-share";
 
-import CryptoJS from "crypto-js";
-
 export default function DialogShare({
   dialogOpen,
   setDialogOpen,
@@ -41,12 +39,12 @@ export default function DialogShare({
         <CopyToClipboard text={`${urlShare}`} />
         <p className="text-xs dark:text-gray-100">Share via social</p>
         <div className="flex space-x-3">
-          <FacebookShareButton url={"https://soundcloud.com/you/likes"}>
+          <FacebookShareButton url={`${urlShare}`}>
             <div className="rounded-full">
               <FacebookIcon className="rounded-full w-7 h-7" />
             </div>
           </FacebookShareButton>
-          <WhatsappShareButton url={"https://soundcloud.com/you/likes"}>
+          <WhatsappShareButton url={`${urlShare}`}>
             <div className="rounded-full">
               <WhatsappIcon className="rounded-full w-7 h-7" />
             </div>

@@ -9,10 +9,12 @@ import LoadingSkeleton from "@/components/LoadingSkeleton";
 import { backgroundSelect } from "@/lib/backgroundSelect";
 import { Share } from "lucide-react";
 import DialogShare from "@/components/DialogShare";
+
 interface ShareTripResponse {
   ciphertext: string;
   // Include any other properties your response might have
 }
+
 export default function ViewTrip({ tripId }: { tripId: number }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isDialogShare, setIsDialogShare] = React.useState(false);
