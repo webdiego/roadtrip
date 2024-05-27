@@ -42,11 +42,13 @@ function calculateExpenses(expenses: Expense[]): ExpenseSummary {
   };
 }
 
-const currencyFormatter = (number: number) => {
-  return "$" + Intl.NumberFormat("us").format(number).toString();
-};
-
-export default function Donut({ expenses }: any) {
+export default function Donut({
+  expenses,
+  currency,
+}: {
+  expenses: any;
+  currency: string;
+}) {
   const result = calculateExpenses(expenses);
   const data = [
     {
@@ -92,29 +94,36 @@ export default function Donut({ expenses }: any) {
       color: "bg-red-500",
     },
   ];
+
+  const currencyFormatter = (number: number) => {
+    return `${currency}` + Intl.NumberFormat("us").format(number).toString();
+  };
+
   return (
     <>
-      <Card className="">
+      <Card className="w-full border rounded-lg">
         <h3 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
           Total expenses by category
         </h3>
-        <DonutChart
-          className="mt-8 h-[200px] dark:text-white "
-          data={data}
-          category="amount"
-          index="name"
-          valueFormatter={currencyFormatter}
-          showTooltip={false}
-          colors={[
-            "cyan",
-            "blue",
-            "indigo",
-            "violet",
-            "fuchsia",
-            "pink",
-            "red",
-          ]}
-        />
+        {expenses.length > 0 ? (
+          <DonutChart
+            className="mt-8 h-[200px] dark:text-white "
+            data={data}
+            category="amount"
+            index="name"
+            valueFormatter={currencyFormatter}
+            showTooltip={false}
+            colors={[
+              "cyan",
+              "blue",
+              "indigo",
+              "violet",
+              "fuchsia",
+              "pink",
+              "red",
+            ]}
+          />
+        ) : null}
         <p className="mt-8 flex items-center justify-between text-tremor-label text-tremor-content dark:text-dark-tremor-content">
           <span>Category</span>
           <span>Amount</span>

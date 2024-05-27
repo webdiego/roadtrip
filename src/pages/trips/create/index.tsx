@@ -373,6 +373,11 @@ export default function CreateTrip() {
                             mode="single"
                             selected={field.value}
                             onSelect={field.onChange}
+                            disabled={{
+                              before:
+                                form.getValues("start_trip") ??
+                                new Date(form.getValues("start_trip")!),
+                            }}
                             initialFocus
                           />
                         </PopoverContent>

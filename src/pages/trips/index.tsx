@@ -15,7 +15,6 @@ export default function Index() {
       return await axios.get("/api/trips/get-all").then((res) => res.data);
     },
   });
-
   if (isLoading) return <LoadingSkeleton />;
   return (
     <div className="px-4 py-10 w-full">

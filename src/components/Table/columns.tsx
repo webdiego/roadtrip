@@ -75,13 +75,7 @@ export const columns: ColumnDef<Expenses>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       return (
-        <Button
-          size="icon"
-          variant="ghost"
-          onClick={() => {
-            console.log("delete", row.id);
-          }}
-        >
+        <Button size="icon" variant="ghost">
           <TrashIcon className="h-4 w-4" />
         </Button>
       );

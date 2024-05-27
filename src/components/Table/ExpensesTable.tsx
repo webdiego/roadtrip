@@ -51,11 +51,9 @@ export function ExpensesTable<Expenses, TValue>({
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: (expensesId: any) => {
-      console.log(expensesId);
       return axios.post("/api/expenses/delete", expensesId);
     },
     onSuccess: (data) => {
-      console.log(data);
       queryClient.invalidateQueries({ queryKey: ["tripId"] });
     },
   });
@@ -166,8 +164,6 @@ export function ExpensesTable<Expenses, TValue>({
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
-        console.log(row);
-
         return (
           <Button
             size="icon"

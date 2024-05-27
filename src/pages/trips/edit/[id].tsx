@@ -108,12 +108,11 @@ export default function EditTrip({ tripId }: { tripId: number }) {
         ? format(values.start_trip, "t")
         : undefined,
       end_trip: values.end_trip ? format(values.end_trip, "t") : undefined,
-      emoji: JSON.stringify(emojiState),
+      emoji: emojiState ? JSON.stringify(emojiState) : trip.emoji,
       background: values.background,
     });
   }
-  // let parseEmoji = JSON.parse(trip?.emoji)
-  // 1. Define your form.
+  console.log(trip);
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -123,7 +122,7 @@ export default function EditTrip({ tripId }: { tripId: number }) {
       currency: trip?.currency ?? "",
       start_trip: trip?.start_trip ?? undefined,
       end_trip: trip?.end_trip ?? undefined,
-      emoji: trip?.emoji ?? "",
+      emoji: trip?.emoji ? JSON.parse(trip?.emoji).native : "",
       background: trip?.background ?? "",
     },
   });
@@ -171,9 +170,9 @@ export default function EditTrip({ tripId }: { tripId: number }) {
   return (
     <>
       <div className="py-10 w-full">
-        <h1 className="text-2xl font-bold">Create a new trip</h1>
+        <h1 className="text-2xl font-bold">Edit trip</h1>
         <p className="text-sm text-gray-500">
-          You can create a new trip by filling out the form below.
+          You can edit the trip by filling out the form below.
         </p>
         <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm flex flex-col mt-5 w-full sm:w-[600px]">
           <Form {...form}>

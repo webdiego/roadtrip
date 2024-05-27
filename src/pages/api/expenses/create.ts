@@ -26,7 +26,6 @@ export default async function handler(
     amount,
     date_issued,
   });
-  console.log("expenseAdded", expenseAdded);
 
   res.status(200).json({ expenseAdded });
 }

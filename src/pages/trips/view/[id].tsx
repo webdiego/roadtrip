@@ -7,11 +7,13 @@ import { Button } from "@/components/ui/button";
 import DialogExpenses from "@/components/DialogExpenses";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 import { backgroundSelect } from "@/lib/backgroundSelect";
-import { Share } from "lucide-react";
+import { Bolt, Share } from "lucide-react";
 import DialogShare from "@/components/DialogShare";
 import Donut from "@/components/Charts/Donut";
 import Bar from "@/components/Charts/Bar";
-
+import Link from "next/link";
+import { format, isWithinInterval, differenceInDays } from "date-fns";
+import { daysRemaining } from "@/lib/utils";
 interface ShareTripResponse {
   ciphertext: string;
   // Include any other properties your response might have
@@ -60,7 +62,11 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
   const amountUsed =
     expenses.reduce((sum: number, expense: any) => sum + expense?.amount, 0) ||
     null;
+
   const amountRemain = trip.budget - amountUsed;
+  const tripDays = daysRemaining(trip.start_trip, trip.end_trip);
+
+  console.log(tripDays);
 
   return (
     <div className="mt-4 w-full">
@@ -71,20 +77,28 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
             This is an overview of your trip. You can add expenses to your trip.
           </p>
         </div>
-        <Button
-          onClick={() => {
-            mutation.mutate(tripId);
-          }}
-          size={"sm"}
-        >
-          <p>Share trip</p>
-          <Share className="w-4 h-4 ml-2" />
-        </Button>
+        <div className="flex">
+          <Button asChild size={"sm"} className="w-full mr-2" variant={"edit"}>
+            <Link href={`/trips/edit/${trip.id}`}>
+              <Bolt className="w-4 mr-2" />
+              Edit
+            </Link>
+          </Button>
+          <Button
+            onClick={() => {
+              mutation.mutate(tripId);
+            }}
+            size={"sm"}
+          >
+            <p>Share trip</p>
+            <Share className="w-4 h-4 ml-2" />
+          </Button>
+        </div>
       </div>
 
       <div className="px-4 mr-auto border border-gray-200 dark:border-gray-700 rounded-lg p-4 w-full">
-        <div className="flex flex-col md:flex-row">
-          <div className="w-full md:w-1/2 mr-5">
+        <div className="flex flex-col-reverse lg:flex-row">
+          <div className="w-full lg:w-1/2 mr-5 mt-10 lg:mt-0">
             <dl className="grid gap-6 text-sm">
               <div className="grid gap-1.5">
                 <dt className="font-medium">Name</dt>
@@ -124,7 +138,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
                   </dd>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-1.5 ">
+              <div className="grid grid-cols-3  gap-1.5 ">
                 <div className="grid mr-10">
                   <dt className="font-medium">Date of departure</dt>
                   <dd className="text-gray-500 dark:text-gray-400">
@@ -156,11 +170,21 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
                       : "-"}
                   </dd>
                 </div>
+                <div className="grid ">
+                  <dt className="font-medium">
+                    {tripDays.remainingDays ? "Days remaining" : "Total Days"}
+                  </dt>
+                  <dd className="text-gray-500 dark:text-gray-400">
+                    {tripDays.remainingDays
+                      ? tripDays.remainingDays
+                      : tripDays.totalDays}
+                  </dd>
+                </div>
               </div>
             </dl>
           </div>
           <div
-            className={`${bg} mt-10 md:mt-0 w-full md:w-96 h-auto ml-auto rounded-md flex items-center justify-center`}
+            className={`${bg}  w-full lg:w-96 h-auto ml-auto rounded-md flex items-center justify-center`}
           >
             <p className="text-white text-7xl py-10">{emojiParsed}</p>
           </div>
@@ -186,11 +210,11 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
           <ExpensesTable data={expenses} />
         </div>
       </div>
-      <div className="h-[200px] flex flex-col md:flex-row">
-        <Donut expenses={expenses} />
+      <div className="flex flex-col lg:flex-row w-full items-start gap-5 pb-10">
+        <Donut expenses={expenses} currency={trip.currency} />
         <Bar expenses={expenses} />
       </div>
-      <div className="h-[200px]"></div>
+
       <DialogExpenses
         dialogOpen={isOpen}
         setDialogOpen={setIsOpen}
