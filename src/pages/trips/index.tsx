@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import CardTrip from "@/components/CardTrip";
 import Link from "next/link";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
+
 export default function Index() {
   // Query
   const { isLoading, data } = useQuery({

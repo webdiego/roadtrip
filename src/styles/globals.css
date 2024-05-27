@@ -6,3 +6,9 @@
 body {
   @apply bg-white dark:border-slate-800 dark:bg-slate-950;
 }
+.recharts-wrapper {
+  @apply dark:fill-white;
+}
+.bg-tremor-brand-subtle {
+  @apply bg-blue-200/50 dark:bg-blue-900/40;
+}

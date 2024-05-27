@@ -9,6 +9,8 @@ import LoadingSkeleton from "@/components/LoadingSkeleton";
 import { backgroundSelect } from "@/lib/backgroundSelect";
 import { Share } from "lucide-react";
 import DialogShare from "@/components/DialogShare";
+import Donut from "@/components/Charts/Donut";
+import Bar from "@/components/Charts/Bar";
 
 interface ShareTripResponse {
   ciphertext: string;
@@ -122,7 +124,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
                   </dd>
                 </div>
               </div>
-              {/* <div className="grid grid-cols-2 gap-1.5 ">
+              <div className="grid grid-cols-2 gap-1.5 ">
                 <div className="grid mr-10">
                   <dt className="font-medium">Date of departure</dt>
                   <dd className="text-gray-500 dark:text-gray-400">
@@ -154,7 +156,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
                       : "-"}
                   </dd>
                 </div>
-              </div> */}
+              </div>
             </dl>
           </div>
           <div
@@ -164,6 +166,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
           </div>
         </div>
       </div>
+
       <div className="w-full mt-10">
         <div className="flex justify-between items-center">
           <div className="pr-7">
@@ -183,6 +186,11 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
           <ExpensesTable data={expenses} />
         </div>
       </div>
+      <div className="h-[200px] flex flex-col md:flex-row">
+        <Donut expenses={expenses} />
+        <Bar expenses={expenses} />
+      </div>
+      <div className="h-[200px]"></div>
       <DialogExpenses
         dialogOpen={isOpen}
         setDialogOpen={setIsOpen}
