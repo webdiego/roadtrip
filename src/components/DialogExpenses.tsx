@@ -59,7 +59,7 @@ const schema = z.object({
   ]),
   description: z.string().min(1, { message: "Required" }),
   amount: z.coerce.number().nonnegative().min(1, { message: "Required" }),
-  date_issued: z.date().min(new Date("1900-01-01")),
+  date_issued: z.date().min(new Date("1900-01-01"), { message: "Required" }),
 });
 
 export default function DialogExpenses({

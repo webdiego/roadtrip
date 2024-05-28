@@ -47,11 +47,17 @@ const schema = z.object({
     .string()
     .min(1, { message: "Required" })
     .max(3, { message: "Max 3 characters" }),
-  start_trip: z.date().min(new Date("1900-01-01")).optional(),
-  end_trip: z.date().min(new Date("1900-01-01")).optional(),
+  start_trip: z.date().min(new Date("1900-01-01"), {
+    message: "Required",
+  }),
+  end_trip: z.date().min(new Date("1900-01-01"), { message: "Required" }),
   emoji: z.string().min(1, { message: "Required" }),
   background: z.string().min(1, { message: "Required" }),
 });
+// .refine((data) => data.start_trip < data.end_trip, {
+//   message: "Start trip date must be before end trip date",
+//   path: ["start_trip", "end_trip"], // The error will be associated with both fields
+// });
 
 export default function CreateTrip() {
   const router = useRouter();
@@ -119,6 +125,7 @@ export default function CreateTrip() {
   }
 
   if (isError) return <div>Error: {error.message}</div>;
+
   const handleEmojiSelect = (emoji: any) => {
     setEmojiState(emoji);
     form.setValue("emoji", emoji.native); // Update the form field value with the selected emoji]

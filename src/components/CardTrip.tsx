@@ -28,7 +28,7 @@ export default function CardTrip({ trip }: { trip: TripType }) {
   let bg = backgroundSelect.find((b) => b.name === trip.background)?.value;
   let emojiParsed = JSON.parse(trip.emoji).native;
   return (
-    <div className="border border-gray-200 rounded-lg p-4 shadow-sm w-full min-w-[320px] space-y-4 flex flex-col text-sm dark:bg-gray-900/40 dark:border-gray-700">
+    <div className="border border-gray-200 rounded-lg p-4 shadow-sm w-full min-w-[320px] space-y-4 flex flex-col text-sm dark:bg-gray-900/40 dark:border-gray-700 ">
       <div className="border dark:border-gray-700 relative w-max px-3 pr-3 rounded-lg self-end justify-self-end -mb-5  ">
         <div className="dot absolute -top-1 right-0">
           <span className="relative flex h-2 w-2  ">
@@ -56,17 +56,20 @@ export default function CardTrip({ trip }: { trip: TripType }) {
         </div>
         <div className="mt-4">
           <h3 className="font-semibold text-gray-800 dark:text-white">Name</h3>
-          <p className="text-gray-500 dark:text-gray-400">{trip.name}</p>
+          <p className="text-gray-500 dark:text-gray-400 truncate">
+            {trip.name}
+          </p>
         </div>
         <div className="mt-2 mb-4">
           <h3 className="font-semibold text-gray-800 dark:text-white">
             Description
           </h3>
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-gray-500 dark:text-gray-400 truncate">
             {trip.description ? trip.description : "No description"}
           </p>
         </div>
 
+        {/* Buttons */}
         <div className="flex items-center justify-end w-full space-x-4 border-t border-gray-200 dark:border-gray-700 pt-4">
           <Button
             asChild

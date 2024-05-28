@@ -8,8 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {} from "next/navigation";
-import { useParams } from "next/navigation";
+
 export function BreadCrumb() {
   // Base on the current pathname, we can determine the current page
   const pathname = usePathname();

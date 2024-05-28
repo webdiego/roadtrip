@@ -12,7 +12,6 @@ import DialogShare from "@/components/DialogShare";
 import Donut from "@/components/Charts/Donut";
 import Bar from "@/components/Charts/Bar";
 import Link from "next/link";
-import { format, isWithinInterval, differenceInDays } from "date-fns";
 import { daysRemaining } from "@/lib/utils";
 interface ShareTripResponse {
   ciphertext: string;
@@ -172,12 +171,12 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
                 </div>
                 <div className="grid ">
                   <dt className="font-medium">
-                    {tripDays.remainingDays ? "Days remaining" : "Total Days"}
+                    {tripDays.remainingDays ? "Days remaining" : "Days of trip"}
                   </dt>
                   <dd className="text-gray-500 dark:text-gray-400">
                     {tripDays.remainingDays
                       ? tripDays.remainingDays
-                      : tripDays.totalDays}
+                      : tripDays.daysOnTrip}
                   </dd>
                 </div>
               </div>

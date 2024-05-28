@@ -35,12 +35,12 @@ export function daysRemaining(start_date: number, end_date: number) {
 
   // Check if today is between the start and end dates
   let remainingDays = null;
-  let totalDays = null;
+  let daysOnTrip = null;
   if (isAfter(today, endDate) || isBefore(today, startDate)) {
     // Calculate the number of days between the start and end dates
-    totalDays = Math.abs(differenceInDays(endDate, startDate));
+    daysOnTrip = Math.abs(differenceInDays(endDate, startDate));
     console.log(
-      `Today is not between the given dates. The number of days between the start and end dates: ${totalDays} days`
+      `Today is not between the given dates. The number of days between the start and end dates: ${daysOnTrip} days`
     );
   } else {
     // Calculate the number of days remaining until the end date
@@ -49,5 +49,5 @@ export function daysRemaining(start_date: number, end_date: number) {
       `Number of days remaining until the ending date: ${remainingDays} days`
     );
   }
-  return { remainingDays, totalDays };
+  return { remainingDays, daysOnTrip };
 }
