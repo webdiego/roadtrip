@@ -25,7 +25,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { format } from "date-fns";
+import { format, isAfter, parseISO } from "date-fns";
 
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
@@ -54,10 +54,6 @@ const schema = z.object({
   emoji: z.string().min(1, { message: "Required" }),
   background: z.string().min(1, { message: "Required" }),
 });
-// .refine((data) => data.start_trip < data.end_trip, {
-//   message: "Start trip date must be before end trip date",
-//   path: ["start_trip", "end_trip"], // The error will be associated with both fields
-// });
 
 export default function CreateTrip() {
   const router = useRouter();
@@ -81,7 +77,17 @@ export default function CreateTrip() {
       background: "",
     },
   });
+  const watchStartTrip = form.watch("start_trip");
+  const watchEndTrip = form.watch("end_trip");
 
+  useEffect(() => {
+    if (isAfter(watchStartTrip, watchEndTrip) && watchEndTrip !== undefined) {
+      //@ts-ignore
+      form.setValue("end_trip", undefined); // Reset end_trip to undefined
+    }
+  }, [watchStartTrip, watchEndTrip]);
+
+  //
   // Mutations
   const { isPending, isSuccess, isError, mutate, error } = useMutation({
     mutationFn: (trip: any) => {
@@ -115,10 +121,8 @@ export default function CreateTrip() {
       description: values.description,
       budget: values.budget,
       currency: values.currency,
-      start_trip: values.start_trip
-        ? format(values.start_trip, "t")
-        : undefined,
-      end_trip: values.end_trip ? format(values.end_trip, "t") : undefined,
+      start_trip: format(values.start_trip, "t"),
+      end_trip: format(values.end_trip, "t"),
       emoji: JSON.stringify(emojiState),
       background: values.background,
     });
@@ -365,6 +369,7 @@ export default function CreateTrip() {
                                 " pl-3 text-left font-normal",
                                 !field.value && "text-muted-foreground"
                               )}
+                              disabled={!watchStartTrip}
                             >
                               {field.value ? (
                                 format(field.value, "PPP")
@@ -380,11 +385,11 @@ export default function CreateTrip() {
                             mode="single"
                             selected={field.value}
                             onSelect={field.onChange}
-                            disabled={{
-                              before:
-                                form.getValues("start_trip") ??
-                                new Date(form.getValues("start_trip")!),
-                            }}
+                            disabled={
+                              watchStartTrip
+                                ? { before: new Date(watchStartTrip) }
+                                : undefined
+                            } // Conditionally set disabled prop
                             initialFocus
                           />
                         </PopoverContent>

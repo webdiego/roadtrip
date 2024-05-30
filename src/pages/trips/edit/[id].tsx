@@ -18,7 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { format } from "date-fns";
+import { format, isAfter } from "date-fns";
 import emojiData from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import {
@@ -52,10 +52,6 @@ const schema = z.object({
   emoji: z.string().min(1, { message: "Required" }),
   background: z.string().min(1, { message: "Required" }),
 });
-// .refine((data) => data.start_trip < data.end_trip, {
-//   message: "Start trip date must be before end trip date",
-//   path: ["start_trip", "end_trip"], // The error will be associated with both fields
-// });
 
 export default function EditTrip({ tripId }: { tripId: number }) {
   const router = useRouter();
@@ -108,10 +104,8 @@ export default function EditTrip({ tripId }: { tripId: number }) {
       description: values.description,
       budget: values.budget,
       currency: values.currency,
-      start_trip: values.start_trip
-        ? format(values.start_trip, "t")
-        : undefined,
-      end_trip: values.end_trip ? format(values.end_trip, "t") : undefined,
+      start_trip: format(values.start_trip, "t"),
+      end_trip: format(values.end_trip, "t"),
       emoji: emojiState ? JSON.stringify(emojiState) : trip.emoji,
       background: values.background,
     });
@@ -124,8 +118,8 @@ export default function EditTrip({ tripId }: { tripId: number }) {
       description: trip?.description ?? "",
       budget: trip?.budget ?? 0,
       currency: trip?.currency ?? "",
-      start_trip: trip?.start_trip ?? undefined,
-      end_trip: trip?.end_trip ?? undefined,
+      start_trip: trip?.start_trip,
+      end_trip: trip?.end_trip,
       emoji: trip?.emoji ? JSON.parse(trip?.emoji).native : "",
       background: trip?.background ?? "",
     },
@@ -141,6 +135,16 @@ export default function EditTrip({ tripId }: { tripId: number }) {
       });
     }
   }, [trip, form]);
+
+  const watchStartTrip = form.watch("start_trip");
+  const watchEndTrip = form.watch("end_trip");
+
+  useEffect(() => {
+    if (isAfter(watchStartTrip, watchEndTrip) && watchEndTrip !== undefined) {
+      //@ts-ignore
+      form.setValue("end_trip", undefined); // Reset end_trip to undefined
+    }
+  }, [watchStartTrip, watchEndTrip]);
 
   const handleEmojiSelect = (emoji: any) => {
     setEmojiState(emoji);
