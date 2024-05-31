@@ -2,6 +2,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { typeSelect } from "@/lib/typeSelect";
 import { TrashIcon } from "lucide-react";
 import { Button } from "../ui/button";
+import { format } from "date-fns";
+import { enGB } from "date-fns/locale";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -61,10 +63,8 @@ export const columns: ColumnDef<Expenses>[] = [
 
       return (
         <div>
-          {new Date(+date_issued * 1000).toLocaleString("en-UK", {
-            month: "long",
-            day: "numeric",
-            year: "numeric",
+          {format(new Date(+date_issued * 1000), "d MMMM yyyy", {
+            locale: enGB,
           })}
         </div>
       );

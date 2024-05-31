@@ -13,6 +13,16 @@ import Donut from "@/components/Charts/Donut";
 import Bar from "@/components/Charts/Bar";
 import Link from "next/link";
 import { daysRemaining } from "@/lib/utils";
+import { format } from "date-fns";
+import { enGB } from "date-fns/locale";
+
+const formattedDate = ({ timestamp }: { timestamp: number }) => {
+  const date = new Date(timestamp * 1000);
+  const formattedDate = format(date, "d MMMM yyyy", { locale: enGB });
+
+  return formattedDate;
+};
+
 interface ShareTripResponse {
   ciphertext: string;
   // Include any other properties your response might have
@@ -142,12 +152,11 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
                   <dt className="font-medium">Date of departure</dt>
                   <dd className="text-gray-500 dark:text-gray-400">
                     {trip.start_trip
-                      ? new Date(+trip.start_trip * 1000).toLocaleString(
-                          "en-UK",
+                      ? format(
+                          new Date(+trip.start_trip * 1000),
+                          "d MMMM yyyy",
                           {
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
+                            locale: enGB,
                           }
                         )
                       : "-"}
@@ -158,14 +167,9 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
                   <dt className="font-medium">Date of arrival</dt>
                   <dd className="text-gray-500 dark:text-gray-400">
                     {trip.end_trip
-                      ? new Date(+trip.end_trip * 1000).toLocaleString(
-                          "en-UK",
-                          {
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
-                          }
-                        )
+                      ? format(new Date(+trip.end_trip * 1000), "d MMMM yyyy", {
+                          locale: enGB,
+                        })
                       : "-"}
                   </dd>
                 </div>

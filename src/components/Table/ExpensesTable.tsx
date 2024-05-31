@@ -25,6 +25,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import { Input } from "../ui/input";
+import { format } from "date-fns";
+import { enGB } from "date-fns/locale";
 
 type Expenses = {
   id: string;
@@ -151,10 +153,8 @@ export function ExpensesTable<Expenses, TValue>({
 
         return (
           <div className="ml-2">
-            {new Date(+date_issued * 1000).toLocaleString("en-UK", {
-              month: "long",
-              day: "numeric",
-              year: "numeric",
+            {format(new Date(+date_issued * 1000), "d MMMM yyyy", {
+              locale: enGB,
             })}
           </div>
         );

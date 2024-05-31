@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/form";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format, isAfter } from "date-fns";
+import { enGB } from "date-fns/locale";
 import emojiData from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import {
@@ -355,7 +356,7 @@ export default function EditTrip({ tripId }: { tripId: number }) {
                             >
                               {field.value instanceof Date &&
                               !isNaN(field.value.getTime()) ? (
-                                format(field.value, "PPP")
+                                format(field.value, "PPP", { locale: enGB })
                               ) : (
                                 <span>Pick a date</span>
                               )}
@@ -395,7 +396,7 @@ export default function EditTrip({ tripId }: { tripId: number }) {
                             >
                               {field.value instanceof Date &&
                               !isNaN(field.value.getTime()) ? (
-                                format(field.value, "PPP")
+                                format(field.value, "PPP", { locale: enGB })
                               ) : (
                                 <span>Pick a date</span>
                               )}
@@ -408,6 +409,11 @@ export default function EditTrip({ tripId }: { tripId: number }) {
                             mode="single"
                             selected={field.value}
                             onSelect={field.onChange}
+                            disabled={
+                              watchStartTrip
+                                ? { before: new Date(watchStartTrip) }
+                                : undefined // Conditionally set disabled prop
+                            }
                             initialFocus
                           />
                         </PopoverContent>
