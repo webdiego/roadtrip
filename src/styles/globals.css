@@ -12,3 +12,22 @@ body {
 .bg-tremor-brand-subtle {
   @apply bg-blue-200/50 dark:bg-blue-900/40;
 }
+
+tr {
+  @apply dark:border-gray-700;
+}
+.dark\:border-dark-tremor-brand:is(.dark *) {
+  @apply dark:border-gray-700;
+}
+.dark\:bg-dark-tremor-background:is(.dark *) {
+  @apply dark:bg-transparent;
+}
+.border-tremor-brand {
+  @apply border-gray-200;
+}
+.ring-1 {
+  @apply ring-0;
+}
+.ring-tremor-ring {
+  @apply ring-opacity-0 shadow-none;
+}

@@ -218,7 +218,7 @@ export function ExpensesTable<Expenses, TValue>({
           className="max-w-sm"
         />
       </div>
-      <div className="rounded-md border w-full">
+      <div className="rounded-md border border-gray-200 dark:border-gray-700 w-full">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
