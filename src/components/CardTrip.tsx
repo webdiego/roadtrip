@@ -9,6 +9,7 @@ import axios from "axios";
 import { currentlyOnTrip } from "@/lib/utils";
 import EmojiBackground from "./EmojiBackground";
 import { backgroundSelect } from "@/lib/backgroundSelect";
+import Tripping from "./Tripping";
 export default function CardTrip({ trip }: { trip: TripType }) {
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -29,25 +30,7 @@ export default function CardTrip({ trip }: { trip: TripType }) {
   let emojiParsed = JSON.parse(trip.emoji).native;
   return (
     <div className="border border-gray-200 rounded-lg p-4 shadow-sm w-full min-w-[320px] space-y-4 flex flex-col text-sm dark:bg-gray-900/40 dark:border-gray-700 ">
-      <div className="border dark:border-gray-700 relative w-max px-3 pr-3 rounded-lg self-end justify-self-end -mb-5  ">
-        <div className="dot absolute -top-1 right-0">
-          <span className="relative flex h-2 w-2  ">
-            <span
-              className={`animate-ping absolute inline-flex h-full w-full rounded-full ${
-                onTrip ? "bg-green-300" : "bg-blue-300"
-              }  opacity-75`}
-            ></span>
-            <span
-              className={`relative inline-flex rounded-full h-2 w-2 ${
-                onTrip ? "bg-green-400" : "bg-blue-400"
-              }`}
-            ></span>
-          </span>
-        </div>
-        <h3 className="text-xs font-medium text-gray-800 dark:text-white">
-          {onTrip ? "On trip" : "Not on trip"}
-        </h3>
-      </div>
+      <Tripping {...{ onTrip }} />
       <div>
         <div
           className={`${bg} mt-4 w-full h-28 ml-auto rounded-md flex items-center justify-center`}

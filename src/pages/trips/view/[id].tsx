@@ -12,16 +12,10 @@ import DialogShare from "@/components/DialogShare";
 import Donut from "@/components/Charts/Donut";
 import Bar from "@/components/Charts/Bar";
 import Link from "next/link";
-import { daysRemaining } from "@/lib/utils";
+import { currentlyOnTrip, daysRemaining } from "@/lib/utils";
 import { format } from "date-fns";
 import { enGB } from "date-fns/locale";
-
-const formattedDate = ({ timestamp }: { timestamp: number }) => {
-  const date = new Date(timestamp * 1000);
-  const formattedDate = format(date, "d MMMM yyyy", { locale: enGB });
-
-  return formattedDate;
-};
+import Tripping from "@/components/Tripping";
 
 interface ShareTripResponse {
   ciphertext: string;
@@ -76,6 +70,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
   const tripDays = daysRemaining(trip.start_trip, trip.end_trip);
 
   console.log(tripDays);
+  let onTrip = currentlyOnTrip(trip.start_trip);
 
   return (
     <div className="mt-4 w-full">
@@ -105,7 +100,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
         </div>
       </div>
 
-      <div className="px-4 mr-auto border border-gray-200 dark:border-gray-700 rounded-lg p-4 w-full">
+      <div className="px-4 mr-auto border border-gray-200 dark:border-gray-700 rounded-lg p-4 w-full ">
         <div className="flex flex-col-reverse lg:flex-row">
           <div className="w-full lg:w-1/2 mr-5 mt-10 lg:mt-0">
             <dl className="grid gap-6 text-sm">

@@ -5,10 +5,10 @@ import Image from "next/image";
 export default function Home() {
   const { isSignedIn } = useUser();
   return (
-    <div className="flex flex-col items-start justify-center h-screen max-w-4xl  px-4 sm:px-6 lg:px-8 py-10 w-full mx-auto">
-      <div className="flex flex-col-reverse text-center md:text-left md:flex-row justify-between items-center w-full">
+    <div className="flex flex-col items-start justify-center h-screen max-w-4xl px-4 sm:px-6 lg:px-8 py-10 w-full mx-auto">
+      <div className="flex flex-col-reverse text-center   justify-between items-center w-full">
         <div>
-          <h1 className="text-7xl xl:text-8xl font-black dark:text-white">
+          <h1 className="text-6xl lg:text-7xl xl:text-8xl font-black dark:text-white">
             Road trip
           </h1>
           <p className="mt-2 ">
@@ -27,11 +27,9 @@ export default function Home() {
         <svg
           version="1.0"
           xmlns="http://www.w3.org/2000/svg"
-          width="480.000000pt"
-          height="480.000000pt"
           viewBox="0 0 480.000000 480.000000"
           preserveAspectRatio="xMidYMid meet"
-          className="fill-black dark:fill-white transform rotate-45  w-44 h-44 md:w-96 md:h-96 lg:w-128 lg:h-128"
+          className="fill-black dark:fill-white transform rotate-45  w-44 h-44 md:w-72 md:h-72 lg:w-96 lg:h-96"
         >
           <g
             transform="translate(0.000000,480.000000) scale(0.100000,-0.100000)"
