@@ -1,9 +1,7 @@
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -30,7 +28,6 @@ import * as z from "zod";
 import React from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Label } from "./ui/label";
 import { useToast } from "./ui/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -58,7 +55,7 @@ const schema = z.object({
     "other",
   ]),
   description: z.string().min(1, { message: "Required" }),
-  amount: z.coerce.number().nonnegative().min(1, { message: "Required" }),
+  amount: z.coerce.number().nonnegative().min(0.01, { message: "Required" }),
   date_issued: z.date().min(new Date("1900-01-01"), { message: "Required" }),
 });
 
@@ -218,7 +215,7 @@ export default function DialogExpenses({
                   control={form.control}
                   name="date_issued"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col z-[1000]">
+                    <FormItem>
                       <FormLabel>Date of the expense</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -226,7 +223,7 @@ export default function DialogExpenses({
                             <Button
                               variant={"outline"}
                               className={cn(
-                                "pl-3 text-left font-normal",
+                                "pl-3 text-left font-normal w-full",
                                 !field.value && "text-muted-foreground"
                               )}
                             >
