@@ -19,7 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
-import { ArrowUpDown, TrashIcon } from "lucide-react";
+import { ArrowUpDown, TrashIcon, Loader } from "lucide-react";
 import { typeSelect } from "@/lib/typeSelect";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
@@ -50,6 +50,7 @@ interface DataTableProps<TData, TValue> {
 export function ExpensesTable<Expenses, TValue>({
   data,
 }: DataTableProps<Expenses, TValue>) {
+  const [deletingRowId, setDeletingRowId] = useState(null);
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: (expensesId: any) => {
@@ -63,6 +64,8 @@ export function ExpensesTable<Expenses, TValue>({
     pageIndex: 0, //initial page index
     pageSize: 10, //default page size
   });
+
+  //^^^^^^^^^^^^ COLUMNS
   const columns: ColumnDef<Expenses>[] = [
     // {
     //   accessorKey: "id",
@@ -169,13 +172,22 @@ export function ExpensesTable<Expenses, TValue>({
             size="icon"
             variant="ghost"
             onClick={() => {
+              // @ts-ignore
+              setDeletingRowId(row.original.id);
               mutation.mutate({
                 // @ts-ignore
                 expensesId: +row.original.id as number,
               });
             }}
           >
-            <TrashIcon className="h-4 w-4" />
+            {
+              // @ts-ignore
+              mutation.isPending && deletingRowId === row.original.id ? (
+                <Loader className="h-4 w-4 animate-spin" />
+              ) : (
+                <TrashIcon className="h-4 w-4" />
+              )
+            }
           </Button>
         );
       },
@@ -183,6 +195,7 @@ export function ExpensesTable<Expenses, TValue>({
   ];
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
   const table = useReactTable({
     data,
     columns: columns,
