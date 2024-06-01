@@ -1,20 +1,20 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/db";
 import { TripTable } from "@/db/schema/trips";
-import { eq } from "drizzle-orm";
-import { getAuth } from "@clerk/nextjs/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { userId } = getAuth(req);
-
-  if (!userId) {
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) {
     res.status(401).json({ message: "Unauthorized" });
     return;
   }
+
+  const userId = session?.user?.id;
 
   const {
     name,
@@ -26,7 +26,7 @@ export default async function handler(
     emoji,
     background,
   } = req.body;
-
+  console.log(session);
   const trip = await db
     .insert(TripTable)
     .values({

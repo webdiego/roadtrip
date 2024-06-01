@@ -62,7 +62,13 @@ export default function Header() {
                     height={30}
                   />
 
-                  <Button size={"sm"} className="w-full ml-2">
+                  <Button
+                    size={"sm"}
+                    onClick={() =>
+                      signOut({ callbackUrl: "http://localhost:3000" })
+                    }
+                    className="w-full ml-2"
+                  >
                     Sign out
                   </Button>
                 </div>

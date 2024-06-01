@@ -3,13 +3,20 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/db";
 import { TripTable } from "@/db/schema/trips";
 import { eq } from "drizzle-orm";
-import { getAuth } from "@clerk/nextjs/server";
+import { getSession } from "next-auth/react";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { userId } = getAuth(req);
+  const session = await getSession({ req });
+
+  if (!session) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+
+  const userId = session?.user?.id;
 
   if (!userId) {
     res.status(401).json({ message: "Unauthorized" });

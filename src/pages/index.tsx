@@ -1,12 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import Image from "next/image";
 export default function Home() {
   const { data: session } = useSession();
 
-  console.log(session);
   return (
     <div className="flex flex-col items-start justify-center h-screen max-w-4xl px-4 sm:px-6 lg:px-8 py-10 w-full mx-auto">
       <div className="flex flex-col-reverse text-center   justify-between items-center w-full">
@@ -20,9 +19,11 @@ export default function Home() {
           </p>
 
           {session && session.user ? (
-            <>
-              <Button>Got to your dashboard</Button>
-            </>
+            <Button className="mt-6" asChild>
+              <Link href={"/trips"} prefetch>
+                Go to your dashboard
+              </Link>
+            </Button>
           ) : (
             <>
               <Button onClick={() => signIn()}>Sign in</Button>

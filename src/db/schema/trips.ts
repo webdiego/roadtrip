@@ -21,15 +21,9 @@ export const TripTable = sqliteTable("trip", {
 export type InsertTrip = typeof TripTable.$inferInsert;
 export type SelectTrip = typeof TripTable.$inferSelect;
 
-export const tripRelations = relations(TripTable, ({ many }) => ({
-  expenses: many(ExpensesTable, {
-    relationName: "collectionExpenses",
-  }),
-}));
-
 export const ExpensesTable = sqliteTable("expenses", {
   id: integer("id").primaryKey(),
-  tripId: integer("trip_id").references(() => TripTable.id),
+  tripId: integer("trip_id").references(() => TripTable.id), // foreign key reference
   type: text("type", {
     enum: [
       "food",
@@ -48,6 +42,11 @@ export const ExpensesTable = sqliteTable("expenses", {
     .notNull()
     .default(sql`(unixepoch())`),
 });
+
+export const tripRelations = relations(TripTable, ({ many }) => ({
+  expenses: many(ExpensesTable),
+}));
+
 export const expensesRelations = relations(ExpensesTable, ({ one }) => ({
   trip: one(TripTable, {
     fields: [ExpensesTable.tripId],
