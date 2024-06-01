@@ -1,23 +1,24 @@
 import React from "react";
 import Link from "next/link";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/router";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
+import Image from "next/image";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 export default function Header() {
   const { setTheme } = useTheme();
   const { pathname } = useRouter();
   const navbar = ["/sign-up/[[...index]]", "/sign-in/[[...index]]"];
   let showNavbar = navbar.includes(pathname) ? false : true;
-
+  const { data: session } = useSession();
   return (
     <>
       {showNavbar && (
@@ -27,19 +28,6 @@ export default function Header() {
               Road trip
             </h1>
             <div className="space-x-4 flex items-center">
-              <SignedOut>
-                {/* <Button asChild variant={"ghost"}>
-                <Link href="/sign-up">Sign Up</Link>
-              </Button> */}
-                <Button asChild className="mr-2">
-                  <Link href="/sign-in" className="mr-2">
-                    Sign In
-                  </Link>
-                </Button>
-              </SignedOut>
-              <SignedIn>
-                <UserButton afterSignOutUrl="/" />
-              </SignedIn>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -64,6 +52,25 @@ export default function Header() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              {session && session.user ? (
+                <div className="flex items-center space-x-2">
+                  <Image
+                    className="rounded-full"
+                    src={`${session.user.image}`}
+                    alt="user"
+                    width={30}
+                    height={30}
+                  />
+
+                  <Button size={"sm"} className="w-full ml-2">
+                    Sign out
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <Button onClick={() => signIn()}>Sign in</Button>
+                </>
+              )}
             </div>
           </div>
         </header>

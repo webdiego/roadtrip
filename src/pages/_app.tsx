@@ -9,8 +9,11 @@ import { Toaster } from "@/components/ui/toaster";
 export const queryClient = new QueryClient();
 import NextTopLoader from "nextjs-toploader";
 import { ThemeProvider } from "@/components/ThemeProvider";
-export default function App({ Component, pageProps }: AppProps) {
-  const [progress, setProgress] = useState(0);
+import { SessionProvider } from "next-auth/react";
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) {
   return (
     <ThemeProvider
       attribute="class"
@@ -18,7 +21,7 @@ export default function App({ Component, pageProps }: AppProps) {
       enableSystem
       disableTransitionOnChange
     >
-      <ClerkProvider>
+      <SessionProvider session={session}>
         <QueryClientProvider client={queryClient}>
           <Layout>
             <NextTopLoader color="#2299DD" />
@@ -26,7 +29,7 @@ export default function App({ Component, pageProps }: AppProps) {
             <Toaster />
           </Layout>
         </QueryClientProvider>
-      </ClerkProvider>
+      </SessionProvider>{" "}
     </ThemeProvider>
   );
 }

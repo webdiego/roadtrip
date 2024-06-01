@@ -57,6 +57,13 @@
       "when": 1716511418840,
       "tag": "0007_marvelous_crystal",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1717198072063,
+      "tag": "0008_clean_russian",
+      "breakpoints": true
     }
   ]
 }
