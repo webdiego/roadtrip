@@ -5,57 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1715864794221,
-      "tag": "0000_ordinary_makkari",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1716082202635,
-      "tag": "0001_unique_tyger_tiger",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "6",
-      "when": 1716082857039,
-      "tag": "0002_violet_lilandra",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "6",
-      "when": 1716127898069,
-      "tag": "0003_fresh_norrin_radd",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "6",
-      "when": 1716127982623,
-      "tag": "0004_whole_justice",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "6",
-      "when": 1716188812934,
-      "tag": "0005_colossal_thing",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "6",
-      "when": 1716465829583,
-      "tag": "0006_lyrical_stranger",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "6",
-      "when": 1716511418840,
-      "tag": "0007_marvelous_crystal",
+      "when": 1717416501729,
+      "tag": "0000_moaning_deathstrike",
       "breakpoints": true
     }
   ]
