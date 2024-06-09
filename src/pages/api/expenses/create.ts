@@ -3,7 +3,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/db";
 import { ExpensesTable, TripTable } from "@/db/schema/trips";
 import { getAuth } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
 
 export default async function handler(
   req: NextApiRequest,
