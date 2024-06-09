@@ -67,10 +67,6 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
     null;
 
   const amountRemain = trip.budget - amountUsed;
-  const tripDays = daysRemaining(trip.start_trip, trip.end_trip);
-
-  console.log(tripDays);
-  let onTrip = currentlyOnTrip(trip.start_trip);
 
   return (
     <div className="mt-4 w-full">
@@ -166,16 +162,6 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
                           locale: enGB,
                         })
                       : "-"}
-                  </dd>
-                </div>
-                <div className="grid ">
-                  <dt className="font-medium">
-                    {tripDays.remainingDays ? "Days remaining" : "Days of trip"}
-                  </dt>
-                  <dd className="text-gray-500 dark:text-gray-400">
-                    {tripDays.remainingDays
-                      ? tripDays.remainingDays
-                      : tripDays.daysOnTrip}
                   </dd>
                 </div>
               </div>
