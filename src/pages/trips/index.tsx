@@ -1,11 +1,12 @@
 import React from "react";
 import axios from "axios";
 import { TripType } from "@/types/index";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import CardTrip from "@/components/CardTrip";
 import Link from "next/link";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
+import { protectRoute } from "@/lib/protectRoute";
 
 export default function Index() {
   // Query
@@ -36,4 +37,23 @@ export default function Index() {
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps(ctx: any) {
+  const { userId, account } = await protectRoute(ctx);
+
+  if (!userId || !account) {
+    return {
+      redirect: {
+        destination: "/sign-in",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      userId,
+    },
+  };
 }

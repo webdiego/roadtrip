@@ -9,8 +9,8 @@ import { Toaster } from "@/components/ui/toaster";
 export const queryClient = new QueryClient();
 import NextTopLoader from "nextjs-toploader";
 import { ThemeProvider } from "@/components/ThemeProvider";
+
 export default function App({ Component, pageProps }: AppProps) {
-  const [progress, setProgress] = useState(0);
   return (
     <ThemeProvider
       attribute="class"

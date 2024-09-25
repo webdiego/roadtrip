@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/db";
 import { TripTable, ExpensesTable } from "@/db/schema/trips";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { getAuth } from "@clerk/nextjs/server";
 
 export default async function handler(
@@ -25,8 +25,15 @@ export default async function handler(
     return;
   }
 
+  // Get trip by trip id and user id
   const trip =
-    (await db.select().from(TripTable).where(eq(TripTable.id, +tripId))) || [];
+    (await db
+      .select()
+      .from(TripTable)
+      .where(and(eq(TripTable.id, +tripId), eq(TripTable.userId, userId)))) ||
+    [];
+
+  console.log("trip", trip);
 
   if (trip.length === 0) {
     console.log("Trip not found");

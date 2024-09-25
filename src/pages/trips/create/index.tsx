@@ -38,6 +38,8 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { backgroundSelect } from "@/lib/backgroundSelect";
 import * as z from "zod";
+import { Loader } from "lucide-react";
+import { protectRoute } from "@/lib/protectRoute";
 
 const schema = z.object({
   name: z.string().min(1, { message: "Required" }),
@@ -87,19 +89,17 @@ export default function CreateTrip() {
     }
   }, [watchStartTrip, watchEndTrip]);
 
-  //
   // Mutations
-  const { isPending, isSuccess, isError, mutate, error } = useMutation({
+  const { isPending, isError, mutate, error } = useMutation({
     mutationFn: (trip: any) => {
       return axios.post("/api/trips/create", trip);
     },
     onSuccess: (data) => {
-      console.log(data);
+      console.log("ON SUCCESS", data);
 
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
       queryClient.invalidateQueries({ queryKey: ["trip"] });
       let tripId = data.data.trip[0].id;
-
       toast({
         title: "Trip created",
         description: "Ready to go!",
@@ -110,25 +110,6 @@ export default function CreateTrip() {
       }, 2000);
     },
   });
-
-  function onSubmit(values: z.infer<typeof schema>) {
-    console.log(values);
-
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    mutate({
-      name: values.name,
-      description: values.description,
-      budget: values.budget,
-      currency: values.currency,
-      start_trip: format(values.start_trip, "t"),
-      end_trip: format(values.end_trip, "t"),
-      emoji: JSON.stringify(emojiState),
-      background: values.background,
-    });
-  }
-
-  if (isError) return <div>Error: {error.message}</div>;
 
   const handleEmojiSelect = (emoji: any) => {
     setEmojiState(emoji);
@@ -152,6 +133,26 @@ export default function CreateTrip() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  function onSubmit(values: z.infer<typeof schema>) {
+    console.log(values);
+
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    mutate({
+      name: values.name,
+      description: values.description,
+      budget: values.budget,
+      currency: values.currency,
+      start_trip: format(values.start_trip, "t"),
+      end_trip: format(values.end_trip, "t"),
+      emoji: JSON.stringify(emojiState),
+      background: values.background,
+    });
+  }
+
+  if (isError) return <div>Error: {error.message}</div>;
+
   return (
     <>
       <div className="py-10 w-full">
@@ -408,6 +409,7 @@ export default function CreateTrip() {
                 size={"sm"}
                 disabled={isPending}
               >
+                {isPending && <Loader className="h-4 w-4 animate-spin mr-2" />}
                 Create Trip
               </Button>
             </form>
@@ -416,4 +418,24 @@ export default function CreateTrip() {
       </div>
     </>
   );
+}
+
+export async function getServerSideProps(ctx: any) {
+  //Check if the user is signed in and has stripeId and redirect
+  const { userId, account } = await protectRoute(ctx);
+
+  if (!userId || !account) {
+    return {
+      redirect: {
+        destination: "/sign-in",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      userId,
+    },
+  };
 }
