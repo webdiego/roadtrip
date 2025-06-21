@@ -39,7 +39,6 @@ import Picker from "@emoji-mart/react";
 import { backgroundSelect } from "@/lib/backgroundSelect";
 import * as z from "zod";
 import { Loader } from "lucide-react";
-import { protectRoute } from "@/lib/protectRoute";
 
 const schema = z.object({
   name: z.string().min(1, { message: "Required" }),
@@ -420,22 +419,22 @@ export default function CreateTrip() {
   );
 }
 
-export async function getServerSideProps(ctx: any) {
-  //Check if the user is signed in and has stripeId and redirect
-  const { userId, account } = await protectRoute(ctx);
+// export async function getServerSideProps(ctx: any) {
+//   //Check if the user is signed in and has stripeId and redirect
+//   const { userId, account } = await protectRoute(ctx);
 
-  if (!userId || !account) {
-    return {
-      redirect: {
-        destination: "/sign-in",
-        permanent: false,
-      },
-    };
-  }
+//   if (!userId || !account) {
+//     return {
+//       redirect: {
+//         destination: "/sign-in",
+//         permanent: false,
+//       },
+//     };
+//   }
 
-  return {
-    props: {
-      userId,
-    },
-  };
-}
+//   return {
+//     props: {
+//       userId,
+//     },
+//   };
+// }

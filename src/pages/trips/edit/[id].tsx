@@ -39,7 +39,7 @@ import {
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 import * as z from "zod";
 import { backgroundSelect } from "@/lib/backgroundSelect";
-import { protectRoute } from "@/lib/protectRoute";
+// import { protectRoute } from "@/lib/protectRoute";
 
 const schema = z.object({
   name: z.string().min(1, { message: "Required" }),
@@ -443,24 +443,24 @@ export default function EditTrip({ tripId }: { tripId: number }) {
   );
 }
 
-export async function getServerSideProps(ctx: any) {
-  //Check if the user is signed in and has stripeId and redirect
-  const { userId, account } = await protectRoute(ctx);
+// export async function getServerSideProps(ctx: any) {
+//   //Check if the user is signed in and has stripeId and redirect
+//   const { userId, account } = await protectRoute(ctx);
 
-  if (!userId || !account) {
-    return {
-      redirect: {
-        destination: "/sign-in",
-        permanent: false,
-      },
-    };
-  }
+//   if (!userId || !account) {
+//     return {
+//       redirect: {
+//         destination: "/sign-in",
+//         permanent: false,
+//       },
+//     };
+//   }
 
-  const tripId = +ctx.query.id!;
+//   const tripId = +ctx.query.id!;
 
-  return {
-    props: {
-      tripId,
-    },
-  };
-}
+//   return {
+//     props: {
+//       tripId,
+//     },
+//   };
+// }

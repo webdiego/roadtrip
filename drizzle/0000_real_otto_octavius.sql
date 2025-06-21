@@ -1,7 +1,6 @@
 CREATE TABLE `account` (
 	`id` integer PRIMARY KEY NOT NULL,
-	`user_id` text NOT NULL,
-	`stripe_id` text,
+	`user_id` integer NOT NULL,
 	`created_at` integer DEFAULT (unixepoch()) NOT NULL
 );
 --> statement-breakpoint
@@ -18,7 +17,7 @@ CREATE TABLE `expenses` (
 --> statement-breakpoint
 CREATE TABLE `trip` (
 	`id` integer PRIMARY KEY NOT NULL,
-	`user_id` text,
+	`user_id` integer,
 	`name` text NOT NULL,
 	`description` text,
 	`emoji` text,

@@ -1,18 +1,27 @@
 import { relations, sql } from "drizzle-orm";
 import { boolean } from "drizzle-orm/mysql-core";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { db } from "../index";
 
-export const AccountTable = sqliteTable("account", {
-  id: integer("id").primaryKey(),
-  userId: text("user_id").notNull().unique(),
-  createdAt: integer("created_at", { mode: "number" })
+export const UserTable = sqliteTable("user", {
+  id: text("id").notNull().primaryKey(),
+  username: text("username").notNull().unique(),
+  hashedPassword: text("hashed_password").notNull(),
+});
+
+export const SessionTable = sqliteTable("session", {
+  id: text("id").notNull().primaryKey(),
+  userId: text("user_id")
     .notNull()
-    .default(sql`(unixepoch())`),
+    .references(() => UserTable.id),
+  expiresAt: integer("expires_at").notNull(),
 });
 
 export const TripTable = sqliteTable("trip", {
-  id: integer("id").primaryKey(),
-  userId: text("user_id").references(() => AccountTable.userId),
+  id: text("id").notNull().primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => UserTable.id),
   name: text("name").notNull(),
   description: text("description"),
   emoji: text("emoji"),
@@ -27,7 +36,7 @@ export const TripTable = sqliteTable("trip", {
 });
 
 export const ExpensesTable = sqliteTable("expenses", {
-  id: integer("id").primaryKey(),
+  id: text("id").notNull().primaryKey(),
   tripId: integer("trip_id").references(() => TripTable.id),
   type: text("type", {
     enum: [
@@ -48,21 +57,21 @@ export const ExpensesTable = sqliteTable("expenses", {
     .default(sql`(unixepoch())`),
 });
 
-export type InsertTrip = typeof TripTable.$inferInsert;
-export type SelectTrip = typeof TripTable.$inferSelect;
-export type SelectAccount = typeof AccountTable.$inferSelect;
-export type InsertAccount = typeof AccountTable.$inferInsert;
-export type InsertExpense = typeof ExpensesTable.$inferInsert;
-export type SelectExpense = typeof ExpensesTable.$inferSelect;
+export type InsertUser = typeof UserTable.$inferInsert;
+export type SelectUser = typeof UserTable.$inferSelect;
+export type InsertSession = typeof SessionTable.$inferInsert;
+export type SelectSession = typeof SessionTable.$inferSelect;
 
-export const accountRelations = relations(AccountTable, ({ many }) => ({
+export const accountRelations = relations(UserTable, ({ many }) => ({
   trips: many(TripTable),
 }));
-
-export const tripRelations = relations(TripTable, ({ many }) => ({
+export const tripRelations = relations(TripTable, ({ many, one }) => ({
   expenses: many(ExpensesTable),
+  user: one(UserTable, {
+    fields: [TripTable.userId],
+    references: [UserTable.id],
+  }),
 }));
-
 export const expensesRelations = relations(ExpensesTable, ({ one }) => ({
   trip: one(TripTable, {
     fields: [ExpensesTable.tripId],

@@ -16,7 +16,6 @@ import { currentlyOnTrip, daysRemaining } from "@/lib/utils";
 import { format } from "date-fns";
 import { enGB } from "date-fns/locale";
 import Tripping from "@/components/Tripping";
-import { protectRoute } from "@/lib/protectRoute";
 
 interface ShareTripResponse {
   ciphertext: string;
@@ -214,22 +213,22 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
   );
 }
 
-export async function getServerSideProps(ctx: any) {
-  const { userId, account } = await protectRoute(ctx);
+// export async function getServerSideProps(ctx: any) {
+//   const { userId, account } = await protectRoute(ctx);
 
-  if (!userId || !account) {
-    return {
-      redirect: {
-        destination: "/sign-in",
-        permanent: false,
-      },
-    };
-  }
-  const tripId = +ctx.query.id!;
+//   if (!userId || !account) {
+//     return {
+//       redirect: {
+//         destination: "/sign-in",
+//         permanent: false,
+//       },
+//     };
+//   }
+//   const tripId = +ctx.query.id!;
 
-  return {
-    props: {
-      tripId,
-    },
-  };
-}
+//   return {
+//     props: {
+//       tripId,
+//     },
+//   };
+// }

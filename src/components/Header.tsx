@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/router";
 import { useTheme } from "next-themes";
@@ -27,19 +26,19 @@ export default function Header() {
               Road trip
             </h1>
             <div className="space-x-4 flex items-center">
-              <SignedOut>
-                {/* <Button asChild variant={"ghost"}>
+              {/* <SignedOut>
+                <Button asChild variant={"ghost"}>
                 <Link href="/sign-up">Sign Up</Link>
-              </Button> */}
+              </Button>
                 <Button asChild className="mr-2">
                   <Link href="/sign-in" className="mr-2">
                     Sign In
                   </Link>
                 </Button>
-              </SignedOut>
-              <SignedIn>
+              </SignedOut> */}
+              {/* <SignedIn>
                 <UserButton afterSignOutUrl="/" />
-              </SignedIn>
+              </SignedIn> */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button

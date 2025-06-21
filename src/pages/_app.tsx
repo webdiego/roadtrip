@@ -18,15 +18,13 @@ export default function App({ Component, pageProps }: AppProps) {
       enableSystem
       disableTransitionOnChange
     >
-      <ClerkProvider>
-        <QueryClientProvider client={queryClient}>
-          <Layout>
-            <NextTopLoader color="#2299DD" />
-            <Component {...pageProps} />
-            <Toaster />
-          </Layout>
-        </QueryClientProvider>
-      </ClerkProvider>
+      <QueryClientProvider client={queryClient}>
+        <Layout>
+          <NextTopLoader color="#2299DD" />
+          <Component {...pageProps} />
+          <Toaster />
+        </Layout>
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }

@@ -1,12 +1,12 @@
 {
-  "version": "6",
+  "version": "7",
   "dialect": "sqlite",
   "entries": [
     {
       "idx": 0,
       "version": "6",
-      "when": 1717416501729,
-      "tag": "0000_moaning_deathstrike",
+      "when": 1727234794217,
+      "tag": "0000_real_otto_octavius",
       "breakpoints": true
     }
   ]

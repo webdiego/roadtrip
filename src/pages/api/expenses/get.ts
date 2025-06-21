@@ -2,7 +2,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/db";
 import { ExpensesTable } from "@/db/schema/trips";
-import { getAuth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 
 export default async function handler(
@@ -10,22 +9,25 @@ export default async function handler(
   res: NextApiResponse
 ) {
   //Guard against unauthorized access
-  const { userId } = getAuth(req);
+  // const { userId } = getAuth(req);
 
-  if (!userId) {
-    res.status(401).json({ message: "Unauthorized" });
-    return;
-  }
+  // if (!userId) {
+  //   res.status(401).json({ message: "Unauthorized" });
+  //   return;
+  // }
 
-  const { tripId } = req.body;
+  // const { tripId } = req.body;
 
-  const expenses = await db
-    .select()
-    .from(ExpensesTable)
-    .where(eq(ExpensesTable.tripId, tripId));
-  // and(eq(ExpensesTable.tripId, tripId), eq(ExpensesTable.userId, userId))
+  // const expenses = await db
+  //   .select()
+  //   .from(ExpensesTable)
+  //   .where(eq(ExpensesTable.tripId, tripId));
+  // // and(eq(ExpensesTable.tripId, tripId), eq(ExpensesTable.userId, userId))
 
-  console.log(expenses);
+  // console.log(expenses);
 
-  res.status(200).json({ expenses });
+  // res.status(200).json({ expenses });
+  res
+    .status(200)
+    .json({ message: "Expense retrieval is not implemented yet." });
 }

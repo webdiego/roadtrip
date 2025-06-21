@@ -2,29 +2,28 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/db";
 import { ExpensesTable, TripTable } from "@/db/schema/trips";
-import { getAuth } from "@clerk/nextjs/server";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   //Guard against unauthorized access
-  const { userId } = getAuth(req);
+  // const { userId } = getAuth(req);
 
-  if (!userId) {
-    res.status(401).json({ message: "Unauthorized" });
-    return;
-  }
+  // if (!userId) {
+  //   res.status(401).json({ message: "Unauthorized" });
+  //   return;
+  // }
 
   const { tripId, type, description, amount, date_issued } = req.body;
 
-  const expenseAdded = await db.insert(ExpensesTable).values({
-    tripId,
-    type,
-    description,
-    amount,
-    date_issued,
-  });
-
-  res.status(200).json({ expenseAdded });
+  // const expenseAdded = await db.insert(ExpensesTable).values({
+  //   tripId,
+  //   type,
+  //   description,
+  //   amount,
+  //   date_issued,
+  // });
+  res.status(200).json({ message: "Expense creation is not implemented yet." });
+  // res.status(200).json({ expenseAdded });
 }
