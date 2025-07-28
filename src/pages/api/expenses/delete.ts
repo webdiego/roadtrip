@@ -19,10 +19,10 @@ export default async function handler(
   const { expensesId } = req.body as { expensesId: number };
   console.log(expensesId);
 
-  // const expenses = await db
-  //   .delete(ExpensesTable)
-  //   .where(eq(ExpensesTable.id, expensesId))
-  //   .returning({ deleted: ExpensesTable.id });
+  const expenses = await db
+    .delete(ExpensesTable)
+    .where(eq(ExpensesTable.id, String(expensesId)))
+    .returning({ deleted: ExpensesTable.id });
 
   // if (expenses.length === 0) {
   //   res.status(404).json({ message: "Trip not found" });

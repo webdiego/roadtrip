@@ -213,22 +213,21 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
   );
 }
 
-// export async function getServerSideProps(ctx: any) {
-//   const { userId, account } = await protectRoute(ctx);
+export async function getServerSideProps(ctx: any) {
+  // if (!userId || !account) {
+  //   return {
+  //     redirect: {
+  //       destination: "/sign-in",
+  //       permanent: false,
+  //     },
+  //   };
+  // }
+  const tripId = ctx.query.id;
+  console.log("Trip ID:", tripId);
 
-//   if (!userId || !account) {
-//     return {
-//       redirect: {
-//         destination: "/sign-in",
-//         permanent: false,
-//       },
-//     };
-//   }
-//   const tripId = +ctx.query.id!;
-
-//   return {
-//     props: {
-//       tripId,
-//     },
-//   };
-// }
+  return {
+    props: {
+      tripId,
+    },
+  };
+}

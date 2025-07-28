@@ -21,10 +21,13 @@ export default async function handler(
     res.status(400).json({ message: "Trip ID is required" });
     return;
   }
+  //Delete first all expenses related to the trip
+  console.log("Deleting trip with ID:", tripId);
 
   const deleteExpenses = await db
     .delete(ExpensesTable)
-    .where(eq(ExpensesTable.tripId, tripId));
+    .where(eq(ExpensesTable.tripId, String(tripId)))
+    .returning();
 
   console.log("delete ex", deleteExpenses);
   if (deleteExpenses.length === 0) {
@@ -33,7 +36,7 @@ export default async function handler(
 
   const tripDeleted = await db
     .delete(TripTable)
-    .where(eq(TripTable.id, tripId))
+    .where(eq(TripTable.id, String(tripId)))
     .returning();
 
   if (tripDeleted.length === 0) {
@@ -44,8 +47,10 @@ export default async function handler(
   // Delete expenses for this trip
   const expensesDeleted = await db
     .delete(ExpensesTable)
-    .where(eq(ExpensesTable.tripId, tripId))
+    .where(eq(ExpensesTable.tripId, String(tripId)))
     .returning();
+
+  console.log("Expenses deleted:", expensesDeleted);
 
   res.status(200).json({ success: true });
 }

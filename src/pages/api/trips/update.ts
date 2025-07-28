@@ -32,7 +32,7 @@ export default async function handler(
     .set({
       name,
       description,
-      userId,
+      // userId,
       budget,
       currency,
       start_trip,
