@@ -52,6 +52,7 @@ export function ExpensesTable<Expenses, TValue>({
 }: DataTableProps<Expenses, TValue>) {
   const [deletingRowId, setDeletingRowId] = useState(null);
   const queryClient = useQueryClient();
+
   const mutation = useMutation({
     mutationFn: (expensesId: any) => {
       return axios.post("/api/expenses/delete", expensesId);
@@ -60,6 +61,7 @@ export function ExpensesTable<Expenses, TValue>({
       queryClient.invalidateQueries({ queryKey: ["tripId"] });
     },
   });
+
   const [pagination, setPagination] = useState({
     pageIndex: 0, //initial page index
     pageSize: 10, //default page size
@@ -176,7 +178,7 @@ export function ExpensesTable<Expenses, TValue>({
               setDeletingRowId(row.original.id);
               mutation.mutate({
                 // @ts-ignore
-                expensesId: +row.original.id as number,
+                expensesId: row.original.id,
               });
             }}
           >

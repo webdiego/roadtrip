@@ -16,7 +16,12 @@ export default async function handler(
   //   return;
   // }
 
-  const { expensesId } = req.body as { expensesId: number };
+  const { expensesId } = req.body;
+
+  if (!expensesId) {
+    res.status(400).json({ message: "Expense ID is required" });
+    return;
+  }
   console.log(expensesId);
 
   const expenses = await db
@@ -24,12 +29,11 @@ export default async function handler(
     .where(eq(ExpensesTable.id, String(expensesId)))
     .returning({ deleted: ExpensesTable.id });
 
-  // if (expenses.length === 0) {
-  //   res.status(404).json({ message: "Trip not found" });
-  //   return;
-  // }
-  // console.log(expenses);
-
-  // res.status(200).json({ expenses });
-  res.status(200).json({ message: "Expense deletion is not implemented yet." });
+  if (expenses.length === 0) {
+    console.log("Expense not found");
+    res.status(404).json({ message: "Expense not found" });
+    return;
+  }
+  console.log("Expense deleted:", expenses);
+  res.status(200).json({ expenses });
 }
