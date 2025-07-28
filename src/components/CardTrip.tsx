@@ -15,11 +15,19 @@ export default function CardTrip({ trip }: { trip: TripType }) {
 
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: (tripId: any) => {
-      return axios.post("/api/trips/delete", tripId);
+    mutationFn: (tripId: string) => {
+      return axios.post("/api/trips/delete", { tripId });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["trips"] });
+    onSuccess: (_res, tripId) => {
+      queryClient.setQueryData(["trips"], (old: any) => {
+        if (!old) return old;
+
+        return {
+          ...old,
+          trips: old.trips.filter((trip: TripType) => trip.id !== tripId),
+        };
+      });
+
       setIsOpen(false);
     },
   });
@@ -89,9 +97,7 @@ export default function CardTrip({ trip }: { trip: TripType }) {
         secondaryButtonVariant="destructive"
         actionStatus={mutation}
         secondaryButtonOnClick={() => {
-          mutation.mutate({
-            tripId: trip.id,
-          });
+          mutation.mutate(trip.id);
         }}
       />
     </div>
