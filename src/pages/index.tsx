@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -23,6 +22,11 @@ export default function Home() {
               </Link>
             </Button>
           )} */}
+          <Button className="mt-6" asChild>
+            <Link href={"/trips"} prefetch>
+              Go to your dashboard
+            </Link>
+          </Button>
         </div>
 
         <svg
