@@ -16,15 +16,15 @@ export default async function handler(
   //   return;
   // }
 
-  // const { tripId } = req.body;
+  const { tripId } = req.body;
 
-  // const expenses = await db
-  //   .select()
-  //   .from(ExpensesTable)
-  //   .where(eq(ExpensesTable.tripId, tripId));
-  // // and(eq(ExpensesTable.tripId, tripId), eq(ExpensesTable.userId, userId))
+  const expenses = await db
+    .select()
+    .from(ExpensesTable)
+    .where(eq(ExpensesTable.tripId, tripId));
+  // and(eq(ExpensesTable.tripId, tripId), eq(ExpensesTable.userId, userId))
 
-  // console.log(expenses);
+  console.log(expenses);
 
   // res.status(200).json({ expenses });
   res

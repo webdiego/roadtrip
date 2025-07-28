@@ -1,27 +1,12 @@
 import { relations, sql } from "drizzle-orm";
 import { boolean } from "drizzle-orm/mysql-core";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { db } from "../index";
-
-export const UserTable = sqliteTable("user", {
-  id: text("id").notNull().primaryKey(),
-  username: text("username").notNull().unique(),
-  hashedPassword: text("hashed_password").notNull(),
-});
-
-export const SessionTable = sqliteTable("session", {
-  id: text("id").notNull().primaryKey(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => UserTable.id),
-  expiresAt: integer("expires_at").notNull(),
-});
 
 export const TripTable = sqliteTable("trip", {
-  id: text("id").notNull().primaryKey(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => UserTable.id),
+  id: text("id").primaryKey().notNull(),
+  // userId: text("user_id")
+  //   .notNull()
+  //   .references(() => "user"),
   name: text("name").notNull(),
   description: text("description"),
   emoji: text("emoji"),
@@ -36,8 +21,8 @@ export const TripTable = sqliteTable("trip", {
 });
 
 export const ExpensesTable = sqliteTable("expenses", {
-  id: text("id").notNull().primaryKey(),
-  tripId: integer("trip_id").references(() => TripTable.id),
+  id: text("id").primaryKey().notNull(),
+  tripId: text("trip_id").references(() => TripTable.id),
   type: text("type", {
     enum: [
       "food",
@@ -57,24 +42,19 @@ export const ExpensesTable = sqliteTable("expenses", {
     .default(sql`(unixepoch())`),
 });
 
-export type InsertUser = typeof UserTable.$inferInsert;
-export type SelectUser = typeof UserTable.$inferSelect;
-export type InsertSession = typeof SessionTable.$inferInsert;
-export type SelectSession = typeof SessionTable.$inferSelect;
-
-export const accountRelations = relations(UserTable, ({ many }) => ({
-  trips: many(TripTable),
-}));
-export const tripRelations = relations(TripTable, ({ many, one }) => ({
-  expenses: many(ExpensesTable),
-  user: one(UserTable, {
-    fields: [TripTable.userId],
-    references: [UserTable.id],
-  }),
-}));
-export const expensesRelations = relations(ExpensesTable, ({ one }) => ({
-  trip: one(TripTable, {
-    fields: [ExpensesTable.tripId],
-    references: [TripTable.id],
-  }),
-}));
+// export const accountRelations = relations(UserTable, ({ many }) => ({
+//   trips: many(TripTable),
+// }));
+// export const tripRelations = relations(TripTable, ({ many, one }) => ({
+//   expenses: many(ExpensesTable),
+//   // user: one(UserTable, {
+//   //   fields: [TripTable.userId],
+//   //   references: [UserTable.id],
+//   // }),
+// }));
+// export const expensesRelations = relations(ExpensesTable, ({ one }) => ({
+//   trip: one(TripTable, {
+//     fields: [ExpensesTable.tripId],
+//     references: [TripTable.id],
+//   }),
+// }));

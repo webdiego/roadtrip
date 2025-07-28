@@ -29,9 +29,10 @@ export default async function handler(
   const trip = await db
     .insert(TripTable)
     .values({
+      id: crypto.randomUUID(), // Generate a unique ID for the trip
       name,
       description,
-      userId,
+      // userId,
       budget,
       currency,
       start_trip,

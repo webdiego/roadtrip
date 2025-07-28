@@ -17,10 +17,14 @@ export default async function handler(
 
   const { tripId } = req.body as { tripId: number };
 
+  if (!tripId) {
+    res.status(400).json({ message: "Trip ID is required" });
+    return;
+  }
+
   const deleteExpenses = await db
     .delete(ExpensesTable)
-    .where(eq(ExpensesTable.tripId, tripId))
-    .returning();
+    .where(eq(ExpensesTable.tripId, tripId));
 
   console.log("delete ex", deleteExpenses);
   if (deleteExpenses.length === 0) {

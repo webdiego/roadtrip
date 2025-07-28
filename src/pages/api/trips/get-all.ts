@@ -18,7 +18,14 @@ export default async function handler(
   // const trips =
   //   (await db.select().from(TripTable).where(eq(TripTable.userId, userId))) ||
   //   [];
+  const trips = (await db.select().from(TripTable)) || [];
 
-  // res.status(200).json({ trips });
-  res.status(200).json({ trips: [] }); // Placeholder response, replace with actual logic
+  if (trips.length === 0) {
+    console.log("No trips found");
+    res.status(404).json({ message: "No trips found" });
+    return;
+  }
+
+  console.log("Trips retrieved:", trips);
+  res.status(200).json({ trips });
 }

@@ -15,6 +15,7 @@ export default function Index() {
       return await axios.get("/api/trips/get-all").then((res) => res.data);
     },
   });
+  console.log("Trips data:", data);
 
   if (isLoading) return <LoadingSkeleton />;
 

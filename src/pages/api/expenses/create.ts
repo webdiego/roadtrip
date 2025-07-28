@@ -17,13 +17,20 @@ export default async function handler(
 
   const { tripId, type, description, amount, date_issued } = req.body;
 
-  // const expenseAdded = await db.insert(ExpensesTable).values({
-  //   tripId,
-  //   type,
-  //   description,
-  //   amount,
-  //   date_issued,
-  // });
-  res.status(200).json({ message: "Expense creation is not implemented yet." });
-  // res.status(200).json({ expenseAdded });
+  const expenseAdded = await db.insert(ExpensesTable).values({
+    id: crypto.randomUUID(), // Generate a unique ID for the expense
+    tripId,
+    type,
+    description,
+    amount,
+    date_issued,
+  });
+  console.log("Expense added:", expenseAdded);
+
+  if (!expenseAdded) {
+    res.status(500).json({ message: "Failed to add expense" });
+    return;
+  }
+
+  res.status(200).json({ expenseAdded });
 }

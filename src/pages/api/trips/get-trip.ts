@@ -25,12 +25,10 @@ export default async function handler(
   }
 
   // Get trip by trip id and user id
-  const trip =
-    (await db
-      .select()
-      .from(TripTable)
-      .where(and(eq(TripTable.id, +tripId), eq(TripTable.userId, userId)))) ||
-    [];
+  const trip = await db
+    .select()
+    .from(TripTable)
+    .where(and(eq(TripTable.id, tripId as string)));
 
   console.log("trip", trip);
 
@@ -40,11 +38,10 @@ export default async function handler(
     return;
   }
 
-  const expenses =
-    (await db
-      .select()
-      .from(ExpensesTable)
-      .where(eq(ExpensesTable.tripId, +tripId))) || [];
+  const expenses = await db
+    .select()
+    .from(ExpensesTable)
+    .where(eq(ExpensesTable.tripId, tripId as string));
 
   res.status(200).json({ trip, expenses });
 }

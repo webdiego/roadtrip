@@ -8,7 +8,7 @@ dotenv.config({
 export default defineConfig({
   dialect: "sqlite", // "postgresql" | "mysql"
   driver: "turso",
-  schema: "./src/db/schema/*",
+  schema: "./src/db/schema",
   out: "./drizzle",
   dbCredentials: {
     url: process.env.TURSO_DATABASE_URL!,
