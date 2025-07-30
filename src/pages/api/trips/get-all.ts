@@ -22,10 +22,9 @@ export default async function handler(
 
   if (trips.length === 0) {
     console.log("No trips found");
-    res.status(404).json({ message: "No trips found" });
+    res.status(404).json({ trips: [], message: "No trips found" });
     return;
   }
 
-  console.log("Trips retrieved:", trips);
-  res.status(200).json({ trips });
+  res.status(200).json({ trips: trips });
 }
