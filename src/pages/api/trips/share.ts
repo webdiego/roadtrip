@@ -9,10 +9,10 @@ export default async function handler(
   try {
     // const { userId } = getAuth(req);
 
-    if (!userId) {
-      res.status(401).json({ message: "Unauthorized" });
-      return;
-    }
+    // if (!userId) {
+    //   res.status(401).json({ message: "Unauthorized" });
+    //   return;
+    // }
 
     const { tripId } = req.body;
     if (tripId === undefined) {

@@ -125,31 +125,31 @@ export async function getServerSideProps(ctx: any) {
   console.log(tripId);
 
   // Get data from db
-  const trip =
-    (await db.select().from(TripTable).where(eq(TripTable.id, +tripId)))[0] ||
-    [];
+  // const trip =
+  //   (await db.select().from(TripTable).where(eq(TripTable.id, +tripId)))[0] ||
+  //   [];
 
-  if (!trip) {
-    console.log("Trip not found");
-    return {
-      notFound: true,
-    };
-  }
-  console.log(trip);
-  const expenses =
-    (await db
-      .select()
-      .from(ExpensesTableDb)
-      .where(eq(ExpensesTableDb.tripId, +tripId))) || [];
+  // if (!trip) {
+  //   console.log("Trip not found");
+  //   return {
+  //     notFound: true,
+  //   };
+  // }
+  // console.log(trip);
+  // const expenses =
+  //   (await db
+  //     .select()
+  //     .from(ExpensesTableDb)
+  //     .where(eq(ExpensesTableDb.tripId, +tripId))) || [];
 
-  let emojiParsed = JSON.parse(trip.emoji as string).native;
+  // let emojiParsed = JSON.parse(trip.emoji as string).native;
 
-  return {
-    props: {
-      tripId,
-      trip,
-      expenses,
-      emojiParsed,
-    },
-  };
+  // return {
+  //   props: {
+  //     tripId,
+  //     trip,
+  //     expenses,
+  //     emojiParsed,
+  //   },
+  // };
 }

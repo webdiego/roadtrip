@@ -84,7 +84,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
               Edit
             </Link>
           </Button>
-          <Button
+          {/* <Button
             onClick={() => {
               mutation.mutate(tripId);
             }}
@@ -92,7 +92,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
           >
             <p>Share trip</p>
             <Share className="w-4 h-4 ml-2" />
-          </Button>
+          </Button> */}
         </div>
       </div>
 
