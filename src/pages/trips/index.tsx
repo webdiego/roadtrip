@@ -15,6 +15,9 @@ export default function Index() {
     queryFn: async () => {
       return await axios.get("/api/trips/get-all").then((res) => res.data);
     },
+    refetchOnWindowFocus: false,
+    retry: false,
+    refetchOnMount: false,
   });
   console.log("Trips data:", data);
 
