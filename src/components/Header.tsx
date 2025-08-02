@@ -42,8 +42,8 @@ export default function Header({ session }: { session: Session | null }) {
                   )}
 
                   <Button
-                    variant="default"
-                    size="sm"
+                    variant="edit"
+                    size="xs"
                     onClick={() =>
                       signOut({
                         callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}`,

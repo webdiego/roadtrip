@@ -65,7 +65,7 @@ export default function CardTrip({ trip }: { trip: TripType }) {
           <Button
             asChild
             size={"sm"}
-            className="w-full"
+            className="w-full cursor-pointer"
             variant={"destructive"}
             onClick={() => setIsOpen(true)}
           >
