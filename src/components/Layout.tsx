@@ -7,10 +7,14 @@ import { useSession } from "next-auth/react";
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();
 
-  // If session is loading, you can return a loading state here
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
+  // // If session is loading, you can return a loading state here
+  // if (status === "loading") {
+  //   return (
+  //     <div className="flex items-center justify-center h-screen">
+  //       Loading...
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
