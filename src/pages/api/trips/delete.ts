@@ -3,18 +3,24 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/db";
 import { TripTable } from "@/db/schema/trips";
 import { eq } from "drizzle-orm";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // const { userId } = getAuth(req);
-
-  // if (!userId) {
-  //   res.status(401).json({ message: "Unauthorized" });
-  //   return;
-  // }
-
+  if (req.method !== "DELETE" && req.method !== "POST") {
+    res.setHeader("Allow", ["DELETE"]);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
+  const session = await getServerSession(req, res, authOptions);
+  console.log("SESSION:", session);
+  if (!session || !session.user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  const userId = session.user.id; // Get the user ID from the session
+  console.log("User ID:", userId);
   const { tripId } = req.body as { tripId: number };
 
   if (!tripId) {

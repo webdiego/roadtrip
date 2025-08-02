@@ -1,12 +1,12 @@
 import { relations, sql } from "drizzle-orm";
 import { boolean } from "drizzle-orm/mysql-core";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
-
+import { users } from "./auth";
 export const TripTable = sqliteTable("trip", {
   id: text("id").primaryKey().notNull(),
-  // userId: text("user_id")
-  //   .notNull()
-  //   .references(() => "user"),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   description: text("description"),
   emoji: text("emoji"),
@@ -42,19 +42,21 @@ export const ExpensesTable = sqliteTable("expenses", {
     .default(sql`(unixepoch())`),
 });
 
-// export const accountRelations = relations(UserTable, ({ many }) => ({
-//   trips: many(TripTable),
-// }));
-// export const tripRelations = relations(TripTable, ({ many, one }) => ({
-//   expenses: many(ExpensesTable),
-//   // user: one(UserTable, {
-//   //   fields: [TripTable.userId],
-//   //   references: [UserTable.id],
-//   // }),
-// }));
-// export const expensesRelations = relations(ExpensesTable, ({ one }) => ({
-//   trip: one(TripTable, {
-//     fields: [ExpensesTable.tripId],
-//     references: [TripTable.id],
-//   }),
-// }));
+export const userRelations = relations(users, ({ many }) => ({
+  trips: many(TripTable),
+}));
+
+export const tripRelations = relations(TripTable, ({ one, many }) => ({
+  user: one(users, {
+    fields: [TripTable.userId],
+    references: [users.id],
+  }),
+  expenses: many(ExpensesTable),
+}));
+
+export const expensesRelations = relations(ExpensesTable, ({ one }) => ({
+  trip: one(TripTable, {
+    fields: [ExpensesTable.tripId],
+    references: [TripTable.id],
+  }),
+}));

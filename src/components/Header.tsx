@@ -10,12 +10,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import type { Session } from "next-auth";
+import { signOut } from "next-auth/react";
 
-export default function Header() {
+export default function Header({ session }: { session: Session | null }) {
   const { setTheme } = useTheme();
   const { pathname } = useRouter();
   const navbar = ["/sign-up/[[...index]]", "/sign-in/[[...index]]"];
   let showNavbar = navbar.includes(pathname) ? false : true;
+
+  const isProd = process.env.NODE_ENV === "production";
 
   return (
     <>
@@ -26,19 +30,22 @@ export default function Header() {
               Road trip
             </h1>
             <div className="space-x-4 flex items-center">
-              {/* <SignedOut>
-                <Button asChild variant={"ghost"}>
-                <Link href="/sign-up">Sign Up</Link>
-              </Button>
-                <Button asChild className="mr-2">
-                  <Link href="/sign-in" className="mr-2">
-                    Sign In
-                  </Link>
+              {session && (
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={() =>
+                    signOut({
+                      callbackUrl: isProd
+                        ? `${process.env.NEXT_PUBLIC_BASE_URL}`
+                        : "https://roadtrip-tracker.vercel.app/",
+                    })
+                  }
+                >
+                  Sign Out
                 </Button>
-              </SignedOut> */}
-              {/* <SignedIn>
-                <UserButton afterSignOutUrl="/" />
-              </SignedIn> */}
+              )}
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button

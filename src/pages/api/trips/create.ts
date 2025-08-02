@@ -3,17 +3,25 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/db";
 import { TripTable } from "@/db/schema/trips";
 import { eq } from "drizzle-orm";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // const { userId } = getAuth(req);
+  if (req.method !== "POST") {
+    res.setHeader("Allow", ["POST"]);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
 
-  // if (!userId) {
-  //   res.status(401).json({ message: "Unauthorized" });
-  //   return;
-  // }
+  const session = await getServerSession(req, res, authOptions);
+  console.log("SESSION:", session);
+
+  if (!session || !session.user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  const userId = session.user.id; // Get the user ID from the session
 
   const {
     name,
@@ -30,9 +38,9 @@ export default async function handler(
     .insert(TripTable)
     .values({
       id: crypto.randomUUID(), // Generate a unique ID for the trip
+      userId,
       name,
       description,
-      // userId,
       budget,
       currency,
       start_trip,

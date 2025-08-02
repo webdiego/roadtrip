@@ -1,9 +1,14 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "./api/auth/[...nextauth]";
+
+import { useSession } from "next-auth/react";
 
 export default function Home() {
-  // const { isSignedIn } = useUser();
+  const { data: session, status } = useSession();
+
   return (
     <div className="flex flex-col items-start justify-center h-screen max-w-4xl px-4 sm:px-6 lg:px-8 py-10 w-full mx-auto">
       <div className="flex flex-col-reverse text-center   justify-between items-center w-full">
@@ -15,18 +20,19 @@ export default function Home() {
             Know your expenses during your road trip. <br />
             Create a trip and add transactions to it.
           </p>
-          {/* {isSignedIn && (
+          {session ? (
             <Button className="mt-6" asChild>
               <Link href={"/trips"} prefetch>
                 Go to your dashboard
               </Link>
             </Button>
-          )} */}
-          <Button className="mt-6" asChild>
-            <Link href={"/trips"} prefetch>
-              Go to your dashboard
-            </Link>
-          </Button>
+          ) : (
+            <Button className="mt-6" asChild>
+              <Link href={"/auth/sign-in"} prefetch>
+                Sign In to your account
+              </Link>
+            </Button>
+          )}
         </div>
 
         <svg

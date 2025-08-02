@@ -3,18 +3,24 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/db";
 import { ExpensesTable } from "@/db/schema/trips";
 import { eq } from "drizzle-orm";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  //Guard against unauthorized access
-  // const { userId } = getAuth(req);
+  if (req.method !== "POST") {
+    res.setHeader("Allow", ["POST"]);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
 
-  // if (!userId) {
-  //   res.status(401).json({ message: "Unauthorized" });
-  //   return;
-  // }
+  const session = await getServerSession(req, res, authOptions);
+  if (!session || !session.user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  const userId = session.user.id; // Get the user ID from the session
+  console.log("User ID:", userId);
 
   const { expensesId } = req.body;
 
@@ -22,6 +28,7 @@ export default async function handler(
     res.status(400).json({ message: "Expense ID is required" });
     return;
   }
+
   console.log(expensesId);
 
   const expenses = await db

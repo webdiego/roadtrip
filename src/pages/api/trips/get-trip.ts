@@ -4,16 +4,24 @@ import { db } from "@/db";
 import { TripTable, ExpensesTable } from "@/db/schema/trips";
 import { eq, and } from "drizzle-orm";
 
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // const { userId } = getAuth(req);
+  if (req.method !== "GET") {
+    res.setHeader("Allow", ["GET"]);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
+  const session = await getServerSession(req, res, authOptions);
+  console.log("SESSION:", session);
+  if (!session || !session.user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  const userId = session.user.id; // Get the user ID from the session
+  console.log("User ID:", userId);
 
-  // if (!userId) {
-  //   res.status(401).json({ message: "Unauthorized" });
-  //   return;
-  // }
   const {
     query: { tripId },
   } = req;

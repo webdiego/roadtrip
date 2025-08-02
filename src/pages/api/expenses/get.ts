@@ -2,19 +2,25 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/db";
 import { ExpensesTable } from "@/db/schema/trips";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   //Guard against unauthorized access
-  // const { userId } = getAuth(req);
-
-  // if (!userId) {
-  //   res.status(401).json({ message: "Unauthorized" });
-  //   return;
-  // }
+  if (req.method !== "POST") {
+    res.setHeader("Allow", ["POST"]);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
+  const session = await getServerSession(req, res, authOptions);
+  if (!session || !session.user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  const userId = session.user.id; // Get the user ID from the session
+  console.log("User ID:", userId);
 
   const { tripId } = req.body;
 
@@ -22,12 +28,9 @@ export default async function handler(
     .select()
     .from(ExpensesTable)
     .where(eq(ExpensesTable.tripId, tripId));
-  // and(eq(ExpensesTable.tripId, tripId), eq(ExpensesTable.userId, userId))
+  // .and(eq(ExpensesTable.tripId, tripId), eq(ExpensesTable.userId, userId));
 
   console.log(expenses);
 
-  // res.status(200).json({ expenses });
-  res
-    .status(200)
-    .json({ message: "Expense retrieval is not implemented yet." });
+  res.status(200).json({ expenses });
 }
