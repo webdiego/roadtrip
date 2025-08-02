@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { Session } from "next-auth";
 import { signOut } from "next-auth/react";
+import Image from "next/image";
 
 export default function Header({ session }: { session: Session | null }) {
   const { setTheme } = useTheme();
@@ -31,19 +32,31 @@ export default function Header({ session }: { session: Session | null }) {
             </h1>
             <div className="space-x-4 flex items-center">
               {session && (
-                <Button
-                  variant="default"
-                  size="sm"
-                  onClick={() =>
-                    signOut({
-                      callbackUrl: isProd
-                        ? `${process.env.NEXT_PUBLIC_BASE_URL}`
-                        : "https://roadtrip-tracker.vercel.app/",
-                    })
-                  }
-                >
-                  Sign Out
-                </Button>
+                <>
+                  {session.user.image && (
+                    <Image
+                      src={session.user.image}
+                      alt={session.user.name || "User Avatar"}
+                      width={30}
+                      height={30}
+                      className="rounded-full"
+                    />
+                  )}
+
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() =>
+                      signOut({
+                        callbackUrl: isProd
+                          ? `${process.env.NEXT_PUBLIC_BASE_URL}`
+                          : "https://roadtrip-tracker.vercel.app/",
+                      })
+                    }
+                  >
+                    Sign Out
+                  </Button>
+                </>
               )}
 
               <DropdownMenu>
