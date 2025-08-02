@@ -15,12 +15,10 @@ export default async function handler(
     return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
   const session = await getServerSession(req, res, authOptions);
-  console.log("SESSION:", session);
+
   if (!session || !session.user) {
     return res.status(401).json({ message: "Unauthorized" });
   }
-  const userId = session.user.id; // Get the user ID from the session
-  console.log("User ID:", userId);
   const { tripId } = req.body as { tripId: number };
 
   if (!tripId) {

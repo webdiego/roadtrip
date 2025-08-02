@@ -94,8 +94,6 @@ export default function CreateTrip() {
       return axios.post("/api/trips/create", trip);
     },
     onSuccess: (data) => {
-      console.log("ON SUCCESS", data);
-
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
       queryClient.invalidateQueries({ queryKey: ["trip"] });
       let tripId = data.data.trip[0].id;
@@ -134,8 +132,6 @@ export default function CreateTrip() {
   }, []);
 
   function onSubmit(values: z.infer<typeof schema>) {
-    console.log(values);
-
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     mutate({

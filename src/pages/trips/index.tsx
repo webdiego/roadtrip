@@ -19,16 +19,17 @@ export default function Index() {
     retry: false,
     refetchOnMount: false,
   });
-  console.log("Trips data:", data);
 
   if (isLoading) return <LoadingSkeleton />;
 
   return (
     <div className="px-4 py-10 w-full">
       <div className="flex items-center justify-between w-full ">
-        <div>
-          <h2 className="text-4xl font-bold ">Your trips</h2>
-          <p>Here you can view and manage your trips.</p>
+        <div className="mr-4">
+          <h2 className="text-2xl  md:text-4xl font-bold ">Your trips</h2>
+          <p className="text-sm md:text-base">
+            Here you can view and manage your trips.
+          </p>
         </div>
         <Button className="mt-4" size={"sm"} asChild>
           <Link href={`/trips/create`}>Create Trip</Link>

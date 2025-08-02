@@ -112,7 +112,6 @@ export default function EditTrip({ tripId }: { tripId: number }) {
       background: values.background,
     });
   }
-  console.log(trip);
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {

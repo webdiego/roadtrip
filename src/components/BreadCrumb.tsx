@@ -15,39 +15,40 @@ export function BreadCrumb() {
 
   return (
     <>
-      {pathname !== "/" && (
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
-            </BreadcrumbItem>
-            {pathname?.includes("/trips") && (
-              <>
-                <BreadcrumbSeparator>
-                  <SlashIcon />
-                </BreadcrumbSeparator>
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="/trips">My Trips</BreadcrumbLink>
-                </BreadcrumbItem>
-              </>
-            )}
+      {pathname !== "/" ||
+        (pathname?.includes("/auth") && (
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              </BreadcrumbItem>
+              {pathname?.includes("/trips") && (
+                <>
+                  <BreadcrumbSeparator>
+                    <SlashIcon />
+                  </BreadcrumbSeparator>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink href="/trips">My Trips</BreadcrumbLink>
+                  </BreadcrumbItem>
+                </>
+              )}
 
-            {pathname?.includes("/trips/") && (
-              <>
-                <BreadcrumbSeparator>
-                  <SlashIcon />
-                </BreadcrumbSeparator>
-                <BreadcrumbItem>
-                  <BreadcrumbPage>
-                    {pathname.split("/")[2].charAt(0).toUpperCase() +
-                      pathname.split("/")[2].slice(1)}
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-              </>
-            )}
-          </BreadcrumbList>
-        </Breadcrumb>
-      )}
+              {pathname?.includes("/trips/") && (
+                <>
+                  <BreadcrumbSeparator>
+                    <SlashIcon />
+                  </BreadcrumbSeparator>
+                  <BreadcrumbItem>
+                    <BreadcrumbPage>
+                      {pathname.split("/")[2].charAt(0).toUpperCase() +
+                        pathname.split("/")[2].slice(1)}
+                    </BreadcrumbPage>
+                  </BreadcrumbItem>
+                </>
+              )}
+            </BreadcrumbList>
+          </Breadcrumb>
+        ))}
     </>
   );
 }

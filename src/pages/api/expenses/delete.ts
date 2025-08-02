@@ -20,7 +20,6 @@ export default async function handler(
     return res.status(401).json({ message: "Unauthorized" });
   }
   const userId = session.user.id; // Get the user ID from the session
-  console.log("User ID:", userId);
 
   const { expensesId } = req.body;
 

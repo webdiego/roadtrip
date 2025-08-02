@@ -18,7 +18,6 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user, account }) {
-      console.log("JWT CALLBACK:", token, "user:", user, "account:", account);
       if (user) {
         token.id = user.id;
       }
@@ -29,7 +28,6 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
-      console.log("SESSION CALLBACK:", session, "token:", token);
       if (token && session.user) {
         session.user.id = token.id as string;
       }

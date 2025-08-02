@@ -20,8 +20,6 @@ export default function Header({ session }: { session: Session | null }) {
   const navbar = ["/sign-up/[[...index]]", "/sign-in/[[...index]]"];
   let showNavbar = navbar.includes(pathname) ? false : true;
 
-  const isProd = process.env.NODE_ENV === "production";
-
   return (
     <>
       {showNavbar && (
@@ -48,9 +46,7 @@ export default function Header({ session }: { session: Session | null }) {
                     size="sm"
                     onClick={() =>
                       signOut({
-                        callbackUrl: isProd
-                          ? `${process.env.NEXT_PUBLIC_BASE_URL}`
-                          : "https://roadtrip-tracker.vercel.app/",
+                        callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}`,
                       })
                     }
                   >
