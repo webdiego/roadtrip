@@ -96,7 +96,7 @@ export default function EditTrip({ tripId }: { tripId: number }) {
       });
       setTimeout(() => {
         router.push("/trips");
-      }, 2000);
+      }, 1500);
     },
   });
 
@@ -431,7 +431,7 @@ export default function EditTrip({ tripId }: { tripId: number }) {
                 type="submit"
                 className="mt-4"
                 size={"sm"}
-                disabled={isPending}
+                disabled={isPending || form.formState.isSubmitSuccessful}
               >
                 Update trip
               </Button>

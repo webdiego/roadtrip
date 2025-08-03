@@ -106,7 +106,7 @@ export default function CreateTrip() {
       });
       setTimeout(() => {
         router.push(`/trips/view/${tripId}`);
-      }, 2000);
+      }, 1500);
     },
   });
 
@@ -406,7 +406,7 @@ export default function CreateTrip() {
                 type="submit"
                 className="mt-4"
                 size={"sm"}
-                disabled={isPending}
+                disabled={isPending || form.formState.isSubmitSuccessful}
               >
                 {isPending && <Loader className="h-4 w-4 animate-spin mr-2" />}
                 Create Trip

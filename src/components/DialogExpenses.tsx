@@ -102,7 +102,7 @@ export default function DialogExpenses({
           form.reset();
         }
         setDialogOpen(false);
-      }, 1700);
+      }, 1500);
     },
   });
 
@@ -301,7 +301,11 @@ export default function DialogExpenses({
                 >
                   Close
                 </Button>
-                <Button type="submit" size={"sm"} disabled={isPending}>
+                <Button
+                  type="submit"
+                  size={"sm"}
+                  disabled={isPending || form.formState.isSubmitSuccessful}
+                >
                   Add expense
                 </Button>
               </div>
