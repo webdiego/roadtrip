@@ -33,7 +33,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { format } from "date-fns";
 import {
   Popover,
   PopoverContent,
@@ -43,6 +42,13 @@ import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Textarea } from "./ui/textarea";
 import { typeSelect } from "@/lib/typeSelect";
+import {
+  format,
+  isBefore,
+  isAfter,
+  eachDayOfInterval,
+  fromUnixTime,
+} from "date-fns";
 
 const schema = z.object({
   type: z.enum([
@@ -63,10 +69,14 @@ export default function DialogExpenses({
   dialogOpen,
   setDialogOpen,
   tripId,
+  initialDateTrip,
+  endDateTrip,
 }: {
   dialogOpen: boolean;
   setDialogOpen: (open: boolean) => void;
   tripId: number;
+  initialDateTrip: Date;
+  endDateTrip?: Date;
 }) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -117,6 +127,13 @@ export default function DialogExpenses({
   //     form.reset();
   //   }
   // }, [form.formState, form.reset]);
+
+  // disabledDate is used to disable dates outside the trip range ( initialDateTrip and endDateTrip  )
+  // Convertiti in oggetti Date
+  // const startDate = fromUnixTime(initialDateTrip);
+  // const endDate = fromUnixTime(endDateTrip);
+
+  // Funzione per disabilitare TUTTO tranne l'intervallo
 
   return (
     <Dialog
@@ -243,6 +260,14 @@ export default function DialogExpenses({
                               selected={field.value}
                               onSelect={field.onChange}
                               initialFocus
+                              disabled={[
+                                {
+                                  before: fromUnixTime(+initialDateTrip),
+                                  after: endDateTrip
+                                    ? fromUnixTime(+endDateTrip)
+                                    : undefined,
+                                },
+                              ]}
                             />
                           </PopoverContent>
                         </div>
