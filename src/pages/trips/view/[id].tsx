@@ -13,11 +13,13 @@ import Donut from "@/components/Charts/Donut";
 import Bar from "@/components/Charts/Bar";
 import Link from "next/link";
 import { currentlyOnTrip, daysRemaining } from "@/lib/utils";
-import { format } from "date-fns";
+import { format, fromUnixTime } from "date-fns";
 import { enGB } from "date-fns/locale";
 import Tripping from "@/components/Tripping";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth";
+import { Expense } from "@/types";
+import MostExpensiveDay from "@/components/Table/MostExpensiveDay";
 
 interface ShareTripResponse {
   ciphertext: string;
@@ -69,6 +71,46 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
     null;
 
   const amountRemain = trip.budget - amountUsed;
+
+  function getDayWithHighestSpending(expenses: Expense[], trip: any) {
+    const totalsByDate: Record<string, number> = {};
+
+    for (const expense of expenses) {
+      const date = expense.date_issued;
+      const amount = expense.amount;
+
+      if (!totalsByDate[date]) {
+        totalsByDate[date] = 0;
+      }
+      totalsByDate[date] += amount;
+    }
+
+    // Trova il giorno con il totale più alto
+    let maxDate = null;
+    let maxTotal = 0;
+
+    for (const [date, total] of Object.entries(totalsByDate)) {
+      if (total > maxTotal) {
+        maxDate = date;
+        maxTotal = total;
+      }
+    }
+    if (!maxDate) {
+      return { date: "No expenses", total: 0 };
+    }
+    let formattedDate = fromUnixTime(Number(maxDate)).toLocaleDateString(
+      "en-GB",
+      {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      }
+    );
+    let formattedTotal = `${trip.currency} ${maxTotal.toFixed(2)}`;
+    return { date: formattedDate, total: formattedTotal };
+  }
+
+  console.log(getDayWithHighestSpending(expenses, trip));
 
   return (
     <div className="mt-4 w-full">
@@ -196,9 +238,13 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
           <ExpensesTable data={expenses} />
         </div>
       </div>
-      <div className="flex flex-col lg:flex-row w-full items-start gap-5 pb-10">
-        <Donut expenses={expenses} currency={trip.currency} />
-        <Bar expenses={expenses} />
+      <div className="grid grid-cols-1 lg:grid-cols-2 w-full items-start gap-5 pb-10">
+        {expenses.length > 0 && (
+          <>
+            <Donut expenses={expenses} currency={trip.currency} />
+            <MostExpensiveDay expenses={expenses} trip={trip} />
+          </>
+        )}
       </div>
 
       <DialogExpenses

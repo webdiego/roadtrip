@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { Bolt, Eye, Trash2 } from "lucide-react";
-import { TripType } from "@/types";
+import { Trip } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { default as DialogDelete } from "@/components/Dialog";
 import axios from "axios";
@@ -10,7 +10,7 @@ import { currentlyOnTrip } from "@/lib/utils";
 import EmojiBackground from "./EmojiBackground";
 import { backgroundSelect } from "@/lib/backgroundSelect";
 import Tripping from "./Tripping";
-export default function CardTrip({ trip }: { trip: TripType }) {
+export default function CardTrip({ trip }: { trip: Trip }) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const queryClient = useQueryClient();
@@ -24,7 +24,7 @@ export default function CardTrip({ trip }: { trip: TripType }) {
 
         return {
           ...old,
-          trips: old.trips.filter((trip: TripType) => trip.id !== tripId),
+          trips: old.trips.filter((trip: Trip) => trip.id !== tripId),
         };
       });
 

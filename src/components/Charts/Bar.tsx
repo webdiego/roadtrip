@@ -1,13 +1,5 @@
 import { BarList, Card } from "@tremor/react";
-interface Expense {
-  id: number;
-  tripId: number;
-  type: string;
-  description: string;
-  amount: number;
-  date_issued: number;
-  createdAt: number;
-}
+import { Expense } from "@/types";
 
 interface ExpenseCounts {
   [key: string]: number;

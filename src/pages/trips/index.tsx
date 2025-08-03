@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { TripType } from "@/types/index";
+import { Trip } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import CardTrip from "@/components/CardTrip";
@@ -40,7 +40,7 @@ export default function Index() {
       <div className="border-t dark:border-t-gray-700 my-4"></div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mt-10">
         {data &&
-          data?.trips.map((trip: TripType) => (
+          data?.trips.map((trip: Trip) => (
             <CardTrip key={trip.id} {...{ trip }} />
           ))}
       </div>

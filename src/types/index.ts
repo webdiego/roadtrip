@@ -1,4 +1,4 @@
-export type TripType = {
+export type Trip = {
   id: string;
   name: string;
   description: string;
@@ -10,4 +10,13 @@ export type TripType = {
   createdAt: Date;
   emoji: string;
   background: string;
+};
+
+export type Expense = {
+  id: string;
+  date_issued: string;
+  amount: number;
+  type: string;
+  payment_method: string;
+  description: string;
 };
