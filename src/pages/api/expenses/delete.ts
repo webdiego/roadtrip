@@ -19,7 +19,6 @@ export default async function handler(
   if (!session || !session.user) {
     return res.status(401).json({ message: "Unauthorized" });
   }
-  const userId = session.user.id; // Get the user ID from the session
 
   const { expensesId } = req.body;
 
