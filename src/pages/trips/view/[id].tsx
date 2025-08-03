@@ -203,6 +203,8 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
         dialogOpen={isOpen}
         setDialogOpen={setIsOpen}
         tripId={trip.id}
+        initialDateTrip={trip.start_trip}
+        endDateTrip={trip.end_trip}
       />
       <DialogShare
         dialogOpen={isDialogShare}
