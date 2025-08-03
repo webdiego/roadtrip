@@ -1,3 +1,4 @@
+import { paymentMethod } from "./../../../lib/typeSelect";
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/db";
@@ -22,7 +23,8 @@ export default async function handler(
   }
   const userId = session.user.id; // Get the user ID from the session
 
-  const { tripId, type, description, amount, date_issued } = req.body;
+  const { tripId, type, paymentMethod, description, amount, date_issued } =
+    req.body;
   const trip = await db
     .select()
     .from(TripTable)
@@ -35,6 +37,7 @@ export default async function handler(
     id: crypto.randomUUID(), // Generate a unique ID for the expense
     tripId,
     type,
+    paymentMethod,
     description,
     amount,
     date_issued,

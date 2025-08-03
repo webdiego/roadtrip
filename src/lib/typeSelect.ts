@@ -35,3 +35,21 @@ export let typeSelect = [
     emoji: "💡",
   },
 ];
+
+export const paymentMethod = [
+  {
+    value: "cash",
+    label: "Cash",
+    emoji: "💵",
+  },
+  {
+    value: "card",
+    label: "Card",
+    emoji: "💳",
+  },
+  {
+    value: "other",
+    label: "Other",
+    emoji: "💡",
+  },
+];

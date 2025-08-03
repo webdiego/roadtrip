@@ -34,6 +34,9 @@ export const ExpensesTable = sqliteTable("expenses", {
       "other",
     ],
   }),
+  paymentMethod: text("payment_method", {
+    enum: ["cash", "card", "other"],
+  }),
   description: text("description"),
   amount: integer("amount").default(0).notNull(),
   date_issued: integer("date_issued", { mode: "number" }).notNull(),

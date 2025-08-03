@@ -113,6 +113,8 @@ export default function CreateTrip() {
     form.setValue("emoji", emoji.native); // Update the form field value with the selected emoji]
     setIsPickerVisible(false);
   };
+
+  // Handle click outside to close the emoji picker
   const handleClickOutside = (event: any) => {
     if (
       inputRef.current &&

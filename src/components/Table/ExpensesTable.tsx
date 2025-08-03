@@ -38,6 +38,7 @@ type Expenses = {
     | "pleasure"
     | "sport"
     | "other";
+  paymentMethod: "cash" | "card" | "other";
   description: string;
   amount: number;
   createdAt: string;
@@ -61,7 +62,12 @@ export function ExpensesTable<Expenses, TValue>({
       queryClient.invalidateQueries({ queryKey: ["tripId"] });
     },
   });
-
+  const paymentMethodEmojiCapitalize = function (value: string) {
+    const capitalize = value.charAt(0).toUpperCase() + value.slice(1);
+    if (value === "cash") return `💵 ${capitalize}`;
+    if (value === "card") return `💳 ${capitalize}`;
+    return `💡 ${capitalize}`;
+  };
   const [pagination, setPagination] = useState({
     pageIndex: 0, //initial page index
     pageSize: 10, //default page size
@@ -134,6 +140,30 @@ export function ExpensesTable<Expenses, TValue>({
             size={"sm"}
           >
             Amount
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+    },
+    {
+      accessorKey: "paymentMethod",
+
+      cell: ({ row }) => {
+        const paymentMethod = row.getValue("paymentMethod") as string;
+        return (
+          <div className="ml-2">
+            {paymentMethod ? paymentMethodEmojiCapitalize(paymentMethod) : null}
+          </div>
+        );
+      },
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            size={"sm"}
+          >
+            Payment Method
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );

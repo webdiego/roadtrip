@@ -102,7 +102,7 @@ export default function Donut({
   return (
     <>
       <Card className="w-full border rounded-lg">
-        <h3 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
+        <h3 className="text-tremor-title text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">
           Total expenses by category
         </h3>
         {expenses.length > 0 ? (

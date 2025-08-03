@@ -17,6 +17,7 @@ export type Expenses = {
     | "pleasure"
     | "sport"
     | "other";
+  paymentMethod: "cash" | "card" | "other";
   description: string;
   amount: number;
   createdAt: string;
@@ -33,6 +34,18 @@ export const columns: ColumnDef<Expenses>[] = [
       return (
         <div>
           {emoji} {type}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "paymentMethod",
+    header: "Payment Method",
+    cell: ({ row }) => {
+      const paymentMethod = row.getValue("paymentMethod") as string;
+      return (
+        <div>
+          {paymentMethod.charAt(0).toUpperCase() + paymentMethod.slice(1)}
         </div>
       );
     },

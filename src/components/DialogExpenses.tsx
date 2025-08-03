@@ -41,14 +41,8 @@ import {
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Textarea } from "./ui/textarea";
-import { typeSelect } from "@/lib/typeSelect";
-import {
-  format,
-  isBefore,
-  isAfter,
-  eachDayOfInterval,
-  fromUnixTime,
-} from "date-fns";
+import { typeSelect, paymentMethod } from "@/lib/typeSelect";
+import { format, fromUnixTime } from "date-fns";
 
 const schema = z.object({
   type: z.enum([
@@ -60,6 +54,7 @@ const schema = z.object({
     "sport",
     "other",
   ]),
+  paymentMethod: z.enum(["cash", "card", "other"]),
   description: z.string().min(1, { message: "Required" }),
   amount: z.coerce.number().nonnegative().min(0.01, { message: "Required" }),
   date_issued: z.date().min(new Date("1900-01-01"), { message: "Required" }),
@@ -86,6 +81,7 @@ export default function DialogExpenses({
     defaultValues: {
       type: "food",
       description: "",
+      paymentMethod: "cash",
       amount: 0,
       date_issued: undefined,
     },
@@ -116,24 +112,12 @@ export default function DialogExpenses({
       type: values.type,
       description: values.description,
       amount: values.amount,
+      paymentMethod: values.paymentMethod,
       date_issued: values.date_issued
         ? format(values.date_issued, "t")
         : undefined,
     });
   }
-
-  // React.useEffect(() => {
-  //   if (form.formState.isSubmitSuccessful) {
-  //     form.reset();
-  //   }
-  // }, [form.formState, form.reset]);
-
-  // disabledDate is used to disable dates outside the trip range ( initialDateTrip and endDateTrip  )
-  // Convertiti in oggetti Date
-  // const startDate = fromUnixTime(initialDateTrip);
-  // const endDate = fromUnixTime(endDateTrip);
-
-  // Funzione per disabilitare TUTTO tranne l'intervallo
 
   return (
     <Dialog
@@ -160,14 +144,14 @@ export default function DialogExpenses({
                 name="type"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>Expenses type</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a verified email to display" />
+                          <SelectValue placeholder="Select an expense type" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -180,6 +164,36 @@ export default function DialogExpenses({
                     </Select>
                     <FormDescription>
                       Write a short name of the activity.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="paymentMethod"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Payment method</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a payment method" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {paymentMethod.map((item) => (
+                          <SelectItem key={item.value} value={item.value}>
+                            {item.emoji} {item.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>
+                      Select the payment method used for the expense.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

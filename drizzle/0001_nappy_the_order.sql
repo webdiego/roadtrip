@@ -1,0 +1,1 @@
+ALTER TABLE `expenses` ADD `payment_method` text;
