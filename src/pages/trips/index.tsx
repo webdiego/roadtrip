@@ -58,4 +58,7 @@ export async function getServerSideProps(ctx: any) {
       },
     };
   }
+  return {
+    props: {},
+  };
 }
