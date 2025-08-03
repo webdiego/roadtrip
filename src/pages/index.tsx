@@ -9,107 +9,51 @@ import { useSession } from "next-auth/react";
 export default function Home() {
   const { data: session, status } = useSession();
 
+  if (status === "loading") {
+    return (
+      <div className="flex-col gap-4 w-full flex items-center justify-center h-screen">
+        <div className="w-32 h-32 border-4 border-transparent text-black text-4xl animate-spin flex items-center justify-center border-t-black rounded-full">
+          <div className="w-24 h-24 border-4 border-transparent text-slate-400 text-2xl animate-spin flex items-center justify-center border-t-slate-400 rounded-full"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-start justify-center h-screen max-w-4xl px-4 sm:px-6 lg:px-8 py-10 w-full mx-auto">
-      <div className="flex flex-col-reverse text-center   justify-between items-center w-full">
-        <div>
-          <h1 className="text-6xl lg:text-7xl xl:text-8xl font-black dark:text-white">
-            Road trip
-          </h1>
-          <p className="mt-2 ">
-            Know your expenses during your road trip. <br />
-            Create a trip and add transactions to it.
-          </p>
-          {session ? (
-            <Button className="mt-6" asChild>
-              <Link href={"/trips"} prefetch>
-                Go to your dashboard
-              </Link>
-            </Button>
-          ) : (
-            <Button className="mt-6" asChild>
-              <Link href={"/auth/sign-in"} prefetch>
-                Sign In to your account
-              </Link>
-            </Button>
-          )}
-        </div>
+      <div className="flex flex-col text-center justify-center items-center w-full">
+        <Image
+          src="/campsite.svg"
+          alt="Road trip"
+          width={100}
+          height={100}
+          priority
+          className="w-44 h-44 md:w-52 md:h-52 rotate-12 dark:invert"
+        />
 
-        <svg
-          version="1.0"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 480.000000 480.000000"
-          preserveAspectRatio="xMidYMid meet"
-          className="fill-black dark:fill-white transform rotate-45  w-44 h-44 md:w-72 md:h-72 lg:w-96 lg:h-96"
-        >
-          <g
-            transform="translate(0.000000,480.000000) scale(0.100000,-0.100000)"
-            stroke="none"
-          >
-            <path
-              d="M2325 4600 c-55 -10 -110 -24 -123 -30 -34 -15 -240 -171 -288 -217
--54 -53 -97 -130 -133 -239 -50 -155 -65 -246 -65 -394 1 -118 4 -145 27 -215
-56 -169 145 -274 293 -346 46 -22 84 -43 84 -46 0 -2 -15 -23 -33 -46 -57 -72
--159 -266 -165 -314 -9 -85 22 -161 134 -331 57 -85 106 -170 110 -187 8 -42
--9 -73 -85 -159 -34 -38 -72 -92 -86 -120 -34 -70 -42 -164 -21 -245 9 -34 16
--66 16 -71 0 -4 -52 -51 -115 -105 -119 -102 -172 -167 -204 -250 -47 -123
--53 -474 -12 -630 64 -243 207 -387 451 -454 144 -40 339 -20 549 55 231 83
-300 151 353 349 48 178 28 426 -51 636 -23 61 -107 204 -148 254 -14 16 -49
-46 -77 66 -45 31 -52 40 -57 80 -14 96 20 196 82 239 64 46 113 146 139 282
-10 58 10 78 -5 145 -31 148 -42 170 -115 242 -84 82 -91 104 -54 168 69 120
-76 137 70 180 -3 22 -21 70 -41 105 -19 36 -35 70 -35 76 0 6 42 31 93 57 106
-54 114 60 174 138 63 82 130 211 155 303 19 70 22 104 22 309 1 216 -1 237
--26 343 -55 228 -144 324 -343 367 -116 26 -351 28 -470 5z m393 -175 c118
--37 150 -65 209 -182 87 -170 117 -291 116 -463 -2 -200 -47 -324 -163 -441
--49 -50 -86 -76 -153 -109 l-89 -43 -151 6 c-237 8 -349 48 -456 163 -108 115
--150 224 -158 415 -7 152 9 238 66 355 46 96 109 167 195 223 89 59 157 82
-256 91 175 15 244 12 328 -15z m-362 -1366 c24 -20 16 -60 -37 -170 -86 -182
--79 -250 42 -411 129 -173 142 -295 45 -426 -51 -70 -86 -152 -96 -225 -16
--107 -31 -141 -64 -145 -66 -8 -87 10 -104 86 -13 54 16 118 94 210 31 37 63
-80 69 97 38 91 25 178 -39 275 -24 36 -69 113 -100 172 -78 151 -77 172 28
-408 66 148 70 154 113 147 19 -3 41 -11 49 -18z m216 -11 c21 -17 58 -120 58
--160 0 -17 -16 -65 -36 -105 -34 -68 -36 -79 -32 -138 7 -76 47 -169 103 -235
-70 -83 110 -209 91 -285 -4 -15 -38 -60 -76 -100 -76 -80 -121 -160 -148 -262
--16 -61 -20 -68 -42 -68 -45 0 -65 80 -36 148 7 18 32 61 55 96 70 109 106
-274 82 371 -7 25 -49 121 -93 214 -100 206 -105 239 -45 324 40 58 57 107 57
-164 0 45 29 62 62 36z m-93 -1513 c103 -48 296 -226 341 -315 65 -127 88 -265
-70 -427 -20 -186 -47 -261 -120 -327 -52 -47 -109 -73 -203 -92 -192 -40 -397
--36 -493 11 -101 49 -202 187 -252 345 -84 259 -37 509 122 658 153 143 398
-210 535 147z"
-            />
-            <path
-              d="M2440 4335 c-138 -28 -216 -71 -305 -167 -60 -64 -103 -141 -129
--228 -23 -77 -31 -231 -16 -305 11 -54 18 -66 79 -126 94 -93 184 -156 250
--176 37 -11 94 -17 171 -17 109 -1 118 1 182 31 115 54 216 168 259 291 29 82
-36 220 15 302 -18 69 -80 191 -129 254 -37 47 -153 124 -215 142 -54 17 -76
-16 -162 -1z m106 -194 c118 -56 159 -109 189 -245 41 -186 -23 -354 -161 -422
--50 -25 -62 -26 -137 -21 -103 7 -143 19 -204 61 -64 43 -109 119 -118 197
--26 222 20 307 219 405 61 30 120 54 131 54 11 0 47 -13 81 -29z"
-            />
-            <path
-              d="M2386 4065 c-63 -26 -146 -97 -173 -150 -22 -42 -20 -132 5 -188 32
--73 70 -114 128 -143 101 -49 204 -18 278 84 47 63 60 117 52 199 -12 118 -56
-182 -145 212 -49 16 -79 13 -145 -14z m145 -144 c24 -24 29 -38 29 -76 0 -52
--21 -99 -49 -115 -37 -19 -97 -12 -131 16 -105 89 -65 203 73 204 40 0 53 -5
-78 -29z"
-            />
-            <path
-              d="M2276 1419 c-51 -8 -95 -29 -215 -98 -140 -82 -186 -176 -186 -376 1
--104 5 -130 28 -194 50 -142 136 -231 256 -265 113 -33 356 -11 461 42 65 33
-117 97 157 192 21 52 27 86 31 168 4 90 1 112 -22 185 -47 150 -142 288 -228
-331 -45 23 -64 26 -142 25 -50 -1 -113 -5 -140 -10z m179 -136 c75 -25 138
--94 164 -178 27 -87 30 -276 5 -350 -39 -112 -158 -173 -321 -162 -73 4 -96
-10 -161 43 -65 33 -82 47 -107 88 -28 46 -30 58 -34 161 -2 81 2 129 13 176
-26 102 49 127 166 187 91 46 109 52 164 52 35 0 84 -8 111 -17z"
-            />
-            <path
-              d="M2340 1154 c-104 -20 -143 -52 -170 -145 -32 -107 -23 -176 31 -226
-53 -48 174 -68 242 -39 47 19 114 97 127 148 14 51 7 124 -16 174 -27 56 -138
-102 -214 88z m97 -134 c34 -31 37 -56 11 -106 -31 -62 -58 -80 -106 -68 -45
-11 -65 44 -58 98 9 81 100 126 153 76z"
-            />
-          </g>
-        </svg>
+        <h1 className="text-6xl lg:text-7xl xl:text-8xl font-black dark:text-white">
+          Road trip
+        </h1>
+        <p className="mt-2 dark:text-white">
+          Create and manage your expenses during your road trip.
+          <br />
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            Don't stress about your expenses, we've got you covered.
+          </span>
+        </p>
+        {session ? (
+          <Button className="mt-6" asChild>
+            <Link href={"/trips"} prefetch>
+              Go to your dashboard
+            </Link>
+          </Button>
+        ) : (
+          <Button className="mt-6" asChild>
+            <Link href={"/auth/sign-in"} prefetch>
+              Sign In to your account
+            </Link>
+          </Button>
+        )}
       </div>
     </div>
   );
