@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import CardTrip from "@/components/CardTrip";
 import Link from "next/link";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]";
+// import { isAuthenticated } from "@/lib/utils";
 
 export default function Index() {
   // Query
@@ -45,19 +48,14 @@ export default function Index() {
   );
 }
 
-// export async function getServerSideProps(ctx: any) {
-//   // const { userId, account } = await protectRoute(ctx);
-//   // if (!userId || !account) {
-//   //   return {
-//   //     redirect: {
-//   //       destination: "/sign-in",
-//   //       permanent: false,
-//   //     },
-//   //   };
-//   // }
-//   // return {
-//   //   props: {
-//   //     userId,
-//   //   },
-//   // };
-// }
+export async function getServerSideProps(ctx: any) {
+  const session = await getServerSession(ctx.req, ctx.res, authOptions);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/sign-in",
+        permanent: false,
+      },
+    };
+  }
+}

@@ -39,7 +39,8 @@ import {
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 import * as z from "zod";
 import { backgroundSelect } from "@/lib/backgroundSelect";
-// import { protectRoute } from "@/lib/protectRoute";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 const schema = z.object({
   name: z.string().min(1, { message: "Required" }),
@@ -443,18 +444,15 @@ export default function EditTrip({ tripId }: { tripId: number }) {
 }
 
 export async function getServerSideProps(ctx: any) {
-  //Check if the user is signed in and has stripeId and redirect
-  // const { userId, account } = await protectRoute(ctx);
-
-  // if (!userId || !account) {
-  //   return {
-  //     redirect: {
-  //       destination: "/sign-in",
-  //       permanent: false,
-  //     },
-  //   };
-  // }
-
+  const session = await getServerSession(ctx.req, ctx.res, authOptions);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/sign-in",
+        permanent: false,
+      },
+    };
+  }
   const tripId = ctx.query.id;
 
   return {

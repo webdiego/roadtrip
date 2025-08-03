@@ -16,6 +16,8 @@ import { currentlyOnTrip, daysRemaining } from "@/lib/utils";
 import { format } from "date-fns";
 import { enGB } from "date-fns/locale";
 import Tripping from "@/components/Tripping";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { getServerSession } from "next-auth";
 
 interface ShareTripResponse {
   ciphertext: string;
@@ -216,16 +218,16 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
 }
 
 export async function getServerSideProps(ctx: any) {
-  // if (!userId || !account) {
-  //   return {
-  //     redirect: {
-  //       destination: "/sign-in",
-  //       permanent: false,
-  //     },
-  //   };
-  // }
+  const session = await getServerSession(ctx.req, ctx.res, authOptions);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/sign-in",
+        permanent: false,
+      },
+    };
+  }
   const tripId = ctx.query.id;
-  console.log("Trip ID:", tripId);
 
   return {
     props: {
