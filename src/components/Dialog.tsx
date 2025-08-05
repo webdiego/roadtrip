@@ -61,6 +61,7 @@ export default function DialogCloseButton({
           {secondaryButtonText && !actionStatus.isPending && (
             <Button
               type="button"
+              size={"sm"}
               onClick={secondaryButtonOnClick}
               variant={secondaryButtonVariant ?? "secondary"}
             >

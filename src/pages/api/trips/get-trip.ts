@@ -6,6 +6,7 @@ import { eq, and } from "drizzle-orm";
 
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -30,24 +31,31 @@ export default async function handler(
     return;
   }
 
-  // Get trip by trip id and user id
-  const trip = await db
-    .select()
-    .from(TripTable)
-    .where(and(eq(TripTable.id, tripId as string)));
+  try {
+    const [trip, expenses] = await Promise.all([
+      db
+        .select()
+        .from(TripTable)
+        .where(eq(TripTable.id, tripId as string)),
+      db
+        .select()
+        .from(ExpensesTable)
+        .where(eq(ExpensesTable.tripId, tripId as string)),
+    ]);
 
-  console.log("trip", trip);
+    if (trip.length === 0) {
+      console.log("Trip not found");
+      res.status(404).json({ message: "Trip not found" });
+      return;
+    }
 
-  if (trip.length === 0) {
-    console.log("Trip not found");
-    res.status(404).json({ message: "Trip not found" });
-    return;
+    res.setHeader(
+      "Cache-Control",
+      "public, s-maxage=30, stale-while-revalidate=60"
+    );
+    res.status(200).json({ trip, expenses });
+  } catch (error) {
+    console.error("Error fetching trip data:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
-
-  const expenses = await db
-    .select()
-    .from(ExpensesTable)
-    .where(eq(ExpensesTable.tripId, tripId as string));
-
-  res.status(200).json({ trip, expenses });
 }
