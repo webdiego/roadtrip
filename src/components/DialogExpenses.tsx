@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ButtonLoading } from "@/components/ButtonLoading";
 import { Calendar } from "@/components/ui/calendar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import * as z from "zod";
@@ -38,7 +39,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Textarea } from "./ui/textarea";
 import { typeSelect, paymentMethod } from "@/lib/typeSelect";
@@ -301,13 +302,17 @@ export default function DialogExpenses({
                 >
                   Close
                 </Button>
-                <Button
-                  type="submit"
-                  size={"sm"}
-                  disabled={isPending || form.formState.isSubmitSuccessful}
-                >
-                  Add expense
-                </Button>
+                {isPending ? (
+                  <ButtonLoading />
+                ) : (
+                  <Button
+                    type="submit"
+                    size={"sm"}
+                    disabled={isPending || form.formState.isSubmitSuccessful}
+                  >
+                    Add expense
+                  </Button>
+                )}
               </div>
             </form>
           </Form>

@@ -8,9 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ReloadIcon } from "@radix-ui/react-icons";
+import { ButtonLoading } from "./ButtonLoading";
 type DialogProps = {
   dialogTitle: string;
   dialogDescription: string;
@@ -57,15 +55,15 @@ export default function DialogCloseButton({
               Close
             </Button>
           </DialogClose>
-          {secondaryButtonText && (
+          {actionStatus && actionStatus.isPending && (
+            <ButtonLoading variant="destructive" />
+          )}
+          {secondaryButtonText && !actionStatus.isPending && (
             <Button
               type="button"
               onClick={secondaryButtonOnClick}
               variant={secondaryButtonVariant ?? "secondary"}
             >
-              {actionStatus && actionStatus.isLoading && (
-                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-              )}
               {secondaryButtonText}
             </Button>
           )}

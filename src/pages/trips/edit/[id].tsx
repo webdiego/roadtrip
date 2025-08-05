@@ -41,7 +41,7 @@ import * as z from "zod";
 import { backgroundSelect } from "@/lib/backgroundSelect";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
-
+import { ButtonLoading } from "@/components/ButtonLoading";
 const schema = z.object({
   name: z.string().min(1, { message: "Required" }),
   description: z.string().min(1, { message: "Required" }),
@@ -92,7 +92,7 @@ export default function EditTrip({ tripId }: { tripId: number }) {
       toast({
         title: "Trip updated",
         description: "Ready to go!",
-        duration: 1500,
+        duration: 1000,
       });
       setTimeout(() => {
         router.push("/trips");
@@ -427,14 +427,18 @@ export default function EditTrip({ tripId }: { tripId: number }) {
                 />
               </div>
 
-              <Button
-                type="submit"
-                className="mt-4"
-                size={"sm"}
-                disabled={isPending || form.formState.isSubmitSuccessful}
-              >
-                Update trip
-              </Button>
+              {isPending ? (
+                <ButtonLoading />
+              ) : (
+                <Button
+                  type="submit"
+                  className="mt-4"
+                  size={"sm"}
+                  disabled={isPending || form.formState.isSubmitSuccessful}
+                >
+                  Update trip
+                </Button>
+              )}
             </form>
           </Form>
         </div>
