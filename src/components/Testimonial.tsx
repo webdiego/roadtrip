@@ -19,8 +19,7 @@ export default function Testimonial() {
             <p className="text-lg md:text-2xl font-medium text-gray-900 dark:text-white">
               "I've been using this app for a few months now and it's been a
               game-changer for my road trips. I've saved so much money on gas
-              and food, and I've been able to find some great campsites along
-              the way."
+              and food, and I've been able to find the way to save money."
             </p>
           </blockquote>
           <figcaption className="flex items-center justify-center mt-6 space-x-3">
