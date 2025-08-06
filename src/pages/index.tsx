@@ -1,10 +1,9 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "./api/auth/[...nextauth]";
-
 import { useSession } from "next-auth/react";
+import Testimonial from "@/components/Testimonial";
+import Stats from "@/components/Stats";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -20,7 +19,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col items-start justify-center h-screen max-w-4xl px-4 sm:px-6 lg:px-8 py-10 w-full mx-auto">
+    <div className="flex flex-col items-start justify-center  max-w-4xl px-4 sm:px-6 lg:px-8 py-10 w-full mx-auto">
       <div className="flex flex-col text-center justify-center items-center w-full">
         <Image
           src="/campsite.svg"
@@ -54,6 +53,8 @@ export default function Home() {
             </Link>
           </Button>
         )}
+        <Stats />
+        <Testimonial />
       </div>
     </div>
   );
