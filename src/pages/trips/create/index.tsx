@@ -349,7 +349,7 @@ export default function CreateTrip() {
                           />
                         </PopoverContent>
                       </Popover>
-                      <FormDescription>Date of departure.</FormDescription>
+                      <FormDescription>Start Trip.</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

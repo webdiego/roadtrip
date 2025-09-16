@@ -184,7 +184,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
               </div>
               <div className="grid grid-cols-3  gap-1.5 ">
                 <div className="grid mr-10">
-                  <dt className="font-medium">Date of departure</dt>
+                  <dt className="font-medium">Start Trip</dt>
                   <dd className="text-gray-500 dark:text-gray-400">
                     {trip.start_trip
                       ? format(
@@ -199,7 +199,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
                 </div>
 
                 <div className="grid ">
-                  <dt className="font-medium">Date of arrival</dt>
+                  <dt className="font-medium">End trip</dt>
                   <dd className="text-gray-500 dark:text-gray-400">
                     {trip.end_trip
                       ? format(new Date(+trip.end_trip * 1000), "d MMMM yyyy", {

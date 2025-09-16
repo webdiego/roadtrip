@@ -374,7 +374,9 @@ export default function EditTrip({ tripId }: { tripId: number }) {
                           />
                         </PopoverContent>
                       </Popover>
-                      <FormDescription>Date of departure.</FormDescription>
+                      <FormDescription>
+                        Set the start date for your trip.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

@@ -287,7 +287,7 @@ export default function DialogExpenses({
                           </PopoverContent>
                         </div>
                       </Popover>
-                      <FormDescription>Date of departure.</FormDescription>
+                      <FormDescription>End Trip.</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
