@@ -110,8 +110,6 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
     return { date: formattedDate, total: formattedTotal };
   }
 
-  console.log(getDayWithHighestSpending(expenses, trip));
-
   return (
     <div className="mt-4 w-full">
       <div className="py-5 flex items-center justify-between">

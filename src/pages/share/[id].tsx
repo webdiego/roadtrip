@@ -6,26 +6,26 @@ import { backgroundSelect } from "@/lib/backgroundSelect";
 import { db } from "@/db";
 import { TripTable, ExpensesTable as ExpensesTableDb } from "@/db/schema/trips";
 import CryptoJS from "crypto-js";
+import Donut from "@/components/Charts/Donut";
+import MostExpensiveDay from "@/components/Table/MostExpensiveDay";
 
 export default function ShareTripPage({
   trip,
   expenses,
   emojiParsed,
+  bg,
 }: {
   trip: any;
   expenses: any;
   emojiParsed: string;
+  bg: string;
 }) {
-  console.log("Trip data in ShareTripPage:", { trip, expenses, emojiParsed });
-  let bg = backgroundSelect.find((b) => b.name === trip.background)?.value;
-
   const amountUsed =
     expenses.reduce((sum: number, expense: any) => sum + expense?.amount, 0) ||
     null;
 
   const amountRemain = trip.budget - amountUsed;
 
-  console.log({ trip, expenses, emojiParsed });
   return (
     <div className="mt-4 w-full">
       <div className="py-5 flex items-center justify-between">
@@ -94,8 +94,7 @@ export default function ShareTripPage({
             <h2 className="text-xl font-bold ">Expenses</h2>
 
             <p className="text-sm text-gray-500">
-              Add expenses to your trip. You can add as many expenses as you
-              want.
+              Here you can see all the expenses for this trip.
             </p>
           </div>
         </div>
@@ -103,6 +102,14 @@ export default function ShareTripPage({
         <div className="pt-4 pb-10 w-full">
           <ExpensesTable data={expenses} />
         </div>
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 w-full items-start gap-5 pb-10">
+        {expenses.length > 0 && (
+          <>
+            <Donut expenses={expenses} currency={trip.currency} />
+            <MostExpensiveDay expenses={expenses} trip={trip} />
+          </>
+        )}
       </div>
     </div>
   );
@@ -150,13 +157,14 @@ export async function getServerSideProps(ctx: any) {
       .where(eq(ExpensesTableDb.tripId, tripId))) || [];
 
   let emojiParsed = JSON.parse(trip.emoji as string).native;
-
+  let bg = backgroundSelect.find((b) => b.name === trip.background)?.value;
   return {
     props: {
       tripId,
       trip,
       expenses,
       emojiParsed,
+      bg,
     },
   };
 }
