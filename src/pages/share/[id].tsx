@@ -113,14 +113,14 @@ export async function getServerSideProps(ctx: any) {
 
   if (!tripIdHashRaw) {
     console.error("No tripIdHash provided in query parameters.");
-    return;
+    return { notFound: true };
   }
 
   const password = process.env.SHARE_PSW;
 
   if (!password) {
     console.error("Environment variable SHARE_PSW is not set.");
-    return;
+    return { notFound: true };
   }
 
   console.log("Using password from env variable.");
