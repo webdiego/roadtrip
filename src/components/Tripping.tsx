@@ -2,7 +2,11 @@ import React from "react";
 
 export default function Tripping({ onTrip }: { onTrip: boolean }) {
   return (
-    <div className="border dark:border-gray-700 relative w-max px-3 pr-3 rounded-lg self-end justify-self-end -mb-5  ">
+    <div
+      className={`relative border w-max px-3 pr-3 rounded-lg self-end justify-self-end -mb-5 ${
+        onTrip ? "bg-green-100 border-green-200" : "bg-blue-100 border-blue-200"
+      }`}
+    >
       <div className="dot absolute -top-1 right-0">
         <span className="relative flex h-2 w-2  ">
           <span
