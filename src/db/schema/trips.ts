@@ -1,7 +1,7 @@
 import { relations, sql } from "drizzle-orm";
-import { boolean } from "drizzle-orm/mysql-core";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { users } from "./auth";
+
 export const TripTable = sqliteTable("trip", {
   id: text("id").primaryKey().notNull(),
   userId: text("user_id")

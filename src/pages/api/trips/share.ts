@@ -1,18 +1,23 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import CryptoJS from "crypto-js";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
-    // const { userId } = getAuth(req);
+    if (req.method !== "POST") {
+      res.setHeader("Allow", ["POST"]);
+      return res.status(405).end(`Method ${req.method} Not Allowed`);
+    }
 
-    // if (!userId) {
-    //   res.status(401).json({ message: "Unauthorized" });
-    //   return;
-    // }
+    const session = await getServerSession(req, res, authOptions);
+    if (!session || !session.user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
 
     const { tripId } = req.body;
     if (tripId === undefined) {
@@ -37,8 +42,9 @@ export default async function handler(
     if (typeof password !== "string" || !password.trim()) {
       throw new Error("Invalid password: Must be a non-empty string");
     }
+    const hash = CryptoJS.AES.encrypt(tripId, password).toString();
+    const ciphertext = encodeURIComponent(hash);
 
-    const ciphertext = CryptoJS.AES.encrypt(tripIdStr, password).toString();
     console.log("Ciphertext:", ciphertext);
 
     res.status(200).json({ ciphertext });

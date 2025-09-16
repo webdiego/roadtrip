@@ -2,13 +2,12 @@ import React from "react";
 import { Label } from "@radix-ui/react-label";
 import { ExpensesTable } from "@/components/Table/ExpensesTable";
 import { eq } from "drizzle-orm";
-
 import { backgroundSelect } from "@/lib/backgroundSelect";
 import { db } from "@/db";
 import { TripTable, ExpensesTable as ExpensesTableDb } from "@/db/schema/trips";
 import CryptoJS from "crypto-js";
 
-export default function ShareTrip({
+export default function ShareTripPage({
   trip,
   expenses,
   emojiParsed,
@@ -17,12 +16,16 @@ export default function ShareTrip({
   expenses: any;
   emojiParsed: string;
 }) {
+  console.log("Trip data in ShareTripPage:", { trip, expenses, emojiParsed });
   let bg = backgroundSelect.find((b) => b.name === trip.background)?.value;
 
   const amountUsed =
     expenses.reduce((sum: number, expense: any) => sum + expense?.amount, 0) ||
     null;
+
   const amountRemain = trip.budget - amountUsed;
+
+  console.log({ trip, expenses, emojiParsed });
   return (
     <div className="mt-4 w-full">
       <div className="py-5 flex items-center justify-between">
@@ -106,50 +109,54 @@ export default function ShareTrip({
 }
 
 export async function getServerSideProps(ctx: any) {
-  const tripIdHash = ctx.query.id!;
-  if (!tripIdHash) {
-    console.error("tripIdHash is not provided in the query parameters.");
+  const tripIdHashRaw = ctx.query.id!;
+
+  if (!tripIdHashRaw) {
+    console.error("No tripIdHash provided in query parameters.");
     return;
   }
 
   const password = process.env.SHARE_PSW;
+
   if (!password) {
     console.error("Environment variable SHARE_PSW is not set.");
     return;
   }
 
+  console.log("Using password from env variable.");
+  const tripIdHash = decodeURIComponent(tripIdHashRaw as string);
   const bytes = CryptoJS.AES.decrypt(tripIdHash, password);
-  console.log(bytes);
 
   const tripId = bytes.toString(CryptoJS.enc.Utf8);
-  console.log(tripId);
 
   // Get data from db
-  // const trip =
-  //   (await db.select().from(TripTable).where(eq(TripTable.id, +tripId)))[0] ||
-  //   [];
+  const trip = await db
+    .select()
+    .from(TripTable)
+    .where(eq(TripTable.id, tripId))
+    .then((res) => res[0]);
 
-  // if (!trip) {
-  //   console.log("Trip not found");
-  //   return {
-  //     notFound: true,
-  //   };
-  // }
-  // console.log(trip);
-  // const expenses =
-  //   (await db
-  //     .select()
-  //     .from(ExpensesTableDb)
-  //     .where(eq(ExpensesTableDb.tripId, +tripId))) || [];
+  if (!trip) {
+    console.log("Trip not found");
+    return {
+      notFound: true,
+    };
+  }
 
-  // let emojiParsed = JSON.parse(trip.emoji as string).native;
+  const expenses =
+    (await db
+      .select()
+      .from(ExpensesTableDb)
+      .where(eq(ExpensesTableDb.tripId, tripId))) || [];
 
-  // return {
-  //   props: {
-  //     tripId,
-  //     trip,
-  //     expenses,
-  //     emojiParsed,
-  //   },
-  // };
+  let emojiParsed = JSON.parse(trip.emoji as string).native;
+
+  return {
+    props: {
+      tripId,
+      trip,
+      expenses,
+      emojiParsed,
+    },
+  };
 }
