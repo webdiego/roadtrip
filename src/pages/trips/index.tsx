@@ -2,27 +2,24 @@ import React from "react";
 import axios from "axios";
 import { Trip } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
 import CardTrip from "@/components/CardTrip";
 import Link from "next/link";
-import LoadingSkeleton from "@/components/LoadingSkeleton";
+import { Button } from "@/components/ui/button";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
-// import { isAuthenticated } from "@/lib/utils";
 
-export default function Index() {
-  // Query
-  const { isLoading, data } = useQuery({
+export default function Home({ trips }: { trips: Trip[] }) {
+  const { data } = useQuery({
     queryKey: ["trips"],
     queryFn: async () => {
-      return await axios.get("/api/trips/get-all").then((res) => res.data);
+      const res = await axios.get("/api/trips/get-all");
+      return res.data;
     },
+    initialData: { trips }, //
     refetchOnWindowFocus: false,
     retry: false,
     refetchOnMount: false,
   });
-
-  if (isLoading) return <LoadingSkeleton />;
 
   return (
     <div className="px-4 py-10 w-full">
@@ -39,10 +36,9 @@ export default function Index() {
       </div>
       <div className="border-t dark:border-t-gray-700 my-4"></div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mt-10">
-        {data &&
-          data?.trips.map((trip: Trip) => (
-            <CardTrip key={trip.id} {...{ trip }} />
-          ))}
+        {data.trips.map((trip: Trip) => (
+          <CardTrip key={trip.id} trip={trip} />
+        ))}
       </div>
     </div>
   );
@@ -52,13 +48,20 @@ export async function getServerSideProps(ctx: any) {
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
   if (!session) {
     return {
-      redirect: {
-        destination: "/auth/sign-in",
-        permanent: false,
-      },
+      redirect: { destination: "/auth/sign-in", permanent: false },
     };
   }
+
+  const res = await axios.get(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/trips/get-all`,
+    {
+      headers: { cookie: ctx.req.headers.cookie || "" },
+    }
+  );
+
+  let trips = res.data.trips;
+
   return {
-    props: {},
+    props: { trips },
   };
 }
