@@ -4,16 +4,20 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import Testimonial from "@/components/Testimonial";
 import Stats from "@/components/Stats";
-import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]";
 
-export default function Home({
-  session,
-  status,
-}: {
-  session: any;
-  status: any;
-}) {
+export default function Home() {
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return (
+      <div className="flex-col gap-4 w-full flex items-center justify-center h-screen">
+        <div className="w-32 h-32 border-4 border-transparent text-black text-4xl animate-spin flex items-center justify-center border-t-black rounded-full">
+          <div className="w-24 h-24 border-4 border-transparent text-slate-400 text-2xl animate-spin flex items-center justify-center border-t-slate-400 rounded-full"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-start justify-center  max-w-4xl px-4 sm:px-6 lg:px-8 py-10 w-full mx-auto">
       <div className="flex flex-col text-center justify-center items-center w-full">
@@ -54,12 +58,4 @@ export default function Home({
       </div>
     </div>
   );
-}
-
-export async function getServerSideProps(ctx: any) {
-  const session = await getServerSession(ctx.req, ctx.res, authOptions);
-  console.log("Session", session);
-  return {
-    props: { session },
-  };
 }
