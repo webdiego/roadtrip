@@ -8,20 +8,24 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function currentlyOnTrip(start_trip: number | undefined | null) {
-  let currentlyOnTrip = false;
-  if (start_trip) {
-    const currentDate = new Date();
-    const tripDate = new Date(start_trip * 1000);
-    if (isBefore(tripDate, currentDate) || isEqual(tripDate, currentDate)) {
-      currentlyOnTrip = true;
-    }
-    if (isAfter(tripDate, currentDate)) {
-      currentlyOnTrip = false;
-    }
-  }
+export function currentlyOnTrip(start_trip: number, end_trip: number): boolean {
+  if (!start_trip || !end_trip) return false;
 
-  return currentlyOnTrip;
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  const start = new Date(
+    new Date(start_trip * 1000).getFullYear(),
+    new Date(start_trip * 1000).getMonth(),
+    new Date(start_trip * 1000).getDate()
+  );
+  const end = new Date(
+    new Date(end_trip * 1000).getFullYear(),
+    new Date(end_trip * 1000).getMonth(),
+    new Date(end_trip * 1000).getDate()
+  );
+
+  return today >= start && today <= end;
 }
 
 export function daysRemaining(start_date: number, end_date: number) {

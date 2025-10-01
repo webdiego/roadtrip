@@ -32,7 +32,7 @@ export default function CardTrip({ trip }: { trip: Trip }) {
     },
   });
 
-  let onTrip = currentlyOnTrip(trip.start_trip);
+  let onTrip = currentlyOnTrip(trip.start_trip, trip.end_trip);
 
   let bg = backgroundSelect.find((b) => b.name === trip.background)?.value;
   let emojiParsed = JSON.parse(trip.emoji).native;
