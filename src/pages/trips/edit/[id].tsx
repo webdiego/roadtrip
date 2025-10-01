@@ -54,7 +54,7 @@ export default function EditTrip({ tripId }: { tripId: number }) {
   const [emojiState, setEmojiState] = useState("");
   // Query
   const { isLoading, data, isError, error } = useQuery({
-    queryKey: ["tripId"],
+    queryKey: ["tripId", tripId],
     queryFn: async () => {
       return axios
         .get(`/api/trips/get-trip/?tripId=${tripId}`)
