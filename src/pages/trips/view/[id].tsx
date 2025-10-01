@@ -10,23 +10,26 @@ import { backgroundSelect } from "@/lib/backgroundSelect";
 import { Bolt, Share } from "lucide-react";
 import DialogShare from "@/components/DialogShare";
 import Donut from "@/components/Charts/Donut";
-import Bar from "@/components/Charts/Bar";
 import Link from "next/link";
-import { currentlyOnTrip, daysRemaining } from "@/lib/utils";
-import { format, fromUnixTime } from "date-fns";
+import { format } from "date-fns";
 import { enGB } from "date-fns/locale";
-import Tripping from "@/components/Tripping";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth";
-import { Expense } from "@/types";
+import { Expense, Trip } from "@/types";
 import MostExpensiveDay from "@/components/Table/MostExpensiveDay";
-
+import { getTripWithExpenses } from "@/lib/trips";
 interface ShareTripResponse {
   ciphertext: string;
   // Include any other properties your response might have
 }
 
-export default function ViewTrip({ tripId }: { tripId: number }) {
+export default function ViewTrip({
+  tripId,
+  tripData,
+}: {
+  tripId: number;
+  tripData: any;
+}) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isDialogShare, setIsDialogShare] = React.useState(false);
   const [urlShare, setUrlShare] = React.useState("");
@@ -39,6 +42,10 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
         .get(`/api/trips/get-trip/?tripId=${tripId}`)
         .then((res) => res.data);
     },
+    initialData: tripData,
+    refetchOnWindowFocus: false,
+    retry: false,
+    refetchOnMount: false,
   });
 
   const mutation = useMutation({
@@ -61,8 +68,8 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
 
   if (isError) return <div>Error: {error.message}</div>;
 
-  let trip = data?.trip[0];
-  let expenses = data?.expenses;
+  let trip: Trip = data.trip[0] as Trip;
+  let expenses: Expense[] = data?.expenses;
   let emojiParsed = JSON.parse(trip.emoji).native;
   let bg = backgroundSelect.find((b) => b.name === trip.background)?.value;
 
@@ -70,45 +77,8 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
     expenses.reduce((sum: number, expense: any) => sum + expense?.amount, 0) ||
     null;
 
-  const amountRemain = trip.budget - amountUsed;
-
-  function getDayWithHighestSpending(expenses: Expense[], trip: any) {
-    const totalsByDate: Record<string, number> = {};
-
-    for (const expense of expenses) {
-      const date = expense.date_issued;
-      const amount = expense.amount;
-
-      if (!totalsByDate[date]) {
-        totalsByDate[date] = 0;
-      }
-      totalsByDate[date] += amount;
-    }
-
-    // Trova il giorno con il totale più alto
-    let maxDate = null;
-    let maxTotal = 0;
-
-    for (const [date, total] of Object.entries(totalsByDate)) {
-      if (total > maxTotal) {
-        maxDate = date;
-        maxTotal = total;
-      }
-    }
-    if (!maxDate) {
-      return { date: "No expenses", total: 0 };
-    }
-    let formattedDate = fromUnixTime(Number(maxDate)).toLocaleDateString(
-      "en-GB",
-      {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      }
-    );
-    let formattedTotal = `${trip.currency} ${maxTotal.toFixed(2)}`;
-    return { date: formattedDate, total: formattedTotal };
-  }
+  let amountRemain = trip.budget;
+  if (amountUsed && amountUsed > 0) amountRemain = trip.budget - amountUsed;
 
   return (
     <div className="mt-4 w-full">
@@ -169,8 +139,8 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
                 <div className="grid ">
                   <dt className="font-medium">Budget remain</dt>
                   <dd
-                    className={`text-gray-500 dark:text-gray-400 ${
-                      Math.sign(amountRemain) >= 0
+                    className={`text-gray-500  ${
+                      Math.sign(amountRemain ?? 0) >= 0
                         ? "text-green-500"
                         : "text-red-500"
                     }`}
@@ -186,7 +156,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
                   <dd className="text-gray-500 dark:text-gray-400">
                     {trip.start_trip
                       ? format(
-                          new Date(+trip.start_trip * 1000),
+                          new Date(trip.start_trip * 1000),
                           "d MMMM yyyy",
                           {
                             locale: enGB,
@@ -200,7 +170,7 @@ export default function ViewTrip({ tripId }: { tripId: number }) {
                   <dt className="font-medium">End trip</dt>
                   <dd className="text-gray-500 dark:text-gray-400">
                     {trip.end_trip
-                      ? format(new Date(+trip.end_trip * 1000), "d MMMM yyyy", {
+                      ? format(new Date(trip.end_trip * 1000), "d MMMM yyyy", {
                           locale: enGB,
                         })
                       : "-"}
@@ -272,10 +242,23 @@ export async function getServerSideProps(ctx: any) {
     };
   }
   const tripId = ctx.query.id;
-
+  let tripData = null;
+  try {
+    tripData = await getTripWithExpenses(tripId);
+    if (!tripData) {
+      return {
+        notFound: true,
+      };
+    }
+  } catch (error) {
+    return {
+      notFound: true,
+    };
+  }
   return {
     props: {
       tripId,
+      tripData,
     },
   };
 }

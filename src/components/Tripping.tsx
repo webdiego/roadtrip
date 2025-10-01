@@ -21,7 +21,7 @@ export default function Tripping({ onTrip }: { onTrip: boolean }) {
           ></span>
         </span>
       </div>
-      <h3 className="text-xs font-medium text-gray-800 dark:text-white">
+      <h3 className="text-xs font-medium text-gray-800 dark:text-green-500">
         {onTrip ? "On trip" : "Not on trip"}
       </h3>
     </div>

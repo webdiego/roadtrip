@@ -4,10 +4,10 @@ export type Trip = {
   description: string;
   currency: string;
   budget: number;
-  amount_used: number;
-  start_trip?: Date;
-  end_trip?: Date;
-  createdAt: Date;
+  amount_used?: number;
+  start_trip: number;
+  end_trip: number;
+  createdAt: number;
   emoji: string;
   background: string;
 };

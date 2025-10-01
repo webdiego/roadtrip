@@ -8,11 +8,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function currentlyOnTrip(start_trip: Date | undefined | null) {
+export function currentlyOnTrip(start_trip: number | undefined | null) {
   let currentlyOnTrip = false;
   if (start_trip) {
     const currentDate = new Date();
-    const tripDate = new Date(+start_trip * 1000);
+    const tripDate = new Date(start_trip * 1000);
     if (isBefore(tripDate, currentDate) || isEqual(tripDate, currentDate)) {
       currentlyOnTrip = true;
     }

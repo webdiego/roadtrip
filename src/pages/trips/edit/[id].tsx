@@ -42,19 +42,7 @@ import { backgroundSelect } from "@/lib/backgroundSelect";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { ButtonLoading } from "@/components/ButtonLoading";
-const schema = z.object({
-  name: z.string().min(1, { message: "Required" }),
-  description: z.string().min(1, { message: "Required" }),
-  budget: z.coerce.number().nonnegative().min(1, { message: "Required" }),
-  currency: z
-    .string()
-    .min(1, { message: "Required" })
-    .max(3, { message: "Max 3 characters" }),
-  start_trip: z.date().min(new Date("1900-01-01"), { message: "Required" }),
-  end_trip: z.date().min(new Date("1900-01-01"), { message: "Required" }),
-  emoji: z.string().min(1, { message: "Required" }),
-  background: z.string().min(1, { message: "Required" }),
-});
+import { tripSchema } from "@/lib/zod/schemas";
 
 export default function EditTrip({ tripId }: { tripId: number }) {
   const router = useRouter();
@@ -100,7 +88,7 @@ export default function EditTrip({ tripId }: { tripId: number }) {
     },
   });
 
-  function onSubmit(values: z.infer<typeof schema>) {
+  function onSubmit(values: z.infer<typeof tripSchema>) {
     mutate({
       id: trip.id,
       name: values.name,
@@ -113,8 +101,8 @@ export default function EditTrip({ tripId }: { tripId: number }) {
       background: values.background,
     });
   }
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+  const form = useForm<z.infer<typeof tripSchema>>({
+    resolver: zodResolver(tripSchema),
     defaultValues: {
       name: trip?.name ?? "",
       description: trip?.description ?? "",
@@ -132,8 +120,8 @@ export default function EditTrip({ tripId }: { tripId: number }) {
       form.reset({
         ...trip,
         emoji: JSON.parse(trip?.emoji).native,
-        start_trip: new Date(+trip?.start_trip * 1000),
-        end_trip: new Date(+trip?.end_trip * 1000),
+        start_trip: new Date(trip?.start_trip * 1000),
+        end_trip: new Date(trip?.end_trip * 1000),
       });
     }
   }, [trip, form]);
@@ -421,8 +409,6 @@ export default function EditTrip({ tripId }: { tripId: number }) {
                           />
                         </PopoverContent>
                       </Popover>
-                      <FormDescription>You can set later on.</FormDescription>
-
                       <FormMessage />
                     </FormItem>
                   )}

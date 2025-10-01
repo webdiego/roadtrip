@@ -68,7 +68,7 @@ export default function ShareTripPage({
                 <div className="grid ">
                   <dt className="font-medium">Budget remain</dt>
                   <dd
-                    className={`text-gray-500 dark:text-gray-400 ${
+                    className={`text-gray-500 ${
                       Math.sign(amountRemain) >= 0
                         ? "text-green-500"
                         : "text-red-500"

@@ -44,22 +44,7 @@ import { cn } from "@/lib/utils";
 import { Textarea } from "./ui/textarea";
 import { typeSelect, paymentMethod } from "@/lib/typeSelect";
 import { format, fromUnixTime } from "date-fns";
-
-const schema = z.object({
-  type: z.enum([
-    "food",
-    "petrol",
-    "transportation",
-    "lodging",
-    "pleasure",
-    "sport",
-    "other",
-  ]),
-  paymentMethod: z.enum(["cash", "card", "other"]),
-  description: z.string().min(1, { message: "Required" }),
-  amount: z.coerce.number().nonnegative().min(0.01, { message: "Required" }),
-  date_issued: z.date().min(new Date("1900-01-01"), { message: "Required" }),
-});
+import { expenseSchema } from "@/lib/zod/schemas";
 
 export default function DialogExpenses({
   dialogOpen,
@@ -70,15 +55,15 @@ export default function DialogExpenses({
 }: {
   dialogOpen: boolean;
   setDialogOpen: (open: boolean) => void;
-  tripId: number;
-  initialDateTrip: Date;
-  endDateTrip?: Date;
+  tripId: string;
+  initialDateTrip: number;
+  endDateTrip: number;
 }) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+  const form = useForm<z.infer<typeof expenseSchema>>({
+    resolver: zodResolver(expenseSchema),
     defaultValues: {
       type: "food",
       description: "",
@@ -87,6 +72,7 @@ export default function DialogExpenses({
       date_issued: undefined,
     },
   });
+
   const { isPending, isSuccess, isError, mutate, error } = useMutation({
     mutationFn: (expense: any) => {
       return axios.post("/api/expenses/create", expense);
@@ -107,7 +93,7 @@ export default function DialogExpenses({
     },
   });
 
-  function onSubmit(values: z.infer<typeof schema>) {
+  function onSubmit(values: z.infer<typeof expenseSchema>) {
     mutate({
       tripId,
       type: values.type,
@@ -279,7 +265,7 @@ export default function DialogExpenses({
                                 {
                                   before: fromUnixTime(+initialDateTrip),
                                   after: endDateTrip
-                                    ? fromUnixTime(+endDateTrip)
+                                    ? fromUnixTime(endDateTrip)
                                     : undefined,
                                 },
                               ]}

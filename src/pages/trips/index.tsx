@@ -7,8 +7,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
+import { getTripsByUser } from "@/lib/trips";
 
-export default function Home({ trips }: { trips: Trip[] }) {
+export default function Home({ trips }: { trips: Trip[] | [] }) {
   const { data } = useQuery({
     queryKey: ["trips"],
     queryFn: async () => {
@@ -52,16 +53,18 @@ export async function getServerSideProps(ctx: any) {
     };
   }
 
-  const res = await axios.get(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/trips/get-all`,
-    {
-      headers: { cookie: ctx.req.headers.cookie || "" },
-    }
-  );
+  const userId = session.user.id;
 
-  let trips = res.data.trips;
+  let trips: Trip[] = [];
+  try {
+    trips = await getTripsByUser(userId);
+  } catch (error) {
+    trips = [];
+  }
 
   return {
-    props: { trips },
+    props: {
+      trips,
+    },
   };
 }
