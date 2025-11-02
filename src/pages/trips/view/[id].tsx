@@ -17,19 +17,12 @@ import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth";
 import { Expense, Trip } from "@/types";
 import MostExpensiveDay from "@/components/Table/MostExpensiveDay";
-import { getTripWithExpenses } from "@/lib/trips";
+
 interface ShareTripResponse {
   ciphertext: string;
-  // Include any other properties your response might have
 }
 
-export default function ViewTrip({
-  tripId,
-  tripData,
-}: {
-  tripId: number;
-  tripData: any;
-}) {
+export default function ViewTrip({ tripId }: { tripId: number }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isDialogShare, setIsDialogShare] = React.useState(false);
   const [urlShare, setUrlShare] = React.useState("");
@@ -42,15 +35,12 @@ export default function ViewTrip({
         .get(`/api/trips/get-trip/?tripId=${tripId}`)
         .then((res) => res.data);
     },
-    initialData: tripData,
     refetchOnWindowFocus: false,
     retry: false,
-    refetchOnMount: false,
   });
 
   const mutation = useMutation({
     mutationFn: (tripId: number) => {
-      console.log(tripId);
       return axios.post<ShareTripResponse>("/api/trips/share", {
         tripId,
       });
@@ -241,24 +231,12 @@ export async function getServerSideProps(ctx: any) {
       },
     };
   }
+
   const tripId = ctx.query.id;
-  let tripData = null;
-  try {
-    tripData = await getTripWithExpenses(tripId);
-    if (!tripData) {
-      return {
-        notFound: true,
-      };
-    }
-  } catch (error) {
-    return {
-      notFound: true,
-    };
-  }
+
   return {
     props: {
       tripId,
-      tripData,
     },
   };
 }

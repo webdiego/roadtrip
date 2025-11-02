@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
-import { getTripsByUser } from "@/lib/trips";
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 export default function Home() {
   const { data, isLoading } = useQuery({
@@ -35,7 +35,7 @@ export default function Home() {
       </div>
       <div className="border-t dark:border-t-gray-700 my-4"></div>
       {isLoading ? (
-        <div className="text-left py-10">Loading trips...</div>
+        <LoadingSkeleton />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mt-10">
           {data?.trips?.map((trip: Trip) => (
