@@ -9,17 +9,15 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { getTripsByUser } from "@/lib/trips";
 
-export default function Home({ trips }: { trips: Trip[] | [] }) {
-  const { data } = useQuery({
+export default function Home() {
+  const { data, isLoading } = useQuery({
     queryKey: ["trips"],
     queryFn: async () => {
       const res = await axios.get("/api/trips/get-all");
       return res.data;
     },
-    initialData: { trips }, //
     refetchOnWindowFocus: false,
     retry: false,
-    refetchOnMount: false,
   });
 
   return (
@@ -36,11 +34,15 @@ export default function Home({ trips }: { trips: Trip[] | [] }) {
         </Button>
       </div>
       <div className="border-t dark:border-t-gray-700 my-4"></div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mt-10">
-        {data.trips.map((trip: Trip) => (
-          <CardTrip key={trip.id} trip={trip} />
-        ))}
-      </div>
+      {isLoading ? (
+        <div className="text-left py-10">Loading trips...</div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mt-10">
+          {data?.trips?.map((trip: Trip) => (
+            <CardTrip key={trip.id} trip={trip} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -53,18 +55,7 @@ export async function getServerSideProps(ctx: any) {
     };
   }
 
-  const userId = session.user.id;
-
-  let trips: Trip[] = [];
-  try {
-    trips = await getTripsByUser(userId);
-  } catch (error) {
-    trips = [];
-  }
-
   return {
-    props: {
-      trips,
-    },
+    props: {},
   };
 }
